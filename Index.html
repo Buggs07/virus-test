@@ -1,1 +1,1803 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PflegefachProfi | Meistere die Pflegeplanung</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --primary-light: #eef2ff;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --warning: #fca311;
+            --danger: #e63946;
+            --coin: #ffd166;
+            --text-primary: #1d3557;
+            --text-secondary: #457b9d;
+            --text-tertiary: #a8dadc;
+            --background: #f1faee;
+            --surface: #ffffff;
+            --border: #e0e0e0;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --radius: 12px;
+            --radius-lg: 20px;
+            --spacing-xs: 8px;
+            --spacing-sm: 16px;
+            --spacing-md: 24px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+            --spacing-xxl: 64px;
+            --font-primary: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            color: var(--text-primary);
+            background-color: var(--background);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--surface);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm) 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .user-stats {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            background: var(--primary-light);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius);
+            font-weight: 600;
+        }
+
+        .coins {
+            background: linear-gradient(135deg, var(--coin) 0%, #ffb347 100%);
+            color: var(--text-primary);
+        }
+
+        .level {
+            background: var(--primary);
+            color: white;
+        }
+
+        .xp {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: var(--spacing-xxl) 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            color: white;
+            margin-bottom: var(--spacing-md);
+            font-size: 2.5rem;
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            background: var(--accent);
+            color: white;
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: var(--radius);
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: var(--shadow-elevated);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(247, 37, 133, 0.4);
+        }
+
+        /* Learning Path */
+        .learning-path {
+            padding: var(--spacing-xl) 0;
+            background: var(--background);
+        }
+
+        .path-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+
+        .path-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .path-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        .path-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-elevated);
+            border-color: var(--primary-light);
+        }
+
+        .path-card.locked {
+            opacity: 0.7;
+            filter: grayscale(0.5);
+        }
+
+        .path-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .path-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .path-cost {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            background: var(--coin);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .path-title {
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .path-description {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+            font-size: 0.9rem;
+        }
+
+        .path-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .path-action {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .path-action.unlock {
+            background: var(--primary);
+            color: white;
+        }
+
+        .path-action.unlock:hover {
+            background: var(--primary-dark);
+        }
+
+        .path-action.start {
+            background: var(--success);
+            color: white;
+        }
+
+        .path-action.start:hover {
+            background: #3ab0d9;
+        }
+
+        .path-action.continue {
+            background: var(--accent);
+            color: white;
+        }
+
+        .path-action.continue:hover {
+            background: #e1156d;
+        }
+
+        /* Learning Module */
+        .learning-module {
+            display: none;
+            padding: var(--spacing-xl) 0;
+            background: var(--surface);
+            min-height: 100vh;
+        }
+
+        .learning-module.active {
+            display: block;
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .module-progress {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .module-steps {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .step {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+
+        .step.completed {
+            background: var(--success);
+        }
+
+        .lesson-content {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .lesson-card {
+            display: none;
+            padding: var(--spacing-xl);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .lesson-card.active {
+            display: block;
+        }
+
+        .lesson-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 2rem;
+            margin: 0 auto var(--spacing-lg);
+        }
+
+        .key-point {
+            background: var(--primary-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .key-point i {
+            color: var(--primary);
+            margin-right: var(--spacing-xs);
+        }
+
+        .example-box {
+            background: #fff9e6;
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            border-left: 4px solid var(--warning);
+        }
+
+        .example-title {
+            font-weight: 700;
+            color: var(--warning);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .interactive-element {
+            background: var(--background);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            border: 2px dashed var(--primary);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-xl);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            background: var(--primary);
+            color: white;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .nav-btn:disabled {
+            background: var(--border);
+            cursor: not-allowed;
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .quiz-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .quiz-question {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .quiz-option {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(76, 201, 240, 0.1);
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--danger);
+            background: rgba(230, 57, 70, 0.1);
+        }
+
+        .option-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .quiz-option.correct .option-indicator {
+            border-color: var(--success);
+            background: var(--success);
+            color: white;
+        }
+
+        .quiz-option.incorrect .option-indicator {
+            border-color: var(--danger);
+            background: var(--danger);
+            color: white;
+        }
+
+        .quiz-feedback {
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            margin-top: var(--spacing-md);
+            display: none;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(76, 201, 240, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .quiz-feedback.incorrect {
+            background: rgba(230, 57, 70, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .quiz-results {
+            text-align: center;
+            padding: var(--spacing-xl);
+            display: none;
+        }
+
+        .quiz-results.active {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .result-icon.correct {
+            color: var(--success);
+        }
+
+        .result-score {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .result-score.good {
+            color: var(--success);
+        }
+
+        .result-score.average {
+            color: var(--warning);
+        }
+
+        .result-score.poor {
+            color: var(--danger);
+        }
+
+        .reward-animation {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .reward-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .reward-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        .reward-icon.coins {
+            background: var(--coin);
+            color: var(--text-primary);
+        }
+
+        .reward-icon.xp {
+            background: var(--success);
+            color: white;
+        }
+
+        .reward-amount {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .countdown {
+            margin-top: var(--spacing-md);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Login Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow-elevated);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .form-input {
+            padding: var(--spacing-md);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes correctFlash {
+            0% { background-color: var(--surface); }
+            50% { background-color: rgba(76, 201, 240, 0.2); }
+            100% { background-color: var(--surface); }
+        }
+
+        @keyframes incorrectFlash {
+            0% { background-color: var(--surface); }
+            50% { background-color: rgba(230, 57, 70, 0.2); }
+            100% { background-color: var(--surface); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .correct-flash {
+            animation: correctFlash 0.5s ease;
+        }
+
+        .incorrect-flash {
+            animation: incorrectFlash 0.5s ease, shake 0.5s ease;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            opacity: 0;
+            z-index: 1000;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+            
+            .user-stats {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .path-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .module-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+            
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Modal -->
+    <div class="modal active" id="login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Willkommen bei PflegefachProfi</h3>
+            </div>
+            <p style="text-align: center; margin-bottom: var(--spacing-lg); font-size: 1.1rem;">
+                <strong>Wenn du Pflegeplanung meisterst, hast du schon 40% der Prüfungspunkte!</strong>
+            </p>
+            <form class="login-form" id="login-form">
+                <input type="text" class="form-input" id="username" placeholder="Benutzername" required minlength="3">
+                <input type="password" class="form-input" id="password" placeholder="Passwort" required minlength="4">
+                <button type="submit" class="cta-button" style="width: 100%;">
+                    <i class="fas fa-play"></i>
+                    Lernabenteuer starten!
+                </button>
+            </form>
+            <p style="text-align: center; margin-top: var(--spacing-md); font-size: 0.9rem; color: var(--text-secondary);">
+                Dein Fortschritt wird lokal gespeichert
+            </p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" style="display: none;">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-star-of-life"></i>
+                    </div>
+                    <span>PflegefachProfi</span>
+                </div>
+                <div class="user-stats">
+                    <div class="stat-item coins">
+                        <i class="fas fa-coins"></i>
+                        <span id="coin-count">0</span>
+                    </div>
+                    <div class="stat-item level">
+                        <i class="fas fa-level-up-alt"></i>
+                        <span>Level <span id="level-count">1</span></span>
+                    </div>
+                    <div class="stat-item xp">
+                        <i class="fas fa-fire"></i>
+                        <span id="xp-count">0</span> XP
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" style="display: none;">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Meistere die Pflegeplanung</h1>
+                <p>Wenn du Pflegeplanung meisterst, hast du schon 40% der Prüfungspunkte! Lerne spielerisch und werde zum PflegefachProfi.</p>
+                <a href="#learning-path" class="cta-button">
+                    <i class="fas fa-play"></i>
+                    Lernpfad starten
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learning Path -->
+    <section class="learning-path" id="learning-path" style="display: none;">
+        <div class="container">
+            <h2 class="text-center">Dein Lernpfad zur Pflegeplanung</h2>
+            <p class="text-center">Meistere die Pflegeplanung Schritt für Schritt. Verdiene Coins durch Lernen und Quizze!</p>
+            
+            <div class="path-container" id="module-container">
+                <!-- Modules will be dynamically generated -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Learning Module -->
+    <section class="learning-module" id="learning-module">
+        <div class="container">
+            <div class="module-header">
+                <h2 id="module-title">Lade Modul...</h2>
+                <div class="module-progress">
+                    <div class="module-steps" id="module-steps">
+                        <!-- Steps will be dynamically generated -->
+                    </div>
+                    <span id="step-counter">Schritt 1 von X</span>
+                </div>
+            </div>
+
+            <div class="lesson-content">
+                <div id="lesson-container">
+                    <!-- Lessons will be dynamically loaded here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // ==================== GAME STATE & MODULES ====================
+        const MODULES = [
+            {
+                id: 1,
+                title: "Pflegeplanung Basics",
+                description: "Grundlagen des Pflegeprozesses und warum Pflegeplanung wichtig ist",
+                cost: 0,
+                coins: 50,
+                xp: 100,
+                lessons: 4,
+                duration: "15 min",
+                icon: "fas fa-book-medical",
+                content: [
+                    {
+                        title: "Was ist Pflegeplanung?",
+                        icon: "fas fa-question-circle",
+                        content: `
+                            <p>Die <strong>Pflegeplanung</strong> ist der systematische Prozess, bei dem Pflegefachpersonen:</p>
+                            <ul style="margin-left: var(--spacing-lg); margin-bottom: var(--spacing-md);">
+                                <li>Pflegeprobleme identifizieren und analysieren</li>
+                                <li>Pflegeziele festlegen</li>
+                                <li>Maßnahmen planen und durchführen</li>
+                                <li>Ergebnisse evaluieren und anpassen</li>
+                            </ul>
+                            <div class="key-point">
+                                <i class="fas fa-lightbulb"></i>
+                                <strong>Warum ist das wichtig?</strong>
+                                <p>Eine gute Pflegeplanung sichert qualitativ hochwertige, individuelle Pflege und ist für 40% der Prüfungspunkte relevant!</p>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "Der Pflegeprozess",
+                        icon: "fas fa-sync-alt",
+                        content: `
+                            <p>Der Pflegeprozess folgt diesen 6 Phasen:</p>
+                            <div class="key-point">
+                                <i class="fas fa-1"></i>
+                                <strong>Informationssammlung</strong>
+                                <p>Daten über den Patienten erheben (Anamnese, Assessment)</p>
+                            </div>
+                            <div class="key-point">
+                                <i class="fas fa-2"></i>
+                                <strong>Problemanalyse</strong>
+                                <p>Pflegeprobleme und Ressourcen identifizieren</p>
+                            </div>
+                            <div class="key-point">
+                                <i class="fas fa-3"></i>
+                                <strong>Zielformulierung</strong>
+                                <p>SMART-Ziele für die Pflege festlegen</p>
+                            </div>
+                            <div class="key-point">
+                                <i class="fas fa-4"></i>
+                                <strong>Maßnahmenplanung</strong>
+                                <p>Konkrete Pflegemaßnahmen planen</p>
+                            </div>
+                            <div class="key-point">
+                                <i class="fas fa-5"></i>
+                                <strong>Durchführung</strong>
+                                <p>Geplante Maßnahmen umsetzen</p>
+                            </div>
+                            <div class="key-point">
+                                <i class="fas fa-6"></i>
+                                <strong>Evaluation</strong>
+                                <p>Ergebnisse überprüfen und planen anpassen</p>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "Rechtliche Grundlagen",
+                        icon: "fas fa-gavel",
+                        content: `
+                            <p>Die Pflegeplanung ist gesetzlich verankert:</p>
+                            <div class="key-point">
+                                <i class="fas fa-scale-balanced"></i>
+                                <strong>SGB V & XI</strong>
+                                <p>Pflicht zur Dokumentation der Pflege</p>
+                            </div>
+                            <div class="key-point">
+                                <i class="fas fa-file-contract"></i>
+                                <strong>Berufsrecht</strong>
+                                <p>Pflegeberufegesetz verpflichtet zu professioneller Dokumentation</p>
+                            </div>
+                            <div class="example-box">
+                                <div class="example-title">Merksatz:</div>
+                                <p><strong>"Was nicht dokumentiert ist, ist nicht gemacht!"</strong></p>
+                                <p>Die Dokumentation dient als Nachweis der geleisteten Pflege.</p>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "Quiz: Basics",
+                        icon: "fas fa-brain",
+                        content: "quiz",
+                        quiz: [
+                            {
+                                question: "Was ist der Hauptzweck der Pflegeplanung?",
+                                options: [
+                                    { text: "Zeit für die Pflegekraft zu sparen", correct: false },
+                                    { text: "Systematische, individuelle Pflege zu gewährleisten", correct: true },
+                                    { text: "Möglichst viele Dokumente zu erstellen", correct: false },
+                                    { text: "Den Arzt zu entlasten", correct: false }
+                                ],
+                                explanation: "Richtig! Die Pflegeplanung sichert qualitativ hochwertige, individuelle Pflege für jeden Patienten."
+                            },
+                            {
+                                question: "Wie viele Phasen hat der Pflegeprozess?",
+                                options: [
+                                    { text: "4 Phasen", correct: false },
+                                    { text: "6 Phasen", correct: true },
+                                    { text: "8 Phasen", correct: false },
+                                    { text: "3 Phasen", correct: false }
+                                ],
+                                explanation: "Korrekt! Der Pflegeprozess umfasst 6 Phasen von der Informationssammlung bis zur Evaluation."
+                            },
+                            {
+                                question: "Warum ist die Pflegeplanung für die Prüfung so wichtig?",
+                                options: [
+                                    { text: "Sie bringt 40% der Prüfungspunkte", correct: true },
+                                    { text: "Sie ist die einfachste Prüfungsaufgabe", correct: false },
+                                    { text: "Sie wird vom Lehrer besonders geliebt", correct: false },
+                                    { text: "Sie ist gesetzlich vorgeschrieben", correct: false }
+                                ],
+                                explanation: "Genau! Die Pflegeplanung macht etwa 40% der Prüfungspunkte aus - ein absolutes Muss für die Prüfung!"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Pflegeprobleme identifizieren",
+                description: "Lerne, was ein echtes Pflegeproblem ist und was nicht",
+                cost: 50,
+                coins: 75,
+                xp: 150,
+                lessons: 4,
+                duration: "20 min",
+                icon: "fas fa-search",
+                content: [
+                    {
+                        title: "Was ist ein Pflegeproblem?",
+                        icon: "fas fa-stethoscope",
+                        content: `
+                            <p>Ein <strong>Pflegeproblem</strong> ist ein gesundheitsbezogenes Problem, das die Pflegefachperson eigenständig erkennen, behandeln und überwachen kann.</p>
+                            <div class="key-point">
+                                <i class="fas fa-check-circle"></i>
+                                <strong>Merkmale eines Pflegeproblems:</strong>
+                                <ul style="margin-left: var(--spacing-lg); margin-top: var(--spacing-xs);">
+                                    <li>Beeinträchtigt die Lebensqualität des Patienten</li>
+                                    <li>Kann durch pflegerische Maßnahmen gelöst/verbessert werden</li>
+                                    <li>Bezieht sich auf AEDL/ATL-Bereiche</li>
+                                    <li>Ist keine ärztliche Diagnose</li>
+                                </ul>
+                            </div>
+                            <div class="example-box">
+                                <div class="example-title">Beispiele:</div>
+                                <p><strong>Richtige Pflegeprobleme:</strong> Schlafstörung, Schmerzen, Dekubitusgefahr, Ernährungsdefizit</p>
+                                <p><strong>Keine Pflegeprobleme:</strong> Diabetes mellitus, Herzinsuffizienz (ärztliche Diagnosen)</p>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "AEDL/ATL Modell",
+                        icon: "fas fa-puzzle-piece",
+                        content: `
+                            <p>Pflegeprobleme werden nach <strong>AEDL</strong> (Aktivitäten und existenzielle Erfahrungen des Lebens) oder <strong>ATL</strong> (Aktivitäten des täglichen Lebens) kategorisiert:</p>
+                            <div class="interactive-element">
+                                <h4>Die 13 AEDL-Bereiche:</h4>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-sm); margin-top: var(--spacing-md);">
+                                    <div style="background: var(--primary-light); padding: var(--spacing-sm); border-radius: var(--radius); text-align: center;">
+                                        <strong>Kommunizieren</strong>
+                                    </div>
+                                    <div style="background: var(--primary-light); padding: var(--spacing-sm); border-radius: var(--radius); text-align: center;">
+                                        <strong>Sich bewegen</strong>
+                                    </div>
+                                    <div style="background: var(--primary-light); padding: var(--spacing-sm); border-radius: var(--radius); text-align: center;">
+                                        <strong>Vitale Funktionen</strong>
+                                    </div>
+                                    <div style="background: var(--primary-light); padding: var(--spacing-sm); border-radius: var(--radius); text-align: center;">
+                                        <strong>Sich pflegen</strong>
+                                    </div>
+                                    <div style="background: var(--primary-light); padding: var(--spacing-sm); border-radius: var(--radius); text-align: center;">
+                                        <strong>Essen & Trinken</strong>
+                                    </div>
+                                    <div style="background: var(--primary-light); padding: var(--spacing-sm); border-radius: var(--radius); text-align: center;">
+                                        <strong>Ausscheiden</strong>
+                                    </div>
+                                    <div style="background: var(--primary-light); padding: var(--spacing-sm); border-radius: var(--radius); text-align: center;">
+                                        <strong>Sich kleiden</strong>
+                                    </div>
+                                    <div style="background: var(--primary-light); padding: var(--spacing-sm); border-radius: var(--radius); text-align: center;">
+                                        <strong>Ruhen & Schlafen</strong>
+                                    </div>
+                                    <div style="background: var(--primary-light); padding: var(--spacing-sm); border-radius: var(--radius); text-align: center;">
+                                        <strong>Beschäftigen</strong>
+                                    </div>
+                                    <div style="background: var(--primary-light); padding: var(--spacing-sm); border-radius: var(--radius); text-align: center;">
+                                        <strong>Sich als Mann/Frau fühlen</strong>
+                                    </div>
+                                    <div style="background: var(--primary-light); padding: var(--spacing-sm); border-radius: var(--radius); text-align: center;">
+                                        <strong>Sorgen für Sicherheit</strong>
+                                    </div>
+                                                                        <div style="background: var(--primary-light); padding: var(--spacing-sm); border-radius: var(--radius); text-align: center;">
+                                        <strong>Soziale Bereiche</strong>
+                                    </div>
+                                    <div style="background: var(--primary-light); padding: var(--spacing-sm); border-radius: var(--radius); text-align: center;">
+                                        <strong>Mit Existenz. umgehen</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="key-point">
+                                <i class="fas fa-tip"></i>
+                                <strong>Tipp:</strong>
+                                <p>Jedes Pflegeproblem sollte einem AEDL-Bereich zugeordnet werden können!</p>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "Häufige Fehler",
+                        icon: "fas fa-exclamation-triangle",
+                        content: `
+                            <p>Vermeide diese häufigen Fehler bei der Problemidentifikation:</p>
+                            <div class="key-point">
+                                <i class="fas fa-times"></i>
+                                <strong>Ärztliche Diagnosen als Pflegeprobleme</strong>
+                                <p><strong>Falsch:</strong> "Patient hat Diabetes"<br>
+                                   <strong>Richtig:</strong> "Wissensdefizit bezüglich Blutzuckerkontrolle"</p>
+                            </div>
+                            <div class="key-point">
+                                <i class="fas fa-times"></i>
+                                <strong>Wertende Formulierungen</strong>
+                                <p><strong>Falsch:</strong> "Patient ist unkooperativ"<br>
+                                   <strong>Richtig:</strong> "Non-Compliance bezüglich Medikamenteneinnahme"</p>
+                            </div>
+                            <div class="key-point">
+                                <i class="fas fa-times"></i>
+                                <strong>Pflegemaßnahmen als Probleme</strong>
+                                <p><strong>Falsch:</strong> "Patient benötigt Wundversorgung"<br>
+                                   <strong>Richtig:</strong> "Hautläsion am Sakralbereich"</p>
+                            </div>
+                            <div class="interactive-element">
+                                <h4>Übung: Erkenne das Pflegeproblem!</h4>
+                                <p><strong>Situation:</strong> Herr Müller (78) ist nach Hüft-OP immobil, isst wenig und trinkt nur 500ml/Tag.</p>
+                                <p style="margin-top: var(--spacing-sm);"><strong>Welches ist das richtige Pflegeproblem?</strong></p>
+                                <div style="background: #e8f5e8; padding: var(--spacing-md); border-radius: var(--radius); margin-top: var(--spacing-sm); border-left: 4px solid var(--success);">
+                                    <strong>Richtig:</strong> "Dekubitusgefahr aufgrund von Immobilität und Mangelernährung"
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "Quiz: Pflegeprobleme",
+                        icon: "fas fa-brain",
+                        content: "quiz",
+                        quiz: [
+                            {
+                                question: '"Schlafstörung aufgrund von Schmerzen" - Ist dies ein Pflegeproblem?',
+                                options: [
+                                    { text: 'Ja, es folgt der PESR-Struktur', correct: true },
+                                    { text: 'Nein, Schmerzen sind eine ärztliche Diagnose', correct: false }
+                                ],
+                                explanation: 'Korrekt! Dies ist ein authentisches Pflegeproblem. Schmerzmanagement ist eine eigenständige pflegerische Aufgabe.'
+                            },
+                            {
+                                question: '"Diabetes mellitus mit erhöhten Blutzuckerwerten" - Ist dies ein Pflegeproblem?',
+                                options: [
+                                    { text: 'Ja, die Pflege kümmert sich um Diabetiker', correct: false },
+                                    { text: 'Nein, das ist eine ärztliche Diagnose', correct: true }
+                                ],
+                                explanation: 'Richtig! Diabetes mellitus ist eine ärztliche Diagnose. Ein Pflegeproblem wäre: "Wissensdefizit bezüglich Blutzuckerkontrolle".'
+                            },
+                            {
+                                question: 'Welche Formulierung ist korrekt?',
+                                options: [
+                                    { text: '"Patient ist schwierig und unkooperativ"', correct: false },
+                                    { text: '"Non-Compliance bezüglich Therapiemaßnahmen"', correct: true },
+                                    { text: '"Patient macht extra Arbeit"', correct: false },
+                                    { text: '"Patient will nicht"', correct: false }
+                                ],
+                                explanation: 'Perfekt! "Non-Compliance" ist die fachlich korrekte, wertfreie Formulierung.'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Ressourcen erkennen",
+                description: "Lerne, patienteneigene Stärken und Ressourcen zu identifizieren",
+                cost: 75,
+                coins: 100,
+                xp: 200,
+                lessons: 3,
+                duration: "18 min",
+                icon: "fas fa-hands-helping",
+                content: [
+                    {
+                        title: "Was sind Ressourcen?",
+                        icon: "fas fa-seedling",
+                        content: `
+                            <p><strong>Ressourcen</strong> sind alle Fähigkeiten, Stärken und Möglichkeiten des Patienten, die zur Problemlösung beitragen können.</p>
+                            <div class="key-point">
+                                <i class="fas fa-categories"></i>
+                                <strong>Arten von Ressourcen:</strong>
+                                <ul style="margin-left: var(--spacing-lg); margin-top: var(--spacing-xs);">
+                                    <li><strong>Personale Ressourcen:</strong> Motivation, Wissen, Fähigkeiten</li>
+                                    <li><strong>Soziale Ressourcen:</strong> Familie, Freunde, Nachbarn</li>
+                                    <li><strong>Materielle Ressourcen:</strong> Wohnung, Hilfsmittel, Finanzen</li>
+                                    <li><strong>Umgebungsressourcen:</strong> Barrierefreiheit, Nahversorgung</li>
+                                </ul>
+                            </div>
+                            <div class="example-box">
+                                <div class="example-title">Beispiel:</div>
+                                <p><strong>Patient:</strong> Frau Schmidt (82) mit Arthrose</p>
+                                <p><strong>Ressourcen:</strong> 
+                                <br>- Tochter wohnt in der Nähe (sozial)
+                                <br>- Ist motiviert, mobil zu bleiben (personal)  
+                                <br>- Rollator vorhanden (materiell)
+                                <br>- Wohnung ebenerdig (Umgebung)</p>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "Ressourcenorientierte Pflege",
+                        icon: "fas fa-search-plus",
+                        content: `
+                            <p>Die ressourcenorientierte Pflege fokussiert auf das, was der Patient <strong>noch kann</strong>, nicht auf das, was er nicht kann.</p>
+                            <div class="key-point">
+                                <i class="fas fa-magic"></i>
+                                <strong>Vorteile der Ressourcenorientierung:</strong>
+                                <ul style="margin-left: var(--spacing-lg); margin-top: var(--spacing-xs);">
+                                    <li>Stärkt die Eigenständigkeit des Patienten</li>
+                                    <li>Fördert die Motivation und Compliance</li>
+                                    <li>Führt zu realistischerer Pflegeplanung</li>
+                                    <li>Entlastet die Pflegekraft</li>
+                                </ul>
+                            </div>
+                            <div class="interactive-element">
+                                <h4>Ressourcen-Quiz:</h4>
+                                <p><strong>Situation:</strong> Herr Weber (65) nach Schlaganfall mit linksseitiger Lähmung, war früher Lehrer, Ehefrau pflegt mit.</p>
+                                <p style="margin-top: var(--spacing-sm);"><strong>Welche Ressourcen hat Herr Weber?</strong></p>
+                                <div style="background: #e8f5e8; padding: var(--spacing-md); border-radius: var(--radius); margin-top: var(--spacing-sm);">
+                                    <strong>Ressourcen:</strong> Gute kognitive Fähigkeiten (war Lehrer), motivierte Ehefrau, rechtsseitige Beweglichkeit erhalten
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "Quiz: Ressourcen",
+                        icon: "fas fa-brain",
+                        content: "quiz",
+                        quiz: [
+                            {
+                                question: 'Was sind personale Ressourcen?',
+                                options: [
+                                    { text: 'Familie und Freunde', correct: false },
+                                    { text: 'Motivation und Wissen des Patienten', correct: true },
+                                    { text: 'Hilfsmittel und Wohnung', correct: false },
+                                    { text: 'Ärztliche Versorgung', correct: false }
+                                ],
+                                explanation: 'Richtig! Personale Ressourcen sind die inneren Stärken des Patienten wie Motivation, Wissen und Fähigkeiten.'
+                            },
+                            {
+                                question: 'Warum ist Ressourcenorientierung wichtig?',
+                                options: [
+                                    { text: 'Weil sie die Pflegekraft entlastet', correct: false },
+                                    { text: 'Weil sie die Eigenständigkeit fördert', correct: true },
+                                    { text: 'Weil sie weniger Dokumentation erfordert', correct: false },
+                                    { text: 'Weil sie vom Arzt verlangt wird', correct: false }
+                                ],
+                                explanation: 'Genau! Die Ressourcenorientierung stärkt die Eigenständigkeit und Motivation des Patienten.'
+                            },
+                            {
+                                question: 'Welche Aussage beschreibt eine soziale Ressource?',
+                                options: [
+                                    { text: '"Patient kann sich noch selbst waschen"', correct: false },
+                                    { text: '"Tochter besucht täglich und unterstützt"', correct: true },
+                                    { text: '"Patient hat einen Rollator"', correct: false },
+                                    { text: '"Patient ist hochmotiviert"', correct: false }
+                                ],
+                                explanation: 'Korrekt! Soziale Ressourcen beziehen sich auf das Unterstützungssystem wie Familie, Freunde oder Nachbarn.'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // ==================== GAME STATE MANAGEMENT ====================
+        let gameState = {
+            user: { username: '', isLoggedIn: false },
+            coins: 150,
+            level: 1,
+            xp: 0,
+            progress: 0,
+            unlockedModules: [1],
+            completedModules: [],
+            moduleScores: {},
+            currentModule: null,
+            currentLesson: 0
+        };
+
+        // ==================== CORE FUNCTIONS ====================
+        function initApp() {
+            loadGameState();
+            if (!gameState.user.isLoggedIn) {
+                showLoginModal();
+            } else {
+                startApplication();
+            }
+            setupEventListeners();
+        }
+
+        function loadGameState() {
+            const saved = localStorage.getItem('pflegefachprofi_save');
+            if (saved) {
+                gameState = { ...gameState, ...JSON.parse(saved) };
+            }
+        }
+
+        function saveGameState() {
+            localStorage.setItem('pflegefachprofi_save', JSON.stringify(gameState));
+        }
+
+        function showLoginModal() {
+            document.getElementById('login-modal').classList.add('active');
+        }
+
+        function hideLoginModal() {
+            document.getElementById('login-modal').classList.remove('active');
+        }
+
+        function startApplication() {
+            document.querySelector('.header').style.display = 'block';
+            document.querySelector('.hero').style.display = 'block';
+            document.querySelector('.learning-path').style.display = 'block';
+            hideLoginModal();
+            renderModules();
+            updateUI();
+        }
+
+        function setupEventListeners() {
+            // Login form
+            document.getElementById('login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                if (username && password) {
+                    gameState.user = {
+                        username: username,
+                        isLoggedIn: true,
+                        joinDate: new Date().toISOString()
+                    };
+                    saveGameState();
+                    startApplication();
+                }
+            });
+        }
+
+        function renderModules() {
+            const container = document.getElementById('module-container');
+            container.innerHTML = MODULES.map(module => `
+                <div class="path-card ${gameState.unlockedModules.includes(module.id) ? '' : 'locked'}" data-module="${module.id}">
+                    <div class="path-header">
+                        <div class="path-icon">
+                            <i class="${module.icon}"></i>
+                        </div>
+                        <div class="path-cost">
+                            <i class="fas fa-coins"></i>
+                            <span>${module.cost}</span>
+                        </div>
+                    </div>
+                    <h3 class="path-title">${module.id}. ${module.title}</h3>
+                    <p class="path-description">${module.description}</p>
+                    <div class="path-stats">
+                        <div class="stat">
+                            <span class="stat-value">${module.lessons}</span>
+                            <span class="stat-label">Lektionen</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">${module.duration}</span>
+                            <span class="stat-label">Dauer</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">+${module.coins}</span>
+                            <span class="stat-label">Coins</span>
+                        </div>
+                    </div>
+                    ${renderModuleButton(module)}
+                </div>
+            `).join('');
+
+            // Add event listeners to module buttons
+            document.querySelectorAll('.path-action').forEach(button => {
+                button.addEventListener('click', function() {
+                    const card = this.closest('.path-card');
+                    const moduleId = parseInt(card.dataset.module);
+                    handleModuleAction(moduleId, this);
+                });
+            });
+        }
+
+        function renderModuleButton(module) {
+            if (gameState.completedModules.includes(module.id)) {
+                return `<button class="path-action continue">
+                    <i class="fas fa-redo"></i>
+                    Wiederholen
+                </button>`;
+            } else if (gameState.unlockedModules.includes(module.id)) {
+                return `<button class="path-action start">
+                    <i class="fas fa-play"></i>
+                    Jetzt lernen
+                </button>`;
+            } else {
+                const canAfford = gameState.coins >= module.cost;
+                return `<button class="path-action unlock" ${!canAfford ? 'disabled' : ''}>
+                    <i class="fas fa-${canAfford ? 'lock-open' : 'lock'}"></i>
+                    ${canAfford ? `Für ${module.cost} Coins freischalten` : `Noch ${module.cost - gameState.coins} Coins benötigt`}
+                </button>`;
+            }
+        }
+
+        function handleModuleAction(moduleId, button) {
+            const module = MODULES.find(m => m.id === moduleId);
+            
+            if (button.classList.contains('unlock')) {
+                if (gameState.coins >= module.cost) {
+                    gameState.coins -= module.cost;
+                    gameState.unlockedModules.push(moduleId);
+                    saveGameState();
+                    renderModules();
+                    updateUI();
+                    startModule(moduleId);
+                }
+            } else if (button.classList.contains('start') || button.classList.contains('continue')) {
+                startModule(moduleId);
+            }
+        }
+
+        function startModule(moduleId) {
+            gameState.currentModule = moduleId;
+            gameState.currentLesson = 0;
+            saveGameState();
+            
+            // Hide homepage, show learning module
+            document.querySelector('.hero').style.display = 'none';
+            document.querySelector('.learning-path').style.display = 'none';
+            document.querySelector('.learning-module').classList.add('active');
+            
+            loadLesson(moduleId, 0);
+        }
+
+        function loadLesson(moduleId, lessonIndex) {
+            const module = MODULES.find(m => m.id === moduleId);
+            const lesson = module.content[lessonIndex];
+            
+            document.getElementById('module-title').textContent = `${module.id}. ${module.title}`;
+            
+            // Update progress steps
+            const stepsContainer = document.getElementById('module-steps');
+            stepsContainer.innerHTML = '';
+            for (let i = 0; i < module.content.length; i++) {
+                const step = document.createElement('div');
+                step.className = `step ${i === lessonIndex ? 'active' : i < lessonIndex ? 'completed' : ''}`;
+                step.dataset.step = i + 1;
+                stepsContainer.appendChild(step);
+            }
+            
+            document.getElementById('step-counter').textContent = `Schritt ${lessonIndex + 1} von ${module.content.length}`;
+            
+            // Load lesson content
+            const container = document.getElementById('lesson-container');
+            if (lesson.content === 'quiz') {
+                loadQuiz(module, lesson, container);
+            } else {
+                container.innerHTML = `
+                    <div class="lesson-card active">
+                        <div class="lesson-icon">
+                            <i class="${lesson.icon}"></i>
+                        </div>
+                        <h3 class="text-center">${lesson.title}</h3>
+                        ${lesson.content}
+                        <div class="navigation">
+                            <button class="nav-btn" onclick="previousLesson()" ${lessonIndex === 0 ? 'disabled' : ''}>
+                                <i class="fas fa-arrow-left"></i>
+                                Zurück
+                            </button>
+                            <button class="nav-btn" onclick="nextLesson()">
+                                ${lessonIndex === module.content.length - 1 ? 'Quiz starten' : 'Weiter'}
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function loadQuiz(module, lesson, container) {
+            container.innerHTML = `
+                <div class="quiz-container">
+                    <div class="quiz-header">
+                        <h3>Quiz: ${module.title}</h3>
+                        <p>Teste dein Wissen und verdiene ${module.coins} Coins!</p>
+                    </div>
+                    <div class="quiz-progress">
+                        <span id="quiz-counter">Frage 1 von ${lesson.quiz.length}</span>
+                        <div class="module-steps" id="quiz-steps">
+                            ${lesson.quiz.map((_, i) => `<div class="step ${i === 0 ? 'active' : ''}" data-question="${i + 1}"></div>`).join('')}
+                        </div>
+                    </div>
+                    <div class="quiz-content" id="quiz-content">
+                        <!-- Quiz questions will be loaded here -->
+                    </div>
+                    <div class="quiz-results" id="quiz-results">
+                        <div class="result-icon correct">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h2 class="result-title">Quiz abgeschlossen!</h2>
+                        <div class="result-score good" id="score-display">0/0 Richtige</div>
+                        <div class="reward-animation">
+                            <div class="reward-item">
+                                <div class="reward-icon coins">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <div class="reward-amount" id="coins-earned">+0</div>
+                            </div>
+                            <div class="reward-item">
+                                <div class="reward-icon xp">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <div class="reward-amount" id="xp-earned">+0</div>
+                            </div>
+                        </div>
+                        <p id="result-message"></p>
+                        <div class="countdown" id="countdown">
+                            Rückkehr in <span id="countdown-number">5</span> Sekunden...
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            startQuiz(module, lesson.quiz);
+        }
+
+        let currentQuestion = 0;
+        let quizScore = 0;
+        let quizQuestions = [];
+
+        function startQuiz(module, questions) {
+            currentQuestion = 0;
+            quizScore = 0;
+            quizQuestions = questions;
+            loadQuestion(currentQuestion);
+        }
+
+        function loadQuestion(index) {
+            const question = quizQuestions[index];
+            const content = document.getElementById('quiz-content');
+            const steps = document.querySelectorAll('#quiz-steps .step');
+            
+            steps.forEach((step, i) => {
+                step.classList.remove('active');
+                if (i === index) step.classList.add('active');
+            });
+            
+            document.getElementById('quiz-counter').textContent = `Frage ${index + 1} von ${quizQuestions.length}`;
+            
+            content.innerHTML = `
+                <div class="quiz-question">${question.question}</div>
+                <div class="quiz-options">
+                    ${question.options.map((option, i) => `
+                        <div class="quiz-option" data-correct="${option.correct}" data-index="${i}">
+                            <div class="option-indicator">${String.fromCharCode(65 + i)}</div>
+                            <div class="option-text">${option.text}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="quiz-feedback" id="quiz-feedback"></div>
+                <div class="navigation" style="margin-top: var(--spacing-lg);">
+                    <button class="nav-btn" id="next-question" style="display: none;">
+                        ${index === quizQuestions.length - 1 ? 'Ergebnisse anzeigen' : 'Nächste Frage'}
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            `;
+            
+            // Add event listeners
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', handleAnswer);
+            });
+            
+            document.getElementById('next-question').addEventListener('click', nextQuestion);
+        }
+
+        function handleAnswer(e) {
+            const option = e.currentTarget;
+            const isCorrect = option.dataset.correct === 'true';
+            const feedback = document.getElementById('quiz-feedback');
+            const nextBtn = document.getElementById('next-question');
+            
+            // Disable all options
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.style.pointerEvents = 'none';
+            });
+            
+            // Mark correct/incorrect
+            option.classList.add(isCorrect ? 'correct' : 'incorrect');
+            
+            // Show correct answer if wrong
+            if (!isCorrect) {
+                document.querySelector('.quiz-option[data-correct="true"]').classList.add('correct');
+            }
+            
+            // Show feedback
+            feedback.textContent = quizQuestions[currentQuestion].explanation;
+            feedback.classList.add(isCorrect ? 'correct' : 'incorrect');
+            feedback.style.display = 'block';
+            
+            // Update score
+            if (isCorrect) {
+                quizScore++;
+                document.getElementById('quiz-content').classList.add('correct-flash');
+            } else {
+                document.getElementById('quiz-content').classList.add('incorrect-flash');
+            }
+            
+            // Show next button
+            nextBtn.style.display = 'flex';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < quizQuestions.length) {
+                loadQuestion(currentQuestion);
+            } else {
+                showQuizResults();
+            }
+        }
+
+        function showQuizResults() {
+            const module = MODULES.find(m => m.id === gameState.currentModule);
+            const percentage = Math.round((quizScore / quizQuestions.length) * 100);
+            const coinsEarned = Math.round(module.coins * (percentage / 100));
+            const xpEarned = Math.round(module.xp * (percentage / 100));
+            
+            document.getElementById('quiz-content').style.display = 'none';
+            document.getElementById('quiz-results').classList.add('active');
+            
+            document.getElementById('score-display').textContent = `${quizScore}/${quizQuestions.length} Richtige (${percentage}%)`;
+            document.getElementById('coins-earned').textContent = `+${coinsEarned}`;
+            document.getElementById('xp-earned').textContent = `+${xpEarned}`;
+            
+            // Set score style
+            const scoreDisplay = document.getElementById('score-display');
+            if (percentage >= 80) {
+                scoreDisplay.className = 'result-score good';
+                document.getElementById('result-message').textContent = 'Herzlichen Glückwunsch! Exzellente Leistung!';
+                createConfetti();
+            } else if (percentage >= 60) {
+                scoreDisplay.className = 'result-score average';
+                document.getElementById('result-message').textContent = 'Gut gemacht! Du kehrst jetzt zum Lernpfad zurück.';
+            } else {
+                scoreDisplay.className = 'result-score poor';
+                document.getElementById('result-message').textContent = 'Weiter so! Übung macht den Meister. Du kannst es nochmal versuchen.';
+            }
+            
+            // Add rewards if passed (60% or higher)
+            if (percentage >= 60 && !gameState.completedModules.includes(gameState.currentModule)) {
+                gameState.coins += coinsEarned;
+                gameState.xp += xpEarned;
+                gameState.completedModules.push(gameState.currentModule);
+                gameState.progress = Math.min(100, Math.floor((gameState.completedModules.length / MODULES.length) * 100));
+                
+                // Check level up
+                const newLevel = Math.floor(gameState.xp / 500) + 1;
+                if (newLevel > gameState.level) {
+                    gameState.level = newLevel;
+                }
+            }
+            
+            saveGameState();
+            updateUI();
+            
+            // Start countdown to return
+            startCountdown();
+        }
+
+        function startCountdown() {
+            let countdown = 5;
+            const countdownEl = document.getElementById('countdown-number');
+            
+            const timer = setInterval(() => {
+                countdown--;
+                countdownEl.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    returnToHomepage();
+                }
+            }, 1000);
+        }
+
+        function returnToHomepage() {
+            document.querySelector('.learning-module').classList.remove('active');
+            document.querySelector('.hero').style.display = 'block';
+            document.querySelector('.learning-path').style.display = 'block';
+            renderModules();
+            
+            // Scroll to learning path
+            document.getElementById('learning-path').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function nextLesson() {
+            const module = MODULES.find(m => m.id === gameState.currentModule);
+            if (gameState.currentLesson < module.content.length - 1) {
+                gameState.currentLesson++;
+                loadLesson(gameState.currentModule, gameState.currentLesson);
+            }
+        }
+
+        function previousLesson() {
+            if (gameState.currentLesson > 0) {
+                gameState.currentLesson--;
+                loadLesson(gameState.currentModule, gameState.currentLesson);
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('coin-count').textContent = gameState.coins;
+            document.getElementById('level-count').textContent = gameState.level;
+            document.getElementById('xp-count').textContent = gameState.xp;
+            
+            // Update progress in hero section if needed
+            const progressElements = document.querySelectorAll('#progress-percent, #progress-bar');
+            progressElements.forEach(el => {
+                if (el.id === 'progress-percent') {
+                    el.textContent = `${gameState.progress}%`;
+                } else if (el.id === 'progress-bar') {
+                    el.style.width = `${gameState.progress}%`;
+                }
+            });
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.cssText = `
+                    position: fixed;
+                    width: 10px;
+                    height: 10px;
+                    background: ${['#4361ee', '#7209b7', '#f72585', '#4cc9f0', '#ffd166'][Math.floor(Math.random() * 5)]};
+                    top: -20px;
+                    left: ${Math.random() * 100}vw;
+                    animation: fall ${Math.random() * 3 + 2}s linear forwards;
+                    border-radius: 2px;
+                    z-index: 1000;
+                `;
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        // Global functions for navigation
+        window.nextLesson = nextLesson;
+        window.previousLesson = previousLesson;
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
