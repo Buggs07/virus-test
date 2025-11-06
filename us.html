@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Über Uns | PflegefachProfi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --primary-light: #eef2ff;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --text-primary: #1d3557;
+            --text-secondary: #457b9d;
+            --background: #f8f9fa;
+            --surface: #ffffff;
+            --border: #e0e0e0;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --radius: 12px;
+            --radius-lg: 20px;
+            --spacing-xs: 8px;
+            --spacing-sm: 16px;
+            --spacing-md: 24px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+            --spacing-xxl: 64px;
+            --font-primary: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            color: var(--text-primary);
+            background-color: var(--background);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--surface);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm) 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .nav {
+            display: flex;
+            gap: var(--spacing-lg);
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: var(--spacing-xxl) 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .floating-element {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+        .floating-element:nth-child(2) { top: 20%; right: 10%; animation-delay: 1s; }
+        .floating-element:nth-child(3) { bottom: 30%; left: 15%; animation-delay: 2s; }
+        .floating-element:nth-child(4) { bottom: 15%; right: 20%; animation-delay: 3s; }
+        .floating-element:nth-child(5) { top: 40%; left: 25%; animation-delay: 4s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: var(--spacing-md);
+            font-weight: 700;
+            opacity: 0;
+            animation: slideUp 1s ease 0.2s forwards;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: var(--spacing-xl);
+            opacity: 0;
+            animation: slideUp 1s ease 0.4s forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mission Section */
+        .mission {
+            padding: var(--spacing-xxl) 0;
+            background: var(--surface);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xxl);
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-md);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-xl);
+        }
+
+        .mission-card {
+            background: var(--surface);
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .mission-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .mission-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-elevated);
+            border-color: var(--primary-light);
+        }
+
+        .mission-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-lg);
+            color: var(--primary);
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .mission-card:hover .mission-icon {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .mission-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+
+        .mission-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Team Section */
+        .team {
+            padding: var(--spacing-xxl) 0;
+            background: var(--background);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-xl);
+        }
+
+        .team-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        .team-card.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .team-card:nth-child(even) {
+            transform: translateX(30px);
+        }
+
+        .team-card:nth-child(even).visible {
+            transform: translateX(0);
+        }
+
+        .team-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto var(--spacing-lg);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+
+        .team-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-primary);
+        }
+
+        .team-role {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .team-bio {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .team-social {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: var(--spacing-xxl) 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-xl);
+            text-align: center;
+        }
+
+        .stat-item {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .stat-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-xs);
+            background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Values Section */
+        .values {
+            padding: var(--spacing-xxl) 0;
+            background: var(--surface);
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-xl);
+        }
+
+        .value-card {
+            background: var(--surface);
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .value-card.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .value-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-light);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-lg);
+            transition: all 0.3s ease;
+        }
+
+        .value-card:hover .value-icon {
+            background: var(--primary);
+            color: white;
+            transform: rotate(10deg);
+        }
+
+        .value-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+
+        .value-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: var(--spacing-xxl) 0;
+            background: var(--background);
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+
+        .cta-content p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            background: var(--primary);
+            color: white;
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: var(--radius);
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: var(--shadow-elevated);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .cta-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(67, 97, 238, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            padding: var(--spacing-xl) 0;
+            background: var(--text-primary);
+            color: white;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: var(--spacing-lg);
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+            
+            .nav {
+                gap: var(--spacing-md);
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .mission-grid,
+            .team-grid,
+            .stats-grid,
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: var(--spacing-md);
+                text-align: center;
+            }
+            
+            .footer-links {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-star-of-life"></i>
+                    </div>
+                    <span>PflegefachProfi</span>
+                </a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="fallbeispielle.html" class="nav-link">Fallbeispielle</a>
+                    <a href="about.html" class="nav-link active">Über Uns</a>
+                    <a href="kontakt.html" class="nav-link">Kontakt</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="floating-elements">
+            <div class="floating-element"><i class="fas fa-heartbeat"></i></div>
+            <div class="floating-element"><i class="fas fa-stethoscope"></i></div>
+            <div class="floating-element"><i class="fas fa-graduation-cap"></i></div>
+            <div class="floating-element"><i class="fas fa-users"></i></div>
+            <div class="floating-element"><i class="fas fa-rocket"></i></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>Über PflegefachProfi</h1>
+                <p>Wir revolutionieren die Pflegeausbildung durch innovative, gamifizierte Lernmethoden und moderne Technologie.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="mission">
+        <div class="container">
+            <div class="section-header">
+                <h2>Unsere Mission</h2>
+                <p>Wir machen Pflegeausbildung zugänglich, engagierend und effektiv für die nächste Generation von Pflegefachkräften.</p>
+            </div>
+            <div class="mission-grid">
+                <div class="mission-card">
+                    <div class="mission-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Bildung Revolutionieren</h3>
+                    <p>Durch gamifizierte Lernmethoden verwandeln wir trockene Theorie in spannende Lernerlebnisse, die nachhaltig im Gedächtnis bleiben.</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h3>Praxisnahes Lernen</h3>
+                    <p>Realistische Fallbeispiele und interaktive Szenarien bereiten optimal auf die Herausforderungen des Pflegealltags vor.</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Fortschritt Messbar Machen</h3>
+                    <p>Detaillierte Fortschrittsverfolgung und personalisiertes Feedback helfen dabei, Stärken zu erkennen und Schwächen zu verbessern.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team">
+        <div class="container">
+            <div class="section-header">
+                <h2>Unser Team</h2>
+                <p>Hinter PflegefachProfi steht ein engagiertes Team aus Bildungsexperten, Pflegefachkräften und Technologie-Spezialisten.</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">SM</div>
+                    <h3>Sarah Müller</h3>
+                    <div class="team-role">Gründerin & Pflegepädagogin</div>
+                    <p class="team-bio">15 Jahre Erfahrung in der Pflegeausbildung, spezialisiert auf innovative Lehrmethoden und Prüfungsvorbereitung.</p>
+                    <div class="team-social">
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">TW</div>
+                    <h3>Thomas Weber</h3>
+                    <div class="team-role">Technischer Leiter</div>
+                    <p class="team-bio">Software-Architekt mit Fokus auf Bildungstechnologie und benutzerfreundlichen Lernplattformen.</p>
+                    <div class="team-social">
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">MH</div>
+                    <h3>Michaela Hoffmann</h3>
+                    <div class="team-role">Content-Spezialistin</div>
+                    <p class="team-bio">Erfahrene Pflegefachkraft und Autorin von Lernmaterialien, spezialisiert auf Fallbeispiele und Prüfungsfragen.</p>
+                    <div class="team-social">
+                        <a href="#" class="social-link"><i class="fas fa-envelope"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" data-target="10000">0</div>
+                    <div class="stat-label">Aktive Lernende</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="98">0</div>
+                    <div class="stat-label">Erfolgsquote in Prüfungen</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="150">0</div>
+                    <div class="stat-label">Fallbeispiele</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="24">0</div>
+                    <div class="stat-label">Monate Erfahrung</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values">
+        <div class="container">
+            <div class="section-header">
+                <h2>Unsere Werte</h2>
+                <p>Diese Grundsätze leiten alles, was wir bei PflegefachProfi tun.</p>
+            </div>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Qualität</h3>
+                    <p>Höchste Standards in allen Lernmaterialien, regelmäßige Updates basierend auf aktuellen Pflegestandards und Feedback unserer Community.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Innovation</h3>
+                    <p>Ständige Weiterentwicklung unserer Plattform mit modernsten Lerntechnologien und gamifizierten Ansätzen für maximalen Lernerfolg.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h3>Gemeinschaft</h3>
+                    <p>Eine unterstützende Lerncommunity, in der sich Pflegeschüler gegenseitig helfen und von erfahrenen Fachkräften lernen können.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Starte deine Lernreise</h2>
+                <p>Werde Teil der PflegefachProfi-Community und meistere deine Pflegeausbildung mit modernsten Lernmethoden.</p>
+                <a href="index.html" class="cta-button">
+                    <i class="fas fa-rocket"></i>
+                    Jetzt starten
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">PflegefachProfi</div>
+                <div class="footer-links">
+                    <a href="impressum.html" class="footer-link">Impressum</a>
+                    <a href="datenschutz.html" class="footer-link">Datenschutz</a>
+                    <a href="agb.html" class="footer-link">AGB</a>
+                    <a href="kontakt.html" class="footer-link">Kontakt</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll Animation
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.mission-card, .team-card, .stat-item, .value-card');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // Animate numbers
+        function animateNumbers() {
+            const counters = document.querySelectorAll('.stat-number');
+            const speed = 200;
+            
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const increment = target / speed;
+                
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(() => animateNumbers(), 1);
+                } else {
+                    counter.innerText = target;
+                }
+            });
+        }
+
+        // Initialize animations
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', () => {
+            animateOnScroll();
+            // Start number animation when stats section is visible
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateNumbers();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+            
+            observer.observe(document.querySelector('.stats'));
+        });
+
+        // Add hover effects to mission cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const missionCards = document.querySelectorAll('.mission-card');
+            missionCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-8px)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
