@@ -48,6 +48,9 @@
             background-color: var(--background);
             line-height: 1.6;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .container {
@@ -57,21 +60,20 @@
             padding: 0 var(--spacing-md);
         }
 
-        /* Header */
-        .header {
-            background-color: var(--surface);
-            box-shadow: var(--shadow);
+        /* ===== NEW NAVIGATION BAR ===== */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: var(--spacing-sm) 0;
+            box-shadow: var(--shadow-elevated);
             position: sticky;
             top: 0;
             z-index: 1000;
-            backdrop-filter: blur(10px);
         }
 
-        .header-content {
+        .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: var(--spacing-sm) 0;
         }
 
         .logo {
@@ -80,52 +82,121 @@
             gap: var(--spacing-sm);
             font-weight: 800;
             font-size: 1.5rem;
-            color: var(--primary);
+            color: white;
+            text-decoration: none;
         }
 
         .logo-icon {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            animation: pulse 2s infinite;
         }
 
-        .user-stats {
-            display: flex;
-            gap: var(--spacing-sm);
-            align-items: center;
-            flex-wrap: wrap;
-            justify-content: flex-end;
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
-        .stat-item {
+        .nav-menu {
             display: flex;
+            list-style: none;
+            gap: var(--spacing-md);
             align-items: center;
-            gap: 4px;
-            background: var(--primary-light);
-            padding: 6px 10px;
-            border-radius: var(--radius);
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
             font-weight: 600;
-            font-size: 0.8rem;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
         }
 
-        .coins {
-            background: linear-gradient(135deg, var(--coin) 0%, #ffb347 100%);
-            color: var(--text-primary);
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
-        .level {
-            background: var(--primary);
+        .nav-link i {
+            font-size: 1.1rem;
+        }
+
+        .nav-cta {
+            background: var(--accent);
             color: white;
+            padding: var(--spacing-xs) var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(247, 37, 133, 0.4);
         }
 
-        .xp {
-            background: var(--success);
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(247, 37, 133, 0.5);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* ===== ECONOMY STATS BAR ===== */
+        .economy-bar {
+            background: rgba(255, 255, 255, 0.1);
+            padding: var(--spacing-xs) 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .economy-stats {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-lg);
+            align-items: center;
+        }
+
+        .economy-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .economy-item i {
+            font-size: 1rem;
+        }
+
+        /* Mobile economy stats */
+        .mobile-economy {
+            display: none;
+            justify-content: space-around;
+            padding: var(--spacing-sm) 0;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: var(--spacing-sm);
         }
 
         /* Hero Section */
@@ -756,6 +827,99 @@
             color: var(--danger);
         }
 
+        /* ===== NEW DRAG & DROP GAME ===== */
+        .dragdrop-game {
+            display: none;
+            padding: var(--spacing-xl) 0;
+            background: var(--surface);
+            min-height: 100vh;
+        }
+
+        .dragdrop-game.active {
+            display: block;
+        }
+
+        .dragdrop-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .dragdrop-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        @media (max-width: 768px) {
+            .dragdrop-area {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .terms-column, .definitions-column {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .dragdrop-term {
+            background: var(--primary-light);
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            cursor: grab;
+            border: 2px dashed var(--primary);
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .dragdrop-term.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .dragdrop-definition {
+            background: var(--surface);
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .dragdrop-definition.hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .dragdrop-definition.correct {
+            background: rgba(76, 201, 240, 0.1);
+            border-color: var(--success);
+        }
+
+        .dragdrop-definition.incorrect {
+            background: rgba(230, 57, 70, 0.1);
+            border-color: var(--danger);
+        }
+
+        .dragdrop-timer {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+        }
+
+        .dragdrop-streak {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--success);
+            font-weight: 600;
+        }
+
         /* Results Screen */
         .results-screen {
             display: none;
@@ -841,12 +1005,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
         @keyframes correct {
             0% { background-color: var(--surface); }
             50% { background-color: var(--success); }
@@ -887,27 +1045,100 @@
             background: var(--primary-dark);
         }
 
+        /* Footer */
+        .footer {
+            background: var(--text-primary);
+            color: white;
+            padding: var(--spacing-lg) 0;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .footer-logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        .footer-copyright {
+            width: 100%;
+            text-align: center;
+            margin-top: var(--spacing-md);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.875rem;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: var(--shadow-elevated);
+                padding: var(--spacing-lg) 0;
+                gap: 0;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-item {
+                margin: var(--spacing-sm) 0;
+                width: 100%;
+            }
+            
+            .nav-link {
+                justify-content: center;
+                padding: var(--spacing-md);
+            }
+            
+            .economy-bar {
+                display: none;
+            }
+            
+            .mobile-economy {
+                display: flex;
+            }
+            
             .hero h1 {
                 font-size: 2rem;
             }
             
             .hero p {
                 font-size: 1.1rem;
-            }
-            
-            .user-stats {
-                gap: 8px;
-            }
-            
-            .stat-item {
-                padding: 4px 8px;
-                font-size: 0.75rem;
-            }
-            
-            .stat-item i {
-                font-size: 0.7rem;
             }
 
             .flashcard {
@@ -925,6 +1156,15 @@
             .memory-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
         }
 
         @media (max-width: 480px) {
@@ -938,15 +1178,6 @@
             
             .section-title {
                 font-size: 1.5rem;
-            }
-            
-            .user-stats {
-                gap: 4px;
-            }
-            
-            .stat-item {
-                padding: 3px 6px;
-                font-size: 0.7rem;
             }
             
             .cta-button {
@@ -966,81 +1197,79 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-        .nav {
-            display: flex;
-            gap: var(--spacing-lg);
-        }
-
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
-            position: relative;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: var(--primary);
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover::after, .nav-link.active::after {
-            width: 100%;
-        }
-        
-        
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
+    <!-- New Navigation Bar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-star-of-life"></i>
+                </div>
+                <span>PflegefachProfi</span>
+            </a>
+            
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        Startseite
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="lernmodule.html" class="nav-link">
+                        <i class="fas fa-book-medical"></i>
+                        Lernmodule
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="lernspiele.html" class="nav-link active">
+                        <i class="fas fa-gamepad"></i>
+                        Lernspiele
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="fallbeispiele.html" class="nav-link">
+                        <i class="fas fa-procedures"></i>
+                        Fallbeispiele
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link nav-cta">
+                        <i class="fas fa-rocket"></i>
+                        Jetzt starten
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Economy Stats Bar (Desktop) -->
+    <div class="economy-bar">
         <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <div class="logo-icon">
-                        <i class="fas fa-stethoscope"></i>
-                    </div>
-                    <span>PflegefachProfi</span>
-               <!-- <span>  <nav class="nav">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="wissenstraining.html" class="nav-link">Lernspiele</a>
-                    <a href="themen.html" class="nav-link active">Vorbereitung</a>
-                    <a href="test.html" class="nav-link">Fallbeispielle</a>
-                    </nav></span>-->
+            <div class="economy-stats">
+                <div class="economy-item">
+                    <i class="fas fa-coins"></i>
+                    <span id="coins">100</span>
                 </div>
-                <div class="user-stats">
-                    <div class="stat-item coins">
-                        <i class="fas fa-coins"></i>
-                        <span id="coins">100</span>
-                    </div>
-                    <div class="stat-item level">
-                        <i class="fas fa-level-up-alt"></i>
-                        <span id="level">1</span>
-                    </div>
-                    <div class="stat-item xp">
-                        <i class="fas fa-fire"></i>
-                        <span id="xp">0</span>
-                    </div>
+                <div class="economy-item">
+                    <i class="fas fa-level-up-alt"></i>
+                    Level <span id="level">1</span>
                 </div>
-                <nav class="nav">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="wissenstraining.html" class="nav-link">Lernspiele</a>
-                    <a href="themen.html" class="nav-link active">Vorbereitung</a>
-                    <a href="test.html" class="nav-link">Fallbeispielle</a>
-                </nav>
+                <div class="economy-item">
+                    <i class="fas fa-fire"></i>
+                    <span id="xp">0</span> XP
+                </div>
             </div>
         </div>
-    </header>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -1060,7 +1289,7 @@
     <section class="dashboard" id="dashboard">
         <div class="container">
             <h2 class="section-title">Wortschatz Kategorien</h2>
-            <p class="section-subtitle">Wähle eine Kategorie aus und lerne mit drei verschiedenen Spielmodi</p>
+            <p class="section-subtitle">Wähle eine Kategorie aus und lerne mit verschiedenen Spielmodi</p>
             
             <div class="categories-grid" id="categories-grid">
                 <!-- Categories will be loaded by JavaScript -->
@@ -1115,6 +1344,21 @@
                     <div class="category-stats">
                         <div class="stat">
                             <span class="stat-value" id="quiz-progress">0%</span>
+                            <span class="stat-label">Fortschritt</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Drag & Drop Game Card -->
+                <div class="game-card" data-game="dragdrop">
+                    <div class="game-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <h3 class="game-title">Drag & Drop</h3>
+                    <p class="game-description">Ziehe Begriffe zu den richtigen Definitionen in einem spannenden Zeit-Challenge.</p>
+                    <div class="category-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="dragdrop-progress">0%</span>
                             <span class="stat-label">Fortschritt</span>
                         </div>
                     </div>
@@ -1367,6 +1611,118 @@
         </div>
     </section>
 
+    <!-- New Drag & Drop Game -->
+    <section class="dragdrop-game" id="dragdrop-game">
+        <div class="container">
+            <button class="back-button" id="back-to-games-dragdrop">
+                <i class="fas fa-arrow-left"></i>
+                Zurück zu Spielmodi
+            </button>
+            
+            <div class="game-header">
+                <h2 id="dragdrop-category-title">Drag & Drop Challenge</h2>
+                <div class="game-progress">
+                    <span>Richtig: <strong id="dragdrop-correct">0</strong>/<strong id="dragdrop-total">0</strong></span>
+                    <div class="game-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-clock" style="color: var(--warning);"></i>
+                            <span id="dragdrop-time">60s</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dragdrop-streak" id="dragdrop-streak">
+                <!-- Streak counter will be shown here -->
+            </div>
+
+            <div class="dragdrop-timer" id="dragdrop-timer">
+                Zeit verbleibend: <span id="dragdrop-time-left">60</span> Sekunden
+            </div>
+
+            <div class="dragdrop-container">
+                <div class="dragdrop-area" id="dragdrop-area">
+                    <div class="terms-column" id="terms-column">
+                        <!-- Terms will be populated by JavaScript -->
+                    </div>
+                    <div class="definitions-column" id="definitions-column">
+                        <!-- Definitions will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-screen" id="dragdrop-results">
+                <div class="result-icon correct">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="result-score good" id="dragdrop-final-score">100%</div>
+                <p>Glückwunsch! Du hast die Challenge abgeschlossen.</p>
+                
+                <div class="reward-animation">
+                    <div class="reward-item">
+                        <div class="reward-icon coins">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="reward-amount" id="dragdrop-coins-reward">+0</div>
+                        <div class="stat-label">Coins</div>
+                    </div>
+                    <div class="reward-item">
+                        <div class="reward-icon xp">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="reward-amount" id="dragdrop-xp-reward">+0</div>
+                        <div class="stat-label">XP</div>
+                    </div>
+                </div>
+                
+                <div class="game-actions">
+                    <button class="action-btn" id="dragdrop-restart">
+                        <i class="fas fa-redo"></i>
+                        Nochmal spielen
+                    </button>
+                    <button class="action-btn easy" id="dragdrop-back-to-games">
+                        <i class="fas fa-home"></i>
+                        Zurück zu Spielmodi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mobile Economy Stats (shown only on mobile) -->
+    <div class="mobile-economy">
+        <div class="economy-item">
+            <i class="fas fa-coins"></i>
+            <span id="mobile-coins">100</span>
+        </div>
+        <div class="economy-item">
+            <i class="fas fa-level-up-alt"></i>
+            <span id="mobile-level">1</span>
+        </div>
+        <div class="economy-item">
+            <i class="fas fa-fire"></i>
+            <span id="mobile-xp">0</span>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">PflegefachProfi - Lernspiele</div>
+                <div class="footer-links">
+                    <a href="index.html" class="footer-link">Startseite</a>
+                    <a href="datenschutz.html" class="footer-link">Datenschutz</a>
+                    <a href="impressum.html" class="footer-link">Impressum</a>
+                    <a href="kontakt.html" class="footer-link">Kontakt</a>
+                </div>
+                <div class="footer-copyright">
+                    &copy; 2023 PflegefachProfi. Alle Rechte vorbehalten.
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <script>
         // ===============================
         // DATA STRUCTURES
@@ -1548,6 +1904,11 @@
             document.getElementById('coins').textContent = user.coins;
             document.getElementById('level').textContent = user.level;
             document.getElementById('xp').textContent = user.xp;
+            
+            // Update mobile stats
+            document.getElementById('mobile-coins').textContent = user.coins;
+            document.getElementById('mobile-level').textContent = user.level;
+            document.getElementById('mobile-xp').textContent = user.xp;
         }
 
         // Calculate level based on XP
@@ -1592,6 +1953,26 @@
         }
 
         // ===============================
+        // NAVIGATION FUNCTIONALITY
+        // ===============================
+
+        function initializeNavigation() {
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('nav-menu');
+            
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+            
+            // Close menu when clicking on a link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                });
+            });
+        }
+
+        // ===============================
         // DASHBOARD FUNCTIONALITY
         // ===============================
 
@@ -1599,6 +1980,7 @@
 
         function initializeDashboard() {
             loadUserData();
+            initializeNavigation();
             renderCategories();
             
             // Event listeners for navigation
@@ -1618,6 +2000,7 @@
             document.getElementById('back-to-games-flashcards').addEventListener('click', showGameSelection);
             document.getElementById('back-to-games-memory').addEventListener('click', showGameSelection);
             document.getElementById('back-to-games-quiz').addEventListener('click', showGameSelection);
+            document.getElementById('back-to-games-dragdrop').addEventListener('click', showGameSelection);
             
             // Event listeners for restart and back buttons in results
             document.getElementById('flashcard-restart').addEventListener('click', () => startGame('flashcards'));
@@ -1626,6 +2009,8 @@
             document.getElementById('memory-back-to-games').addEventListener('click', showGameSelection);
             document.getElementById('quiz-restart').addEventListener('click', () => startGame('quiz'));
             document.getElementById('quiz-back-to-games').addEventListener('click', showGameSelection);
+            document.getElementById('dragdrop-restart').addEventListener('click', () => startGame('dragdrop'));
+            document.getElementById('dragdrop-back-to-games').addEventListener('click', showGameSelection);
         }
 
         function renderCategories() {
@@ -1696,12 +2081,13 @@
             if (!user.progress[categoryName]) return 0;
             
             const progress = user.progress[categoryName];
-            const totalGames = 3; // flashcards, memory, quiz
+            const totalGames = 4; // flashcards, memory, quiz, dragdrop
             let completedGames = 0;
             
             if (progress.flashcards && progress.flashcards.completed) completedGames++;
             if (progress.memory && progress.memory.completed) completedGames++;
             if (progress.quiz && progress.quiz.completed) completedGames++;
+            if (progress.dragdrop && progress.dragdrop.completed) completedGames++;
             
             return Math.round((completedGames / totalGames) * 100);
         }
@@ -1738,6 +2124,7 @@
             document.getElementById('flashcard-game').classList.remove('active');
             document.getElementById('memory-game').classList.remove('active');
             document.getElementById('quiz-game').classList.remove('active');
+            document.getElementById('dragdrop-game').classList.remove('active');
         }
 
         function showGameSelection() {
@@ -1746,6 +2133,7 @@
             document.getElementById('flashcard-game').classList.remove('active');
             document.getElementById('memory-game').classList.remove('active');
             document.getElementById('quiz-game').classList.remove('active');
+            document.getElementById('dragdrop-game').classList.remove('active');
             
             document.getElementById('game-selection-title').textContent = `Spielmodi - ${currentCategory}`;
             updateGameSelectionProgress();
@@ -1759,10 +2147,13 @@
             const memoryProgress = progress.memory && progress.memory.completed ? 100 : 0;
             const quizProgress = progress.quiz ? 
                 Math.round((progress.quiz.correct / progress.quiz.total) * 100) : 0;
+            const dragdropProgress = progress.dragdrop ? 
+                Math.round((progress.dragdrop.correct / progress.dragdrop.total) * 100) : 0;
             
             document.getElementById('flashcards-progress').textContent = `${flashcardsProgress}%`;
             document.getElementById('memory-progress').textContent = `${memoryProgress}%`;
             document.getElementById('quiz-progress').textContent = `${quizProgress}%`;
+            document.getElementById('dragdrop-progress').textContent = `${dragdropProgress}%`;
         }
 
         function startGame(gameType) {
@@ -1771,6 +2162,7 @@
             document.getElementById('flashcard-game').classList.remove('active');
             document.getElementById('memory-game').classList.remove('active');
             document.getElementById('quiz-game').classList.remove('active');
+            document.getElementById('dragdrop-game').classList.remove('active');
             
             switch(gameType) {
                 case 'flashcards':
@@ -1784,6 +2176,10 @@
                 case 'quiz':
                     initializeQuizGame();
                     document.getElementById('quiz-game').classList.add('active');
+                    break;
+                case 'dragdrop':
+                    initializeDragDropGame();
+                    document.getElementById('dragdrop-game').classList.add('active');
                     break;
             }
         }
@@ -1902,7 +2298,7 @@
         }
 
         // ===============================
-        // MEMORY GAME
+        // MEMORY GAME (IMPROVED)
         // ===============================
 
         let memoryCards = [];
@@ -1921,12 +2317,12 @@
             matchedPairs = 0;
             memoryMoves = 0;
             
-            // Create card pairs
+            // Create card pairs - using only 6 pairs for better success rate
             memoryCards = [];
             const vocabulary = categories[currentCategory].vocabulary;
             
-            // Use first 8 terms for memory game (16 cards)
-            const gameVocabulary = vocabulary.slice(0, 8);
+            // Use first 6 terms for memory game (12 cards) - reduced from 8
+            const gameVocabulary = vocabulary.slice(0, 6);
             
             gameVocabulary.forEach((item, index) => {
                 // Term card
@@ -2012,31 +2408,32 @@
                     flippedCards = [];
                     
                     // Check if game is complete
-                    if (matchedPairs === 8) {
+                    if (matchedPairs === 6) {
                         setTimeout(finishMemoryGame, 500);
                     }
                 } else {
-                    // No match, flip back after delay
+                    // No match, flip back after delay (increased from 1s to 1.5s)
                     setTimeout(() => {
                         document.querySelector(`.memory-card[data-index="${card1.index}"]`).classList.remove('flipped');
                         document.querySelector(`.memory-card[data-index="${card2.index}"]`).classList.remove('flipped');
                         flippedCards = [];
-                    }, 1000);
+                    }, 1500);
                 }
             }
         }
 
         function updateMemoryStats() {
-            document.getElementById('memory-progress-text').textContent = `${matchedPairs}/8`;
+            document.getElementById('memory-progress-text').textContent = `${matchedPairs}/6`;
             document.getElementById('memory-moves').textContent = memoryMoves;
         }
 
         function finishMemoryGame() {
             // Calculate rewards based on moves (fewer moves = better reward)
-            const maxMoves = 24; // Theoretical maximum for 8 pairs
-            const efficiency = Math.max(0, (maxMoves - memoryMoves) / maxMoves);
-            const coinsReward = Math.max(15, Math.floor(30 * efficiency));
-            const xpReward = Math.max(25, Math.floor(50 * efficiency));
+            // Increased base rewards and made scoring more forgiving
+            const maxMoves = 20; // Reduced from 24 for 6 pairs
+            const efficiency = Math.max(0.4, (maxMoves - memoryMoves) / maxMoves); // Minimum 40% efficiency
+            const coinsReward = Math.max(20, Math.floor(40 * efficiency)); // Increased from 15/30
+            const xpReward = Math.max(30, Math.floor(60 * efficiency)); // Increased from 25/50
             
             // Update UI
             document.getElementById('memory-final-score').textContent = `${Math.round(efficiency * 100)}%`;
@@ -2059,8 +2456,8 @@
             // Add rewards
             addReward(coinsReward, xpReward);
             
-            // Show confetti for good efficiency
-            if (efficiency >= 0.7) {
+            // Show confetti for good efficiency (lowered threshold from 70% to 60%)
+            if (efficiency >= 0.6) {
                 showConfetti();
             }
         }
@@ -2228,6 +2625,240 @@
             
             // Show confetti for good scores
             if (score >= 80) {
+                showConfetti();
+            }
+        }
+
+        // ===============================
+        // DRAG & DROP GAME (NEW)
+        // ===============================
+
+        let dragdropTerms = [];
+        let dragdropDefinitions = [];
+        let dragdropCorrect = 0;
+        let dragdropTotal = 0;
+        let dragdropStreak = 0;
+        let dragdropTimer;
+        let dragdropTimeLeft = 60;
+
+        function initializeDragDropGame() {
+            document.getElementById('dragdrop-results').classList.remove('active');
+            
+            // Set category title
+            document.getElementById('dragdrop-category-title').textContent = `Drag & Drop - ${currentCategory}`;
+            
+            // Reset stats
+            dragdropCorrect = 0;
+            dragdropStreak = 0;
+            dragdropTimeLeft = 60;
+            
+            // Get vocabulary for the game
+            const vocabulary = categories[currentCategory].vocabulary;
+            dragdropTotal = Math.min(8, vocabulary.length); // Use up to 8 terms
+            
+            // Create term and definition arrays
+            dragdropTerms = [];
+            dragdropDefinitions = [];
+            
+            // Select random terms
+            const selectedTerms = shuffleArray([...vocabulary]).slice(0, dragdropTotal);
+            
+            selectedTerms.forEach(item => {
+                dragdropTerms.push({
+                    term: item.term,
+                    definition: item.definition
+                });
+                
+                dragdropDefinitions.push({
+                    definition: item.definition,
+                    term: item.term
+                });
+            });
+            
+            // Shuffle definitions
+            dragdropDefinitions = shuffleArray(dragdropDefinitions);
+            
+            // Render game area
+            renderDragDropGame();
+            updateDragDropStats();
+            
+            // Start timer
+            startDragDropTimer();
+        }
+
+        function renderDragDropGame() {
+            const termsColumn = document.getElementById('terms-column');
+            const definitionsColumn = document.getElementById('definitions-column');
+            
+            termsColumn.innerHTML = '';
+            definitionsColumn.innerHTML = '';
+            
+            // Render terms
+            dragdropTerms.forEach((item, index) => {
+                const termElement = document.createElement('div');
+                termElement.className = 'dragdrop-term';
+                termElement.textContent = item.term;
+                termElement.setAttribute('draggable', 'true');
+                termElement.setAttribute('data-term', item.term);
+                
+                termElement.addEventListener('dragstart', handleDragStart);
+                termElement.addEventListener('dragend', handleDragEnd);
+                
+                termsColumn.appendChild(termElement);
+            });
+            
+            // Render definitions
+            dragdropDefinitions.forEach((item, index) => {
+                const definitionElement = document.createElement('div');
+                definitionElement.className = 'dragdrop-definition';
+                definitionElement.textContent = item.definition;
+                definitionElement.setAttribute('data-definition', item.definition);
+                
+                definitionElement.addEventListener('dragover', handleDragOver);
+                definitionElement.addEventListener('dragenter', handleDragEnter);
+                definitionElement.addEventListener('dragleave', handleDragLeave);
+                definitionElement.addEventListener('drop', handleDrop);
+                
+                definitionsColumn.appendChild(definitionElement);
+            });
+        }
+
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.getAttribute('data-term'));
+            e.target.classList.add('dragging');
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            e.target.classList.add('hover');
+        }
+
+        function handleDragLeave(e) {
+            e.target.classList.remove('hover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.target.classList.remove('hover');
+            
+            const term = e.dataTransfer.getData('text/plain');
+            const definition = e.target.getAttribute('data-definition');
+            
+            // Check if the match is correct
+            const isCorrect = checkDragDropMatch(term, definition);
+            
+            if (isCorrect) {
+                // Correct match
+                e.target.classList.add('correct');
+                dragdropCorrect++;
+                dragdropStreak++;
+                
+                // Remove matched elements
+                const termElement = document.querySelector(`.dragdrop-term[data-term="${term}"]`);
+                termElement.style.display = 'none';
+                
+                // Update streak display
+                updateDragDropStreak();
+                
+                // Check if game is complete
+                if (dragdropCorrect === dragdropTotal) {
+                    finishDragDropGame();
+                }
+            } else {
+                // Incorrect match
+                e.target.classList.add('incorrect');
+                dragdropStreak = 0;
+                updateDragDropStreak();
+                
+                // Reset incorrect class after a delay
+                setTimeout(() => {
+                    e.target.classList.remove('incorrect');
+                }, 1000);
+            }
+            
+            updateDragDropStats();
+        }
+
+        function checkDragDropMatch(term, definition) {
+            const matchedTerm = dragdropTerms.find(t => t.term === term);
+            return matchedTerm && matchedTerm.definition === definition;
+        }
+
+        function updateDragDropStats() {
+            document.getElementById('dragdrop-correct').textContent = dragdropCorrect;
+            document.getElementById('dragdrop-total').textContent = dragdropTotal;
+            document.getElementById('dragdrop-time-left').textContent = dragdropTimeLeft;
+        }
+
+        function updateDragDropStreak() {
+            const streakElement = document.getElementById('dragdrop-streak');
+            if (dragdropStreak > 1) {
+                streakElement.textContent = `🔥 Streak: ${dragdropStreak} in Folge!`;
+                streakElement.style.display = 'block';
+            } else {
+                streakElement.style.display = 'none';
+            }
+        }
+
+        function startDragDropTimer() {
+            dragdropTimer = setInterval(() => {
+                dragdropTimeLeft--;
+                updateDragDropStats();
+                
+                if (dragdropTimeLeft <= 0) {
+                    clearInterval(dragdropTimer);
+                    finishDragDropGame();
+                }
+            }, 1000);
+        }
+
+        function finishDragDropGame() {
+            clearInterval(dragdropTimer);
+            
+            // Calculate score and rewards
+            const score = Math.round((dragdropCorrect / dragdropTotal) * 100);
+            const timeBonus = Math.max(0, Math.floor(dragdropTimeLeft / 5));
+            const streakBonus = Math.floor(dragdropStreak / 2);
+            const coinsReward = Math.max(20, Math.floor(score / 5) + timeBonus + streakBonus);
+            const xpReward = Math.max(40, Math.floor(score / 2) + timeBonus * 2 + streakBonus * 2);
+            
+            // Update UI
+            document.getElementById('dragdrop-final-score').textContent = `${score}%`;
+            document.getElementById('dragdrop-final-score').className = `result-score ${
+                score >= 80 ? 'good' : score >= 60 ? 'average' : 'poor'
+            }`;
+            document.getElementById('dragdrop-coins-reward').textContent = `+${coinsReward}`;
+            document.getElementById('dragdrop-xp-reward').textContent = `+${xpReward}`;
+            
+            // Show results
+            document.getElementById('dragdrop-results').classList.add('active');
+            
+            // Update user progress
+            if (!user.progress[currentCategory]) {
+                user.progress[currentCategory] = {};
+            }
+            user.progress[currentCategory].dragdrop = {
+                completed: true,
+                correct: dragdropCorrect,
+                total: dragdropTotal,
+                score: score,
+                timeLeft: dragdropTimeLeft,
+                streak: dragdropStreak
+            };
+            
+            // Add rewards
+            addReward(coinsReward, xpReward);
+            
+            // Show confetti for good scores
+            if (score >= 70) {
                 showConfetti();
             }
         }
