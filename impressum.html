@@ -5,25 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Impressum | PflegefachProfi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ===== CSS VARIABLES ===== */
         :root {
-            --primary-red: #e30613;
-            --primary-white: #ffffff;
-            --primary-black: #000000;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --background: #f8fafc;
+            --primary-dark: #1a1a1a;
+            --primary-light: #ffffff;
+            --accent: #2d5b8a;
+            --accent-light: #4a7bb8;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-600: #6c757d;
+            --gray-800: #343a40;
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --background: #ffffff;
             --surface: #ffffff;
-            --border: #e2e8f0;
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --border: #dee2e6;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.05);
+            --radius-sm: 4px;
             --radius-md: 8px;
-            --radius-lg: 12px;
+            --space-xs: 8px;
             --space-sm: 16px;
             --space-md: 24px;
             --space-lg: 32px;
             --space-xl: 48px;
+            --space-xxl: 64px;
         }
 
         * {
@@ -33,18 +42,19 @@
         }
 
         body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-primary);
             background-color: var(--background);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            font-weight: 400;
         }
 
         .container {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 0 var(--space-md);
         }
@@ -52,7 +62,7 @@
         /* Header */
         .header {
             background: var(--surface);
-            box-shadow: var(--shadow-md);
+            border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -62,95 +72,116 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: var(--space-sm) 0;
+            padding: var(--space-md) 0;
         }
 
         .logo {
             display: flex;
             align-items: center;
             gap: var(--space-sm);
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: var(--primary-black);
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: var(--primary-dark);
             text-decoration: none;
+            letter-spacing: -0.5px;
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--primary-red);
-            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: bold;
+            font-weight: 500;
         }
 
         /* Navigation */
         .navbar {
-            background: var(--primary-red);
-            padding: var(--space-sm) 0;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
         }
 
         .nav-menu {
             display: flex;
             list-style: none;
             gap: var(--space-md);
-            flex-wrap: wrap;
+            overflow-x: auto;
+            padding: var(--space-sm) 0;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .nav-menu::-webkit-scrollbar {
+            display: none;
         }
 
         .nav-link {
-            color: white;
+            color: var(--text-secondary);
             text-decoration: none;
-            font-weight: 600;
-            padding: 8px 12px;
-            border-radius: var(--radius-md);
-            transition: all 0.3s ease;
+            font-weight: 500;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 8px;
             white-space: nowrap;
+            font-size: 0.95rem;
         }
 
-        .nav-link:hover, .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.2);
+        .nav-link:hover {
+            color: var(--accent);
+            background: var(--gray-100);
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+            font-weight: 600;
         }
 
         /* Impressum Content */
         .impressum-content {
-            padding: var(--space-xl) 0;
+            padding: var(--space-xxl) 0;
             flex: 1;
         }
 
         .impressum-header {
             text-align: center;
-            margin-bottom: var(--space-xl);
+            margin-bottom: var(--space-xxl);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .impressum-title {
             font-size: 2.5rem;
             margin-bottom: var(--space-sm);
-            color: var(--primary-black);
+            color: var(--primary-dark);
             font-weight: 700;
+            letter-spacing: -1px;
+            line-height: 1.1;
         }
 
         .impressum-subtitle {
             color: var(--text-secondary);
-            font-size: 1.1rem;
+            font-size: 1.125rem;
+            font-weight: 400;
         }
 
         .impressum-card {
             background: var(--surface);
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             padding: var(--space-xl);
-            box-shadow: var(--shadow-md);
             margin-bottom: var(--space-lg);
-            border-top: 4px solid var(--primary-red);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
         }
 
         .impressum-section {
-            margin-bottom: var(--space-lg);
+            margin-bottom: var(--space-xl);
         }
 
         .impressum-section:last-child {
@@ -158,68 +189,92 @@
         }
 
         .section-title {
-            font-size: 1.5rem;
-            color: var(--primary-black);
+            font-size: 1.375rem;
+            color: var(--primary-dark);
             margin-bottom: var(--space-md);
             padding-bottom: var(--space-sm);
             border-bottom: 1px solid var(--border);
-            font-weight: 700;
+            font-weight: 600;
+            letter-spacing: -0.5px;
         }
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: var(--space-md);
         }
 
         .info-item {
-            background: var(--background);
             padding: var(--space-md);
-            border-radius: var(--radius-md);
-            border-left: 4px solid var(--primary-red);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--accent);
+            background: var(--gray-100);
         }
 
         .info-item h4 {
-            color: var(--primary-black);
+            color: var(--primary-dark);
             margin-bottom: var(--space-sm);
-            font-weight: 700;
+            font-weight: 600;
+            font-size: 1rem;
         }
 
         .notice-box {
-            background: #fff9e6;
+            background: #f8f9fa;
             border-radius: var(--radius-md);
-            padding: var(--space-md);
-            margin: var(--space-lg) 0;
-            border-left: 4px solid var(--primary-red);
+            padding: var(--space-lg);
+            margin: var(--space-xl) 0;
+            border-left: 4px solid var(--accent);
         }
 
         .notice-box h3 {
-            color: var(--primary-black);
+            color: var(--primary-dark);
             margin-bottom: var(--space-sm);
-            font-weight: 700;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
         }
 
         .contact-link {
-            color: var(--primary-red);
-            font-weight: 600;
+            color: var(--accent);
+            font-weight: 500;
             text-decoration: none;
+            transition: color 0.2s ease;
         }
 
         .contact-link:hover {
+            color: var(--accent-light);
             text-decoration: underline;
         }
 
         .placeholder {
-            color: var(--text-secondary);
+            color: var(--gray-600);
             font-style: italic;
+        }
+
+        .legal-text {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .legal-text h3 {
+            color: var(--primary-dark);
+            margin: var(--space-lg) 0 var(--space-sm) 0;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+
+        .legal-text p {
+            margin-bottom: var(--space-md);
         }
 
         /* Footer */
         .footer {
             padding: var(--space-xl) 0;
-            background: var(--primary-black);
-            color: white;
+            background: var(--gray-100);
+            color: var(--text-secondary);
             margin-top: auto;
+            border-top: 1px solid var(--border);
         }
 
         .footer-content {
@@ -234,43 +289,14 @@
         }
 
         .footer-link {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--text-secondary);
             text-decoration: none;
             transition: color 0.2s ease;
+            font-size: 0.9rem;
         }
 
         .footer-link:hover {
-            color: white;
-        }
-
-        /* Swiss Design Elements */
-        .swiss-flag {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            background: var(--primary-red);
-            position: relative;
-            margin-right: 8px;
-        }
-
-        .swiss-flag::before, .swiss-flag::after {
-            content: '';
-            position: absolute;
-            background: white;
-        }
-
-        .swiss-flag::before {
-            width: 12px;
-            height: 4px;
-            top: 8px;
-            left: 4px;
-        }
-
-        .swiss-flag::after {
-            width: 4px;
-            height: 12px;
-            top: 4px;
-            left: 8px;
+            color: var(--accent);
         }
 
         /* Responsive */
@@ -288,15 +314,19 @@
             .footer-links {
                 flex-wrap: wrap;
                 justify-content: center;
+                gap: var(--space-md);
             }
             
             .nav-menu {
                 gap: var(--space-sm);
             }
             
-            .nav-link {
-                font-size: 0.9rem;
-                padding: 6px 10px;
+            .impressum-title {
+                font-size: 2rem;
+            }
+            
+            .impressum-card {
+                padding: var(--space-lg);
             }
         }
 
@@ -311,6 +341,14 @@
             
             .nav-link i {
                 font-size: 1.2rem;
+            }
+            
+            .impressum-title {
+                font-size: 1.75rem;
+            }
+            
+            .impressum-card {
+                padding: var(--space-md);
             }
         }
     </style>
@@ -349,7 +387,7 @@
         <div class="container">
             <div class="impressum-header">
                 <h1 class="impressum-title">Impressum</h1>
-                <p class="impressum-subtitle"></p>
+                <p class="impressum-subtitle">Rechtliche Informationen gemäß § 5 TMG</p>
             </div>
 
             <div class="impressum-card">
@@ -360,7 +398,7 @@
                 </div>
 
                 <div class="impressum-section">
-                    <h2 class="section-title">Angaben gemäß Art. 321e des Schweizer Obligationenrechts (OR)</h2>
+                    <h2 class="section-title">Angaben gemäß § 5 TMG</h2>
                     <div class="info-grid">
                         <div class="info-item">
                             <h4>Betreiber</h4>
@@ -380,25 +418,34 @@
                 </div>
 
                 <div class="impressum-section">
-                    <h2 class="section-title">Handelsregistereintrag</h2>
-                    <p class="placeholder">Informationen in Bearbeitung</p>
+                    <h2 class="section-title">Registereintrag</h2>
+                    <p class="placeholder">Eintragung folgt</p>
+                    <p class="placeholder">Registergericht: Wird nachgereicht</p>
+                    <p class="placeholder">Registernummer: Wird nachgereicht</p>
                 </div>
 
                 <div class="impressum-section">
-                    <h2 class="section-title">Mehrwertsteuernummer</h2>
+                    <h2 class="section-title">Umsatzsteuer-ID</h2>
+                    <p class="placeholder">Umsatzsteuer-Identifikationsnummer gemäß §27a Umsatzsteuergesetz wird nachgereicht</p>
+                </div>
+
+                <div class="impressum-section">
+                    <h2 class="section-title">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
                     <p class="placeholder">Informationen in Bearbeitung</p>
                 </div>
 
                 <div class="impressum-section">
                     <h2 class="section-title">Haftungsausschluss</h2>
-                    <h3>Haftung für Inhalte</h3>
-                    <p>Der Autor übernimmt keinerlei Gewähr hinsichtlich der inhaltlichen Richtigkeit, Genauigkeit, Aktualität, Zuverlässigkeit und Vollständigkeit der Informationen.</p>
-                    
-                    <h3>Haftung für Links</h3>
-                    <p>Verweise und Links auf Webseiten Dritter liegen ausserhalb unseres Verantwortungsbereichs. Es wird jegliche Verantwortung für solche Webseiten abgelehnt.</p>
-                    
-                    <h3>Urheberrecht</h3>
-                    <p>Die Urheber- und alle anderen Rechte an Inhalten, Bildern, Fotos oder anderen Dateien auf der Website, gehören ausschliesslich der Firma [Firmenname] oder den speziell genannten Rechtsinhabern. Für die Reproduktion jeglicher Elemente ist die schriftliche Zustimmung der Urheberrechtsträger im Voraus einzuholen.</p>
+                    <div class="legal-text">
+                        <h3>Haftung für Inhalte</h3>
+                        <p>Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.</p>
+                        
+                        <h3>Haftung für Links</h3>
+                        <p>Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.</p>
+                        
+                        <h3>Urheberrecht</h3>
+                        <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.</p>
+                    </div>
                 </div>
             </div>
         </div>
