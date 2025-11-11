@@ -198,7 +198,40 @@
             background: rgba(255, 255, 255, 0.1);
             margin-top: var(--spacing-sm);
         }
+.user-stats {
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
 
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--primary-light);
+            padding: 6px 10px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .coins {
+            background: linear-gradient(135deg, var(--coin) 0%, #ffb347 100%);
+            color: var(--text-primary);
+        }
+
+        .level {
+            background: var(--primary);
+            color: white;
+        }
+
+        .xp {
+            background: var(--success);
+            color: white;
+        }
+        
         /* Hero Section */
         .hero {
             padding: var(--spacing-xxl) 0;
@@ -1110,7 +1143,18 @@
                 padding: var(--spacing-lg) 0;
                 gap: 0;
             }
+            .user-stats {
+                gap: 8px;
+            }
             
+            .stat-item {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+            }
+            
+            .stat-item i {
+                font-size: 0.7rem;
+            }
             .nav-menu.active {
                 left: 0;
             }
@@ -1179,7 +1223,14 @@
             .section-title {
                 font-size: 1.5rem;
             }
+            .user-stats {
+                gap: 4px;
+            }
             
+            .stat-item {
+                padding: 3px 6px;
+                font-size: 0.7rem;
+            }
             .cta-button {
                 padding: var(--spacing-sm) var(--spacing-lg);
                 font-size: 1rem;
