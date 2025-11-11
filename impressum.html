@@ -5,34 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Impressum | PflegefachProfi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ===== CSS VARIABLES ===== */
+        /* ===== YOUR ORIGINAL CSS VARIABLES ===== */
         :root {
-            --primary-dark: #1a1a1a;
-            --primary-light: #ffffff;
-            --accent: #2d5b8a;
-            --accent-light: #4a7bb8;
-            --gray-100: #f8f9fa;
-            --gray-200: #e9ecef;
-            --gray-300: #dee2e6;
-            --gray-600: #6c757d;
-            --gray-800: #343a40;
-            --text-primary: #212529;
-            --text-secondary: #495057;
-            --background: #ffffff;
+            --primary-blue: #4361ee;
+            --primary-purple: #7209b7;
+            --primary-pink: #f72585;
+            --primary-cyan: #4cc9f0;
+            --success: #4ade80;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --background: #f8fafc;
             --surface: #ffffff;
-            --border: #dee2e6;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-md: 0 4px 6px rgba(0,0,0,0.05);
-            --radius-sm: 4px;
-            --radius-md: 8px;
-            --space-xs: 8px;
+            --border: #e2e8f0;
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --radius-md: 12px;
+            --radius-lg: 16px;
             --space-sm: 16px;
             --space-md: 24px;
             --space-lg: 32px;
             --space-xl: 48px;
-            --space-xxl: 64px;
         }
 
         * {
@@ -42,27 +37,26 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             color: var(--text-primary);
             background-color: var(--background);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            font-weight: 400;
         }
 
         .container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 var(--space-md);
         }
 
-        /* Header */
+        /* Header - Simplified */
         .header {
             background: var(--surface);
-            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -72,209 +66,132 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: var(--space-md) 0;
+            padding: var(--space-sm) 0;
         }
 
         .logo {
             display: flex;
             align-items: center;
             gap: var(--space-sm);
-            font-weight: 600;
-            font-size: 1.25rem;
-            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-blue);
             text-decoration: none;
-            letter-spacing: -0.5px;
         }
 
         .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: var(--accent);
-            border-radius: var(--radius-sm);
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+            border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: 500;
         }
 
-        /* Navigation */
+        /* Navigation - Your original styling */
         .navbar {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-purple) 100%);
+            padding: var(--space-sm) 0;
         }
 
         .nav-menu {
             display: flex;
             list-style: none;
             gap: var(--space-md);
-            overflow-x: auto;
-            padding: var(--space-sm) 0;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        .nav-menu::-webkit-scrollbar {
-            display: none;
         }
 
         .nav-link {
-            color: var(--text-secondary);
+            color: white;
             text-decoration: none;
-            font-weight: 500;
-            padding: var(--space-xs) var(--space-sm);
-            border-radius: var(--radius-sm);
-            transition: all 0.2s ease;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 8px;
-            white-space: nowrap;
-            font-size: 0.95rem;
         }
 
-        .nav-link:hover {
-            color: var(--accent);
-            background: var(--gray-100);
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
-        .nav-link.active {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        /* Impressum Content */
+        /* Impressum Content Styling */
         .impressum-content {
-            padding: var(--space-xxl) 0;
+            padding: var(--space-xl) 0;
             flex: 1;
         }
 
         .impressum-header {
             text-align: center;
-            margin-bottom: var(--space-xxl);
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
+            margin-bottom: var(--space-xl);
         }
 
         .impressum-title {
             font-size: 2.5rem;
             margin-bottom: var(--space-sm);
-            color: var(--primary-dark);
-            font-weight: 700;
-            letter-spacing: -1px;
-            line-height: 1.1;
-        }
-
-        .impressum-subtitle {
-            color: var(--text-secondary);
-            font-size: 1.125rem;
-            font-weight: 400;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .impressum-card {
             background: var(--surface);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-lg);
             padding: var(--space-xl);
-            margin-bottom: var(--space-lg);
             box-shadow: var(--shadow-md);
-            border: 1px solid var(--border);
+            margin-bottom: var(--space-lg);
         }
 
-        .impressum-section {
-            margin-bottom: var(--space-xl);
-        }
-
-        .impressum-section:last-child {
-            margin-bottom: 0;
+        .legal-section {
+            margin-bottom: var(--space-lg);
         }
 
         .section-title {
-            font-size: 1.375rem;
-            color: var(--primary-dark);
+            font-size: 1.5rem;
+            color: var(--primary-blue);
             margin-bottom: var(--space-md);
             padding-bottom: var(--space-sm);
-            border-bottom: 1px solid var(--border);
-            font-weight: 600;
-            letter-spacing: -0.5px;
+            border-bottom: 2px solid var(--border);
         }
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: var(--space-md);
         }
 
         .info-item {
+            background: var(--background);
             padding: var(--space-md);
-            border-radius: var(--radius-sm);
-            border-left: 3px solid var(--accent);
-            background: var(--gray-100);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--primary-blue);
         }
 
         .info-item h4 {
-            color: var(--primary-dark);
+            color: var(--primary-blue);
             margin-bottom: var(--space-sm);
-            font-weight: 600;
-            font-size: 1rem;
         }
 
-        .notice-box {
-            background: #f8f9fa;
-            border-radius: var(--radius-md);
-            padding: var(--space-lg);
-            margin: var(--space-xl) 0;
-            border-left: 4px solid var(--accent);
-        }
-
-        .notice-box h3 {
-            color: var(--primary-dark);
-            margin-bottom: var(--space-sm);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: var(--space-xs);
-        }
-
-        .contact-link {
-            color: var(--accent);
-            font-weight: 500;
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        .contact-link:hover {
-            color: var(--accent-light);
-            text-decoration: underline;
-        }
-
-        .placeholder {
-            color: var(--gray-600);
-            font-style: italic;
-        }
-
-        .legal-text {
+        .disclaimer-text {
             color: var(--text-secondary);
             line-height: 1.7;
         }
 
-        .legal-text h3 {
-            color: var(--primary-dark);
+        .disclaimer-text h3 {
+            color: var(--text-primary);
             margin: var(--space-lg) 0 var(--space-sm) 0;
-            font-weight: 600;
-            font-size: 1.125rem;
-        }
-
-        .legal-text p {
-            margin-bottom: var(--space-md);
+            font-size: 1.1rem;
         }
 
         /* Footer */
         .footer {
             padding: var(--space-xl) 0;
-            background: var(--gray-100);
-            color: var(--text-secondary);
+            background: var(--text-primary);
+            color: white;
             margin-top: auto;
-            border-top: 1px solid var(--border);
         }
 
         .footer-content {
@@ -289,17 +206,15 @@
         }
 
         .footer-link {
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             transition: color 0.2s ease;
-            font-size: 0.9rem;
         }
 
         .footer-link:hover {
-            color: var(--accent);
+            color: white;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .info-grid {
                 grid-template-columns: 1fr;
@@ -314,41 +229,6 @@
             .footer-links {
                 flex-wrap: wrap;
                 justify-content: center;
-                gap: var(--space-md);
-            }
-            
-            .nav-menu {
-                gap: var(--space-sm);
-            }
-            
-            .impressum-title {
-                font-size: 2rem;
-            }
-            
-            .impressum-card {
-                padding: var(--space-lg);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .nav-menu {
-                justify-content: space-between;
-            }
-            
-            .nav-link span {
-                display: none;
-            }
-            
-            .nav-link i {
-                font-size: 1.2rem;
-            }
-            
-            .impressum-title {
-                font-size: 1.75rem;
-            }
-            
-            .impressum-card {
-                padding: var(--space-md);
             }
         }
     </style>
@@ -372,12 +252,10 @@
     <nav class="navbar">
         <div class="container">
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> <span>Startseite</span></a></li>
-                <li><a href="fallbeispiele.html" class="nav-link"><i class="fas fa-book-medical"></i> <span>Fallbeispiele</span></a></li>
-                <li><a href="fortschritt.html" class="nav-link"><i class="fas fa-chart-line"></i> <span>Fortschritt</span></a></li>
-                <li><a href="impressum.html" class="nav-link active"><i class="fas fa-file-contract"></i> <span>Impressum</span></a></li>
-                <li><a href="datenschutz.html" class="nav-link"><i class="fas fa-shield-alt"></i> <span>Datenschutz</span></a></li>
-                <li><a href="kontakt.html" class="nav-link"><i class="fas fa-envelope"></i> <span>Kontakt</span></a></li>
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Startseite</a></li>
+                <li><a href="fallbeispiele.html" class="nav-link"><i class="fas fa-book-medical"></i> Fallbeispiele</a></li>
+                <li><a href="fortschritt.html" class="nav-link"><i class="fas fa-chart-line"></i> Fortschritt</a></li>
+                <li><a href="impressum.html" class="nav-link active"><i class="fas fa-file-contract"></i> Impressum</a></li>
             </ul>
         </div>
     </nav>
@@ -391,52 +269,59 @@
             </div>
 
             <div class="impressum-card">
-                <div class="notice-box">
-                    <h3><i class="fas fa-info-circle"></i> Wichtiger Hinweis</h3>
-                    <p>Diese Seite befindet sich derzeit in Bearbeitung. Das vollständige Impressum wird in Kürze zur Verfügung stehen. Bis dahin können Sie uns für alle rechtlichen Anfragen unter folgender E-Mail-Adresse kontaktieren:</p>
-                    <p><strong><a href="mailto:dvbuggs@gmail.com" class="contact-link">dvbuggs@gmail.com</a></strong></p>
-                </div>
-
-                <div class="impressum-section">
+                <!-- Angaben gemäß § 5 TMG -->
+                <div class="legal-section">
                     <h2 class="section-title">Angaben gemäß § 5 TMG</h2>
                     <div class="info-grid">
                         <div class="info-item">
                             <h4>Betreiber</h4>
-                            <p class="placeholder">Informationen in Bearbeitung</p>
+                            <p>PflegefachProfi</p>
+                            <p>..</p>
+                            <p>..</p>
+                            <p>..</p>
                         </div>
                         <div class="info-item">
                             <h4>Kontakt</h4>
-                            <p>E-Mail: <a href="mailto:dvbuggs@gmail.com" class="contact-link">dvbuggs@gmail.com</a></p>
-                            <p class="placeholder">Weitere Kontaktdaten folgen</p>
+                            <p>Telefon: </p>
+                            <p>E-Mail: dvbuggs@gmail.com</p>
+                            <p>Website: www.pflegefachprofi.de</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="impressum-section">
+                <!-- Vertreten durch -->
+                <div class="legal-section">
                     <h2 class="section-title">Vertreten durch</h2>
-                    <p class="placeholder">Informationen in Bearbeitung</p>
+                    <p></p>
                 </div>
 
-                <div class="impressum-section">
+                <!-- Registereintrag -->
+                <div class="legal-section">
                     <h2 class="section-title">Registereintrag</h2>
-                    <p class="placeholder">Eintragung folgt</p>
-                    <p class="placeholder">Registergericht: Wird nachgereicht</p>
-                    <p class="placeholder">Registernummer: Wird nachgereicht</p>
+                    <p>Eintragung im Handelsregister</p>
+                    <p>Registergericht: Amtsgericht Musterstadt</p>
+                    <p>Registernummer: </p>
                 </div>
 
-                <div class="impressum-section">
+                <!-- Umsatzsteuer-ID -->
+                <div class="legal-section">
                     <h2 class="section-title">Umsatzsteuer-ID</h2>
-                    <p class="placeholder">Umsatzsteuer-Identifikationsnummer gemäß §27a Umsatzsteuergesetz wird nachgereicht</p>
+                    <p>Umsatzsteuer-Identifikationsnummer gemäß §27a Umsatzsteuergesetz:</p>
+                    <p></p>
                 </div>
 
-                <div class="impressum-section">
+                <!-- Verantwortlich für den Inhalt -->
+                <div class="legal-section">
                     <h2 class="section-title">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
-                    <p class="placeholder">Informationen in Bearbeitung</p>
+                    <p..</p>
+                    <p>..</p>
+                    <p>..</p>
                 </div>
 
-                <div class="impressum-section">
+                <!-- Haftungsausschluss -->
+                <div class="legal-section">
                     <h2 class="section-title">Haftungsausschluss</h2>
-                    <div class="legal-text">
+                    <div class="disclaimer-text">
                         <h3>Haftung für Inhalte</h3>
                         <p>Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.</p>
                         
@@ -456,13 +341,12 @@
         <div class="container">
             <div class="footer-content">
                 <div class="copyright">
-                    &copy; 2023 PflegefachProfi. Alle Rechte vorbehalten.
+                    &copy; 2025 PflegefachProfi. Alle Rechte vorbehalten.
                 </div>
                 <div class="footer-links">
                     <a href="impressum.html" class="footer-link">Impressum</a>
                     <a href="datenschutz.html" class="footer-link">Datenschutz</a>
-                    <a href="agb.html" class="footer-link">AGB</a>
-                    <a href="kontakt.html" class="footer-link">Kontakt</a>
+                   <!-- <a href="agb.html" class="footer-link">AGB</a>-->
                 </div>
             </div>
         </div>
