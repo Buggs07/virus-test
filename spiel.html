@@ -48,9 +48,6 @@
             background-color: var(--background);
             line-height: 1.6;
             overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
         }
 
         .container {
@@ -60,21 +57,21 @@
             padding: 0 var(--spacing-md);
         }
 
-        /* ===== NEW NAVIGATION BAR ===== */
-        .navbar {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            padding: var(--spacing-sm) 0 0 0; /* Remove bottom padding to connect with economy bar */
-            box-shadow: var(--shadow-elevated);
+        /* Header */
+        .header {
+            background-color: var(--surface);
+            box-shadow: var(--shadow);
             position: sticky;
             top: 0;
             z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
-        .nav-container {
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: var(--spacing-sm); /* Add padding here instead */
+            padding: var(--spacing-sm) 0;
         }
 
         .logo {
@@ -83,140 +80,52 @@
             gap: var(--spacing-sm);
             font-weight: 800;
             font-size: 1.5rem;
-            color: white;
-            text-decoration: none;
+            color: var(--primary);
         }
 
         .logo-icon {
             width: 40px;
             height: 40px;
-            background: rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            animation: pulse 2s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .nav-menu {
+        .user-stats {
             display: flex;
-            list-style: none;
-            gap: var(--spacing-md);
+            gap: var(--spacing-sm);
             align-items: center;
-        }
-
-        .nav-item {
-            position: relative;
-        }
-
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            padding: var(--spacing-xs) var(--spacing-sm);
-            border-radius: var(--radius);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-xs);
-        }
-
-        .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .nav-link i {
-            font-size: 1.1rem;
-        }
-
-        .nav-cta {
-            background: var(--accent);
-            color: white;
-            padding: var(--spacing-xs) var(--spacing-lg);
-            border-radius: var(--radius-lg);
-            font-weight: 700;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(247, 37, 133, 0.4);
-        }
-
-        .nav-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(247, 37, 133, 0.5);
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-        }
-
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background: white;
-            margin: 3px 0;
-            transition: 0.3s;
-        }
-
-        /* ===== FIXED ECONOMY STATS BAR ===== */
-        .economy-bar {
-            background: rgba(0, 0, 0, 0.2);
-            padding: var(--spacing-xs) 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: block !important; /* Force display */
-            visibility: visible !important; /* Force visibility */
-        }
-
-        .economy-stats {
-            display: flex;
+            flex-wrap: wrap;
             justify-content: flex-end;
-            gap: var(--spacing-lg);
-            align-items: center;
         }
 
-        .economy-item {
+        .stat-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            color: white;
-            font-weight: 600;
-            font-size: 0.9rem;
-            padding: 4px 12px;
-            background: rgba(255, 255, 255, 0.1);
+            gap: 4px;
+            background: var(--primary-light);
+            padding: 6px 10px;
             border-radius: var(--radius);
-            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.8rem;
         }
 
-        .economy-item:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-1px);
+        .coins {
+            background: linear-gradient(135deg, var(--coin) 0%, #ffb347 100%);
+            color: var(--text-primary);
         }
 
-        .economy-item i {
-            font-size: 1rem;
+        .level {
+            background: var(--primary);
+            color: white;
         }
 
-        /* Mobile economy stats */
-        .mobile-economy {
-            display: none;
-            justify-content: space-around;
-            padding: var(--spacing-sm) 0;
-            background: rgba(0, 0, 0, 0.2);
-            margin-top: var(--spacing-sm);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .mobile-economy .economy-item {
-            background: rgba(255, 255, 255, 0.15);
-            flex: 1;
-            justify-content: center;
-            margin: 0 var(--spacing-xs);
+        .xp {
+            background: var(--success);
+            color: white;
         }
 
         /* Hero Section */
@@ -305,7 +214,6 @@
             margin-right: auto;
         }
 
-        /* Rest of your existing CSS remains the same... */
         .categories-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -848,99 +756,6 @@
             color: var(--danger);
         }
 
-        /* ===== NEW DRAG & DROP GAME ===== */
-        .dragdrop-game {
-            display: none;
-            padding: var(--spacing-xl) 0;
-            background: var(--surface);
-            min-height: 100vh;
-        }
-
-        .dragdrop-game.active {
-            display: block;
-        }
-
-        .dragdrop-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .dragdrop-area {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--spacing-lg);
-            margin-bottom: var(--spacing-lg);
-        }
-
-        @media (max-width: 768px) {
-            .dragdrop-area {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .terms-column, .definitions-column {
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing-md);
-        }
-
-        .dragdrop-term {
-            background: var(--primary-light);
-            padding: var(--spacing-md);
-            border-radius: var(--radius);
-            cursor: grab;
-            border: 2px dashed var(--primary);
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .dragdrop-term.dragging {
-            opacity: 0.5;
-            transform: scale(0.95);
-        }
-
-        .dragdrop-definition {
-            background: var(--surface);
-            padding: var(--spacing-md);
-            border-radius: var(--radius);
-            border: 2px solid var(--border);
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        .dragdrop-definition.hover {
-            background: var(--primary-light);
-            border-color: var(--primary);
-        }
-
-        .dragdrop-definition.correct {
-            background: rgba(76, 201, 240, 0.1);
-            border-color: var(--success);
-        }
-
-        .dragdrop-definition.incorrect {
-            background: rgba(230, 57, 70, 0.1);
-            border-color: var(--danger);
-        }
-
-        .dragdrop-timer {
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: var(--spacing-lg);
-            color: var(--text-primary);
-        }
-
-        .dragdrop-streak {
-            text-align: center;
-            font-size: 1.1rem;
-            margin-bottom: var(--spacing-md);
-            color: var(--success);
-            font-weight: 600;
-        }
-
         /* Results Screen */
         .results-screen {
             display: none;
@@ -1026,6 +841,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
         @keyframes correct {
             0% { background-color: var(--surface); }
             50% { background-color: var(--success); }
@@ -1066,100 +887,27 @@
             background: var(--primary-dark);
         }
 
-        /* Footer */
-        .footer {
-            background: var(--text-primary);
-            color: white;
-            padding: var(--spacing-lg) 0;
-            margin-top: auto;
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: var(--spacing-md);
-        }
-
-        .footer-logo {
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: var(--spacing-lg);
-            flex-wrap: wrap;
-        }
-
-        .footer-link {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-size: 0.875rem;
-            transition: color 0.2s ease;
-        }
-
-        .footer-link:hover {
-            color: white;
-        }
-
-        .footer-copyright {
-            width: 100%;
-            text-align: center;
-            margin-top: var(--spacing-md);
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.875rem;
-        }
-
         /* Responsive Design */
         @media (max-width: 768px) {
-            .hamburger {
-                display: flex;
-            }
-            
-            .nav-menu {
-                position: fixed;
-                left: -100%;
-                top: 70px;
-                flex-direction: column;
-                background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-                width: 100%;
-                text-align: center;
-                transition: 0.3s;
-                box-shadow: var(--shadow-elevated);
-                padding: var(--spacing-lg) 0;
-                gap: 0;
-            }
-            
-            .nav-menu.active {
-                left: 0;
-            }
-            
-            .nav-item {
-                margin: var(--spacing-sm) 0;
-                width: 100%;
-            }
-            
-            .nav-link {
-                justify-content: center;
-                padding: var(--spacing-md);
-            }
-            
-            .economy-bar {
-                display: none !important;
-            }
-            
-            .mobile-economy {
-                display: flex;
-            }
-            
             .hero h1 {
                 font-size: 2rem;
             }
             
             .hero p {
                 font-size: 1.1rem;
+            }
+            
+            .user-stats {
+                gap: 8px;
+            }
+            
+            .stat-item {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+            }
+            
+            .stat-item i {
+                font-size: 0.7rem;
             }
 
             .flashcard {
@@ -1177,15 +925,6 @@
             .memory-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
-
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .footer-links {
-                justify-content: center;
-            }
         }
 
         @media (max-width: 480px) {
@@ -1199,6 +938,15 @@
             
             .section-title {
                 font-size: 1.5rem;
+            }
+            
+            .user-stats {
+                gap: 4px;
+            }
+            
+            .stat-item {
+                padding: 3px 6px;
+                font-size: 0.7rem;
             }
             
             .cta-button {
@@ -1221,92 +969,33 @@
     </style>
 </head>
 <body>
-    <!-- New Navigation Bar -->
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-star-of-life"></i>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <span>PflegefachProfi</span>
                 </div>
-                <span>PflegefachProfi</span>
-            </a>
-            
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            
-            <ul class="nav-menu" id="nav-menu">
-                <li class="nav-item">
-                    <a href="index.html" class="nav-link">
-                        <i class="fas fa-home"></i>
-                        Startseite
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="lernmodule.html" class="nav-link">
-                        <i class="fas fa-book-medical"></i>
-                        Lernmodule
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="lernspiele.html" class="nav-link active">
-                        <i class="fas fa-gamepad"></i>
-                        Lernspiele
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="fallbeispiele.html" class="nav-link">
-                        <i class="fas fa-procedures"></i>
-                        Fallbeispiele
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link nav-cta">
-                        <i class="fas fa-rocket"></i>
-                        Jetzt starten
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Economy Stats Bar (Desktop) - NOW INSIDE NAV -->
-        <div class="economy-bar">
-            <div class="container">
-                <div class="economy-stats">
-                    <div class="economy-item">
+                <div class="user-stats">
+                    <div class="stat-item coins">
                         <i class="fas fa-coins"></i>
                         <span id="coins">100</span>
                     </div>
-                    <div class="economy-item">
+                    <div class="stat-item level">
                         <i class="fas fa-level-up-alt"></i>
-                        Level <span id="level">1</span>
+                        <span id="level">1</span>
                     </div>
-                    <div class="economy-item">
+                    <div class="stat-item xp">
                         <i class="fas fa-fire"></i>
-                        <span id="xp">0</span> XP
+                        <span id="xp">0</span>
                     </div>
                 </div>
             </div>
         </div>
-    </nav>
-
-    <!-- Mobile Economy Stats (shown only on mobile) -->
-    <div class="mobile-economy">
-        <div class="economy-item">
-            <i class="fas fa-coins"></i>
-            <span id="mobile-coins">100</span>
-        </div>
-        <div class="economy-item">
-            <i class="fas fa-level-up-alt"></i>
-            <span id="mobile-level">1</span>
-        </div>
-        <div class="economy-item">
-            <i class="fas fa-fire"></i>
-            <span id="mobile-xp">0</span>
-        </div>
-    </div>
+    </header>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -1326,7 +1015,7 @@
     <section class="dashboard" id="dashboard">
         <div class="container">
             <h2 class="section-title">Wortschatz Kategorien</h2>
-            <p class="section-subtitle">Wähle eine Kategorie aus und lerne mit verschiedenen Spielmodi</p>
+            <p class="section-subtitle">Wähle eine Kategorie aus und lerne mit drei verschiedenen Spielmodi</p>
             
             <div class="categories-grid" id="categories-grid">
                 <!-- Categories will be loaded by JavaScript -->
@@ -1385,67 +1074,394 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
 
-                <!-- New Drag & Drop Game Card -->
-                <div class="game-card" data-game="dragdrop">
-                    <div class="game-icon">
-                        <i class="fas fa-mouse-pointer"></i>
-                    </div>
-                    <h3 class="game-title">Drag & Drop</h3>
-                    <p class="game-description">Ziehe Begriffe zu den richtigen Definitionen in einem spannenden Zeit-Challenge.</p>
-                    <div class="category-stats">
-                        <div class="stat">
-                            <span class="stat-value" id="dragdrop-progress">0%</span>
-                            <span class="stat-label">Fortschritt</span>
+    <!-- Flashcard Game -->
+    <section class="flashcard-game" id="flashcard-game">
+        <div class="container">
+            <button class="back-button" id="back-to-games-flashcards">
+                <i class="fas fa-arrow-left"></i>
+                Zurück zu Spielmodi
+            </button>
+            
+            <div class="game-header">
+                <h2 id="flashcard-category-title">Karteikarten</h2>
+                <div class="game-progress">
+                    <span>Fortschritt: <strong id="flashcard-progress">0/0</strong></span>
+                    <div class="game-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                            <span id="flashcard-correct">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-times-circle" style="color: var(--danger);"></i>
+                            <span id="flashcard-incorrect">0</span>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="flashcard" id="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <div class="flashcard-category" id="flashcard-front-category">Kategorie</div>
+                        <div class="flashcard-term" id="flashcard-term">Begriff</div>
+                        <div class="flashcard-hint">Klicken zum Umdrehen</div>
+                        <div class="flashcard-hint">
+                            <i class="fas fa-hand-pointer"></i>
+                        </div>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="flashcard-category" id="flashcard-back-category">Kategorie</div>
+                        <div class="flashcard-definition" id="flashcard-definition">Definition</div>
+                        <div class="flashcard-example" id="flashcard-example">Beispiel</div>
+                        <div class="flashcard-hint">Wie gut kennst du dieses Wort?</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-actions">
+                <button class="action-btn difficult" id="btn-difficult">
+                    <i class="fas fa-times-circle"></i>
+                    Schwer
+                </button>
+                <button class="action-btn medium" id="btn-medium">
+                    <i class="fas fa-minus-circle"></i>
+                    Mittel
+                </button>
+                <button class="action-btn easy" id="btn-easy">
+                    <i class="fas fa-check-circle"></i>
+                    Einfach
+                </button>
+            </div>
+
+            <div class="results-screen" id="flashcard-results">
+                <div class="result-icon correct">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="result-score good" id="flashcard-final-score">100%</div>
+                <p>Herzlichen Glückwunsch! Du hast alle Karteikarten bearbeitet.</p>
+                
+                <div class="reward-animation">
+                    <div class="reward-item">
+                        <div class="reward-icon coins">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="reward-amount" id="flashcard-coins-reward">+0</div>
+                        <div class="stat-label">Coins</div>
+                    </div>
+                    <div class="reward-item">
+                        <div class="reward-icon xp">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="reward-amount" id="flashcard-xp-reward">+0</div>
+                        <div class="stat-label">XP</div>
+                    </div>
+                </div>
+                
+                <div class="game-actions">
+                    <button class="action-btn" id="flashcard-restart">
+                        <i class="fas fa-redo"></i>
+                        Nochmal spielen
+                    </button>
+                    <button class="action-btn easy" id="flashcard-back-to-games">
+                        <i class="fas fa-home"></i>
+                        Zurück zu Spielmodi
+                    </button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Rest of your game sections remain the same -->
-    <!-- Flashcard Game, Memory Game, Quiz Game, Drag & Drop Game sections... -->
-
-    <footer class="footer">
+    <!-- Memory Game -->
+    <section class="memory-game" id="memory-game">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">PflegefachProfi - Lernspiele</div>
-                <div class="footer-links">
-                    <a href="index.html" class="footer-link">Startseite</a>
-                    <a href="datenschutz.html" class="footer-link">Datenschutz</a>
-                    <a href="impressum.html" class="footer-link">Impressum</a>
-                    <a href="kontakt.html" class="footer-link">Kontakt</a>
+            <button class="back-button" id="back-to-games-memory">
+                <i class="fas fa-arrow-left"></i>
+                Zurück zu Spielmodi
+            </button>
+            
+            <div class="game-header">
+                <h2 id="memory-category-title">Memory Spiel</h2>
+                <div class="game-progress">
+                    <span>Paare: <strong id="memory-progress-text">0/0</strong></span>
+                    <div class="game-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-redo"></i>
+                            <span id="memory-moves">0</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="footer-copyright">
-                    &copy; 2023 PflegefachProfi. Alle Rechte vorbehalten.
+            </div>
+
+            <div class="memory-grid" id="memory-grid">
+                <!-- Memory cards will be generated by JavaScript -->
+            </div>
+
+            <div class="results-screen" id="memory-results">
+                <div class="result-icon correct">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="result-score good" id="memory-final-score">100%</div>
+                <p>Glückwunsch! Du hast alle Paare gefunden.</p>
+                
+                <div class="reward-animation">
+                    <div class="reward-item">
+                        <div class="reward-icon coins">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="reward-amount" id="memory-coins-reward">+0</div>
+                        <div class="stat-label">Coins</div>
+                    </div>
+                    <div class="reward-item">
+                        <div class="reward-icon xp">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="reward-amount" id="memory-xp-reward">+0</div>
+                        <div class="stat-label">XP</div>
+                    </div>
+                </div>
+                
+                <div class="game-actions">
+                    <button class="action-btn" id="memory-restart">
+                        <i class="fas fa-redo"></i>
+                        Nochmal spielen
+                    </button>
+                    <button class="action-btn easy" id="memory-back-to-games">
+                        <i class="fas fa-home"></i>
+                        Zurück zu Spielmodi
+                    </button>
                 </div>
             </div>
         </div>
-    </footer>
+    </section>
+
+    <!-- Quiz Game -->
+    <section class="quiz-game" id="quiz-game">
+        <div class="container">
+            <button class="back-button" id="back-to-games-quiz">
+                <i class="fas fa-arrow-left"></i>
+                Zurück zu Spielmodi
+            </button>
+            
+            <div class="game-header">
+                <h2 id="quiz-category-title">Quiz</h2>
+                <div class="game-progress">
+                    <span>Frage <strong id="quiz-current">1</strong> von <strong id="quiz-total">0</strong></span>
+                    <div class="game-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                            <span id="quiz-correct">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-times-circle" style="color: var(--danger);"></i>
+                            <span id="quiz-incorrect">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question" id="quiz-question">
+                    Quizfrage wird geladen...
+                </div>
+                
+                <div class="quiz-options" id="quiz-options">
+                    <!-- Options will be populated by JavaScript -->
+                </div>
+                
+                <div class="quiz-feedback" id="quiz-feedback">
+                    <!-- Feedback will be shown here -->
+                </div>
+                
+                <div class="game-actions">
+                    <button class="action-btn" id="quiz-next" disabled>
+                        Weiter
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-screen" id="quiz-results">
+                <div class="result-icon correct">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="result-score good" id="quiz-final-score">100%</div>
+                <p>Super! Du hast das Quiz abgeschlossen.</p>
+                
+                <div class="reward-animation">
+                    <div class="reward-item">
+                        <div class="reward-icon coins">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="reward-amount" id="quiz-coins-reward">+0</div>
+                        <div class="stat-label">Coins</div>
+                    </div>
+                    <div class="reward-item">
+                        <div class="reward-icon xp">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="reward-amount" id="quiz-xp-reward">+0</div>
+                        <div class="stat-label">XP</div>
+                    </div>
+                </div>
+                
+                <div class="game-actions">
+                    <button class="action-btn" id="quiz-restart">
+                        <i class="fas fa-redo"></i>
+                        Nochmal spielen
+                    </button>
+                    <button class="action-btn easy" id="quiz-back-to-games">
+                        <i class="fas fa-home"></i>
+                        Zurück zu Spielmodi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <script>
         // ===============================
-        // FIXED ECONOMY SYSTEM
+        // DATA STRUCTURES
         // ===============================
 
         // User data structure
         let user = {
-            coins: 150,
-            xp: 250,
-            level: 3,
-            unlockedCategories: ["Herz und Kreislauf", "Lungen"],
-            progress: {
-                "Herz und Kreislauf": {
-                    flashcards: { completed: true, correct: 8, total: 10, score: 80 },
-                    memory: { completed: true, moves: 12, efficiency: 75 },
-                    quiz: { completed: true, correct: 7, total: 10, score: 70 }
-                },
-                "Lungen": {
-                    flashcards: { completed: false, correct: 5, total: 10, score: 50 }
-                }
+            coins: 100,
+            xp: 0,
+            level: 1,
+            unlockedCategories: [],
+            progress: {}
+        };
+
+        // Category data - Easy to expand by adding new categories
+        const categories = {
+            "Herz und Kreislauf": {
+                cost: 50,
+                icon: "fas fa-heartbeat",
+                color: "#e63946",
+                vocabulary: [
+                    { term: "Hypertonie", definition: "Bluthochdruck (>140/90 mmHg)", example: "Risikofaktor für Schlaganfall und Herzinfarkt." },
+                    { term: "Hypotonie", definition: "Niedriger Blutdruck (<100/60 mmHg)", example: "Kann zu Schwindel und Synkope führen." },
+                    { term: "Tachykardie", definition: "Herzfrequenz > 100 Schläge pro Minute", example: "Bei Fieber, Anämie oder Schilddrüsenüberfunktion." },
+                    { term: "Bradykardie", definition: "Herzfrequenz < 60 Schläge pro Minute", example: "Kann physiologisch bei Sportlern auftreten." },
+                    { term: "Arrhythmie", definition: "Unregelmäßiger Herzschlag", example: "Vorhofflimmern ist die häufigste Form." },
+                    { term: "Ödem", definition: "Wassereinlagerung im Gewebe", example: "Knöchelödeme bei Rechtsherzinsuffizienz." },
+                    { term: "Dyspnoe", definition: "Atemnot oder erschwerte Atmung", example: "Ruhedyspnoe bei dekompensierter Herzinsuffizienz." },
+                    { term: "Angina Pectoris", definition: "Brustschmerz bei Durchblutungsstörung des Herzens", example: "Typisches Symptom der KHK." },
+                    { term: "Myokardinfarkt", definition: "Herzinfarkt durch Verschluss eines Herzkranzgefäßes", example: "Notfall mit ST-Strecken-Hebung im EKG." },
+                    { term: "Herzinsuffizienz", definition: "Eingeschränkte Pumpleistung des Herzens", example: "NYHA-Stadien I-IV zur Einteilung." }
+                ]
+            },
+            "Lungen": {
+                cost: 40,
+                icon: "fas fa-lungs",
+                color: "#4cc9f0",
+                vocabulary: [
+                    { term: "Dyspnoe", definition: "Atemnot oder erschwerte Atmung", example: "Leitsymptom bei Asthma bronchiale." },
+                    { term: "Tachypnoe", definition: "Erhöhte Atemfrequenz (>20/min)", example: "Bei Lungenentzündung oder Lungenödem." },
+                    { term: "Bradypnoe", definition: "Verminderte Atemfrequenz (<12/min)", example: "Bei Opiat-Überdosierung." },
+                    { term: "Zyanose", definition: "Bläuliche Verfärbung von Haut und Schleimhäuten", example: "Zeichen für Sauerstoffmangel." },
+                    { term: "Husten", definition: "Schutzreflex zur Reinigung der Atemwege", example: "Produktiv (mit Auswurf) oder unproduktiv." },
+                    { term: "Asthma bronchiale", definition: "Chronisch-entzündliche Erkrankung der Atemwege", example: "Anfallsweise auftretende Atemnot." },
+                    { term: "COPD", definition: "Chronisch obstruktive Lungenerkrankung", example: "Hauptursache: Rauchen." },
+                    { term: "Pneumonie", definition: "Lungenentzündung", example: "Kann bakteriell, viral oder fungal verursacht sein." },
+                    { term: "Pneumothorax", definition: "Luft im Pleuraspalt", example: "Plötzlicher stechender Brustschmerz und Dyspnoe." },
+                    { term: "Lungenödem", definition: "Wassereinlagerung in der Lunge", example: "Bei Linksherzinsuffizienz." }
+                ]
+            },
+            "Verdauungssystem": {
+                cost: 45,
+                icon: "fas fa-stomach",
+                color: "#fca311",
+                vocabulary: [
+                    { term: "Dysphagie", definition: "Schluckstörung", example: "Häufig bei neurologischen Erkrankungen." },
+                    { term: "Ösophagitis", definition: "Entzündung der Speiseröhre", example: "Oft durch Reflux verursacht." },
+                    { term: "Gastritis", definition: "Entzündung der Magenschleimhaut", example: "Kann akut oder chronisch sein." },
+                    { term: "Ulkus", definition: "Geschwür der Magen- oder Darmschleimhaut", example: "Magengeschwür oder Zwölffingerdarmgeschwür." },
+                    { term: "Diarrhoe", definition: "Durchfall", example: "Mehr als 3 dünnflüssige Stühle pro Tag." },
+                    { term: "Obstipation", definition: "Verstopfung", example: "Seltene oder erschwerte Stuhlentleerung." },
+                    { term: "Meteorismus", definition: "Blähungen durch Gasansammlung", example: "Völlegefühl und aufgetriebener Bauch." },
+                    { term: "Ileus", definition: "Darmverschluss", example: "Notfall mit Erbrechen und Stuhlverhalt." },
+                    { term: "Peritonitis", definition: "Bauchfellentzündung", example: "Akutes Abdomen mit Abwehrspannung." },
+                    { term: "Colitis", definition: "Entzündung des Dickdarms", example: "Morbus Crohn oder Colitis ulcerosa." }
+                ]
+            },
+            "Nieren": {
+                cost: 55,
+                icon: "fas fa-filter",
+                color: "#7209b7",
+                vocabulary: [
+                    { term: "Niereninsuffizienz", definition: "Eingeschränkte Nierenfunktion", example: "Akut oder chronisch." },
+                    { term: "Urämie", definition: "Harnvergiftung bei Nierenversagen", example: "Symptome: Übelkeit, Juckreiz, neurologische Störungen." },
+                    { term: "Dialyse", definition: "Blutwäsche bei Nierenversagen", example: "Hämodialyse oder Peritonealdialyse." },
+                    { term: "Proteinurie", definition: "Eiweißausscheidung im Urin", example: "Hinweis auf Nierenschädigung." },
+                    { term: "Hämaturie", definition: "Blut im Urin", example: "Makroskopisch sichtbar oder mikroskopisch." },
+                    { term: "Glomerulonephritis", definition: "Entzündung der Nierenkörperchen", example: "Immunologisch bedingt." },
+                    { term: "Pyelonephritis", definition: "Nierenbeckenentzündung", example: "Oft aufsteigende Harnwegsinfektion." },
+                    { term: "Nierensteine", definition: "Konkremente in den Nieren", example: "Kolikartige Schmerzen bei Abgang." },
+                    { term: "Zystitis", definition: "Blasenentzündung", example: "Häufig bei Frauen, Schmerzen beim Wasserlassen." },
+                    { term: "Anurie", definition: "Harnverhalt (<100 ml/24h)", example: "Notfall bei akutem Nierenversagen." }
+                ]
+            },
+            "Prophylaxen": {
+                cost: 35,
+                icon: "fas fa-shield-alt",
+                color: "#06d6a0",
+                vocabulary: [
+                    { term: "Dekubitusprophylaxe", definition: "Vorbeugung von Druckgeschwüren", example: "Regelmäßige Lagerung und Hautpflege." },
+                    { term: "Thromboseprophylaxe", definition: "Vorbeugung von Blutgerinnseln", example: "Frühmobilisation, Kompressionsstrümpfe, Heparin." },
+                    { term: "Pneumonieprophylaxe", definition: "Vorbeugung von Lungenentzündungen", example: "Atemgymnastik, Mobilisation, Sekretolyse." },
+                    { term: "Sturzprophylaxe", definition: "Vorbeugung von Stürzen", example: "Geeignetes Schuhwerk, Gehhilfen, Stolperfallen beseitigen." },
+                    { term: "Kontrakturprophylaxe", definition: "Vorbeugung von Gelenkversteifungen", example: "Bewegungstraining, Lagerungsschienen." },
+                    { term: "Infektionsprophylaxe", definition: "Vorbeugung von Infektionen", example: "Händedesinfektion, sterile Arbeitsweise." },
+                    { term: "Exsikkoseprophylaxe", definition: "Vorbeugung von Austrocknung", example: "Ausreichende Flüssigkeitszufuhr, Hautpflege." },
+                    { term: "Mangelernährungsprophylaxe", definition: "Vorbeugung von Unterernährung", example: "Ausgewogene Ernährung, Nahrungsergänzung." },
+                    { term: "Obstipationsprophylaxe", definition: "Vorbeugung von Verstopfung", example: "Ballaststoffreiche Ernährung, ausreichend trinken." },
+                    { term: "Delirprophylaxe", definition: "Vorbeugung von Verwirrtheitszuständen", example: "Orientierungshilfen, vertraute Bezugspersonen." }
+                ]
+            },
+            "Pflegetheorien": {
+                cost: 60,
+                icon: "fas fa-book-medical",
+                color: "#118ab2",
+                vocabulary: [
+                    { term: "AEDL", definition: "Aktivitäten und existenzielle Erfahrungen des Lebens", example: "13 Lebensbereiche nach Monika Krohwinkel." },
+                    { term: "ATL", definition: "Aktivitäten des täglichen Lebens", example: "12 Lebensaktivitäten nach Nancy Roper." },
+                    { term: "Pflegeprozess", definition: "Systematisches Vorgehen in der Pflege", example: "Assessment, Diagnose, Planung, Durchführung, Evaluation." },
+                    { term: "Pflegediagnose", definition: "Benennung eines Pflegeproblems", example: "Formulierung nach NANDA-I." },
+                    { term: "Pflegeziel", definition: "Angestrebter Zustand des Patienten", example: "Soll SMART formuliert werden." },
+                    { term: "Pflegemaßnahme", definition: "Konkrete Handlung zur Zielerreichung", example: "Muss auf die Pflegediagnose abgestimmt sein." },
+                    { term: "Validation", definition: "Wertschätzende Kommunikationstechnik", example: "Nach Naomi Feil für Menschen mit Demenz." },
+                    { term: "Basale Stimulation", definition: "Förderung grundlegender Wahrnehmung", example: "Nach Andreas Fröhlich für schwerstpflegebedürftige Menschen." },
+                    { term: "Biografiearbeit", definition: "Einbeziehung der Lebensgeschichte", example: "Wichtig für individuelle Pflegeplanung." },
+                    { term: "Ressourcenorientierung", definition: "Fokus auf vorhandene Fähigkeiten", example: "Stärken des Patienten fördern und nutzen." }
+                ]
+            },
+            "Expertenstandards": {
+                cost: 65,
+                icon: "fas fa-award",
+                color: "#073b4c",
+                vocabulary: [
+                    { term: "Dekubitusprophylaxe", definition: "Expertenstandard zur Vorbeugung von Druckgeschwüren", example: "Risikoassessment, Hautbeobachtung, Lagerung." },
+                    { term: "Sturzprophylaxe", definition: "Expertenstandard zur Vorbeugung von Stürzen", example: "Risikoeinschätzung, Umgebungsgestaltung, Training." },
+                    { term: "Schmerzmanagement", definition: "Expertenstandard zur Schmerzerfassung und -behandlung", example: "Regelmäßige Schmerzerfassung, medikamentöse und nicht-medikamentöse Maßnahmen." },
+                    { term: "Ernährungsmanagement", definition: "Expertenstandard zur Sicherstellung der Ernährung", example: "Screening, Bedarfsermittlung, Ernährungsplanung." },
+                    { term: "Förderung der Harnkontinenz", definition: "Expertenstandard zum Erhalt der Blasenkontrolle", example: "Toilettentraining, Beckenbodengymnastik, Hilfsmittel." },
+                    { term: "Entlassungsmanagement", definition: "Expertenstandard zur Vorbereitung der Entlassung", example: "Frühzeitige Planung, Einbeziehung von Angehörigen, Nachsorge." },
+                    { term: "Chronische Wunden", definition: "Expertenstandard zur Versorgung von chronischen Wunden", example: "Wundassessment, Reinigung, geeignete Verbandmittel." },
+                    { term: "Demenz", definition: "Expertenstandard zur Pflege von Menschen mit Demenz", example: "Validation, Biografiearbeit, Milieugestaltung." },
+                    { term: "Beziehungsgestaltung", definition: "Expertenstandard zur professionellen Beziehungsarbeit", example: "Kommunikation, Empathie, professionelle Distanz." },
+                    { term: "Pflege von Menschen mit Depression", definition: "Expertenstandard zur Unterstützung depressiver Patienten", example: "Aktivierung, Gesprächsangebote, Sicherheit." }
+                ]
             }
         };
+
+        // ===============================
+        // UTILITY FUNCTIONS
+        // ===============================
 
         // Cookie management
         function setCookie(name, value, days) {
@@ -1472,45 +1488,21 @@
         // Save and load user data
         function saveUserData() {
             setCookie('pflegeUser', JSON.stringify(user), 30);
-            console.log('User data saved:', user);
         }
 
         function loadUserData() {
             const userData = getCookie('pflegeUser');
             if (userData) {
-                try {
-                    user = JSON.parse(userData);
-                    console.log('User data loaded:', user);
-                } catch (e) {
-                    console.log('Error loading user data, using defaults');
-                }
-            } else {
-                console.log('No saved user data, using defaults');
+                user = JSON.parse(userData);
             }
             updateUserStats();
         }
 
         // Update UI with user stats
         function updateUserStats() {
-            console.log('Updating stats:', user);
-            
-            // Update desktop economy bar
-            const coinsElement = document.getElementById('coins');
-            const levelElement = document.getElementById('level');
-            const xpElement = document.getElementById('xp');
-            
-            if (coinsElement) coinsElement.textContent = user.coins;
-            if (levelElement) levelElement.textContent = user.level;
-            if (xpElement) xpElement.textContent = user.xp;
-            
-            // Update mobile economy stats
-            const mobileCoinsElement = document.getElementById('mobile-coins');
-            const mobileLevelElement = document.getElementById('mobile-level');
-            const mobileXpElement = document.getElementById('mobile-xp');
-            
-            if (mobileCoinsElement) mobileCoinsElement.textContent = user.coins;
-            if (mobileLevelElement) mobileLevelElement.textContent = user.level;
-            if (mobileXpElement) mobileXpElement.textContent = user.xp;
+            document.getElementById('coins').textContent = user.coins;
+            document.getElementById('level').textContent = user.level;
+            document.getElementById('xp').textContent = user.xp;
         }
 
         // Calculate level based on XP
@@ -1518,15 +1510,12 @@
             const newLevel = Math.floor(user.xp / 100) + 1;
             if (newLevel > user.level) {
                 user.level = newLevel;
-                console.log('Level up! New level:', user.level);
                 // Level up celebration could be added here
             }
         }
 
         // Add XP and coins with animation
         function addReward(coins, xp) {
-            console.log(`Adding reward: ${coins} coins, ${xp} XP`);
-            
             user.coins += coins;
             user.xp += xp;
             calculateLevel();
@@ -1535,8 +1524,17 @@
             
             // Visual feedback for rewards
             if (coins > 0 || xp > 0) {
-                console.log(`Reward added! Total: ${user.coins} coins, ${user.xp} XP, Level ${user.level}`);
+                // Could add animation here
             }
+        }
+
+        // Shuffle array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
         }
 
         // Show confetti animation
@@ -1549,40 +1547,656 @@
         }
 
         // ===============================
+        // DASHBOARD FUNCTIONALITY
+        // ===============================
+
+        let currentCategory = '';
+
+        function initializeDashboard() {
+            loadUserData();
+            renderCategories();
+            
+            // Event listeners for navigation
+            document.getElementById('start-learning').addEventListener('click', showDashboard);
+            document.getElementById('back-to-categories').addEventListener('click', showDashboard);
+            
+            // Event listener for game selection
+            const gameCards = document.querySelectorAll('.game-card');
+            gameCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const game = this.getAttribute('data-game');
+                    startGame(game);
+                });
+            });
+            
+            // Event listeners for back buttons in games
+            document.getElementById('back-to-games-flashcards').addEventListener('click', showGameSelection);
+            document.getElementById('back-to-games-memory').addEventListener('click', showGameSelection);
+            document.getElementById('back-to-games-quiz').addEventListener('click', showGameSelection);
+            
+            // Event listeners for restart and back buttons in results
+            document.getElementById('flashcard-restart').addEventListener('click', () => startGame('flashcards'));
+            document.getElementById('flashcard-back-to-games').addEventListener('click', showGameSelection);
+            document.getElementById('memory-restart').addEventListener('click', () => startGame('memory'));
+            document.getElementById('memory-back-to-games').addEventListener('click', showGameSelection);
+            document.getElementById('quiz-restart').addEventListener('click', () => startGame('quiz'));
+            document.getElementById('quiz-back-to-games').addEventListener('click', showGameSelection);
+        }
+
+        function renderCategories() {
+            const grid = document.getElementById('categories-grid');
+            grid.innerHTML = '';
+            
+            for (const [categoryName, categoryData] of Object.entries(categories)) {
+                const isUnlocked = user.unlockedCategories.includes(categoryName);
+                const progress = calculateCategoryProgress(categoryName);
+                
+                const card = document.createElement('div');
+                card.className = `category-card ${isUnlocked ? '' : 'locked'}`;
+                card.style.borderLeftColor = categoryData.color;
+                
+                card.innerHTML = `
+                    <div class="category-header">
+                        <div class="category-icon" style="background: ${categoryData.color}20; color: ${categoryData.color}">
+                            <i class="${categoryData.icon}"></i>
+                        </div>
+                        ${!isUnlocked ? `
+                        <div class="category-cost">
+                            <i class="fas fa-coins"></i>
+                            <span>${categoryData.cost}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <h3 class="category-title">${categoryName}</h3>
+                    <p class="category-description">${categoryData.vocabulary.length} Fachwörter zum Lernen</p>
+                    <div class="category-stats">
+                        <div class="stat">
+                            <span class="stat-value">${progress}%</span>
+                            <span class="stat-label">Fortschritt</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">${categoryData.vocabulary.length}</span>
+                            <span class="stat-label">Wörter</span>
+                        </div>
+                    </div>
+                    <button class="category-action ${isUnlocked ? 'start' : 'unlock'}" 
+                            data-category="${categoryName}">
+                        <i class="fas fa-${isUnlocked ? 'play' : 'lock'}"></i>
+                        ${isUnlocked ? 'Kategorie öffnen' : 'Freischalten'}
+                    </button>
+                `;
+                
+                grid.appendChild(card);
+            }
+            
+            // Add event listeners to category buttons
+            const unlockButtons = document.querySelectorAll('.category-action.unlock');
+            unlockButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    unlockCategory(category);
+                });
+            });
+            
+            const startButtons = document.querySelectorAll('.category-action.start');
+            startButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    selectCategory(category);
+                });
+            });
+        }
+
+        function calculateCategoryProgress(categoryName) {
+            if (!user.progress[categoryName]) return 0;
+            
+            const progress = user.progress[categoryName];
+            const totalGames = 3; // flashcards, memory, quiz
+            let completedGames = 0;
+            
+            if (progress.flashcards && progress.flashcards.completed) completedGames++;
+            if (progress.memory && progress.memory.completed) completedGames++;
+            if (progress.quiz && progress.quiz.completed) completedGames++;
+            
+            return Math.round((completedGames / totalGames) * 100);
+        }
+
+        function unlockCategory(categoryName) {
+            const category = categories[categoryName];
+            if (user.coins >= category.cost) {
+                user.coins -= category.cost;
+                user.unlockedCategories.push(categoryName);
+                saveUserData();
+                updateUserStats();
+                renderCategories();
+                
+                // Show success message
+                alert(`Glückwunsch! Du hast die Kategorie "${categoryName}" freigeschaltet.`);
+            } else {
+                alert(`Du hast nicht genug Coins. Du benötigst ${category.cost} Coins.`);
+            }
+        }
+
+        function selectCategory(categoryName) {
+            currentCategory = categoryName;
+            updateGameSelectionProgress();
+            showGameSelection();
+        }
+
+        // ===============================
+        // NAVIGATION
+        // ===============================
+
+        function showDashboard() {
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('game-selection').classList.remove('active');
+            document.getElementById('flashcard-game').classList.remove('active');
+            document.getElementById('memory-game').classList.remove('active');
+            document.getElementById('quiz-game').classList.remove('active');
+        }
+
+        function showGameSelection() {
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('game-selection').classList.add('active');
+            document.getElementById('flashcard-game').classList.remove('active');
+            document.getElementById('memory-game').classList.remove('active');
+            document.getElementById('quiz-game').classList.remove('active');
+            
+            document.getElementById('game-selection-title').textContent = `Spielmodi - ${currentCategory}`;
+            updateGameSelectionProgress();
+        }
+
+        function updateGameSelectionProgress() {
+            const progress = user.progress[currentCategory] || {};
+            
+            const flashcardsProgress = progress.flashcards ? 
+                Math.round((progress.flashcards.correct / categories[currentCategory].vocabulary.length) * 100) : 0;
+            const memoryProgress = progress.memory && progress.memory.completed ? 100 : 0;
+            const quizProgress = progress.quiz ? 
+                Math.round((progress.quiz.correct / progress.quiz.total) * 100) : 0;
+            
+            document.getElementById('flashcards-progress').textContent = `${flashcardsProgress}%`;
+            document.getElementById('memory-progress').textContent = `${memoryProgress}%`;
+            document.getElementById('quiz-progress').textContent = `${quizProgress}%`;
+        }
+
+        function startGame(gameType) {
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('game-selection').classList.remove('active');
+            document.getElementById('flashcard-game').classList.remove('active');
+            document.getElementById('memory-game').classList.remove('active');
+            document.getElementById('quiz-game').classList.remove('active');
+            
+            switch(gameType) {
+                case 'flashcards':
+                    initializeFlashcards();
+                    document.getElementById('flashcard-game').classList.add('active');
+                    break;
+                case 'memory':
+                    initializeMemoryGame();
+                    document.getElementById('memory-game').classList.add('active');
+                    break;
+                case 'quiz':
+                    initializeQuizGame();
+                    document.getElementById('quiz-game').classList.add('active');
+                    break;
+            }
+        }
+
+        // ===============================
+        // FLASHCARD GAME
+        // ===============================
+
+        let flashcardIndex = 0;
+        let flashcardCorrect = 0;
+        let flashcardIncorrect = 0;
+        let flashcardDeck = [];
+
+        function initializeFlashcards() {
+            document.getElementById('flashcard-results').classList.remove('active');
+            
+            // Set category title
+            document.getElementById('flashcard-category-title').textContent = `Karteikarten - ${currentCategory}`;
+            document.getElementById('flashcard-front-category').textContent = currentCategory;
+            document.getElementById('flashcard-back-category').textContent = currentCategory;
+            
+            // Reset stats
+            flashcardIndex = 0;
+            flashcardCorrect = 0;
+            flashcardIncorrect = 0;
+            
+            // Create shuffled deck
+            flashcardDeck = shuffleArray([...categories[currentCategory].vocabulary]);
+            
+            // Update UI
+            updateFlashcardStats();
+            loadFlashcard();
+            
+            // Add event listeners
+            document.getElementById('flashcard').addEventListener('click', flipFlashcard);
+            document.getElementById('btn-difficult').addEventListener('click', () => rateFlashcard('difficult'));
+            document.getElementById('btn-medium').addEventListener('click', () => rateFlashcard('medium'));
+            document.getElementById('btn-easy').addEventListener('click', () => rateFlashcard('easy'));
+        }
+
+        function flipFlashcard() {
+            document.getElementById('flashcard').classList.toggle('flipped');
+        }
+
+        function loadFlashcard() {
+            const card = flashcardDeck[flashcardIndex];
+            document.getElementById('flashcard-term').textContent = card.term;
+            document.getElementById('flashcard-definition').textContent = card.definition;
+            document.getElementById('flashcard-example').textContent = card.example;
+            document.getElementById('flashcard').classList.remove('flipped');
+        }
+
+        function updateFlashcardStats() {
+            document.getElementById('flashcard-progress').textContent = `${flashcardIndex + 1}/${flashcardDeck.length}`;
+            document.getElementById('flashcard-correct').textContent = flashcardCorrect;
+            document.getElementById('flashcard-incorrect').textContent = flashcardIncorrect;
+        }
+
+        function rateFlashcard(difficulty) {
+            // Update stats based on difficulty
+            if (difficulty === 'easy') {
+                flashcardCorrect++;
+            } else if (difficulty === 'difficult') {
+                flashcardIncorrect++;
+                // Add card to the end of the deck for repetition
+                flashcardDeck.push(flashcardDeck[flashcardIndex]);
+            }
+            // Medium doesn't affect stats
+            
+            // Move to next card
+            flashcardIndex++;
+            
+            if (flashcardIndex < flashcardDeck.length) {
+                loadFlashcard();
+                updateFlashcardStats();
+            } else {
+                finishFlashcards();
+            }
+        }
+
+        function finishFlashcards() {
+            // Calculate score and rewards
+            const score = Math.round((flashcardCorrect / flashcardDeck.length) * 100);
+            const coinsReward = Math.max(10, Math.floor(score / 10));
+            const xpReward = Math.max(20, Math.floor(score / 5));
+            
+            // Update UI
+            document.getElementById('flashcard-final-score').textContent = `${score}%`;
+            document.getElementById('flashcard-final-score').className = `result-score ${
+                score >= 80 ? 'good' : score >= 60 ? 'average' : 'poor'
+            }`;
+            document.getElementById('flashcard-coins-reward').textContent = `+${coinsReward}`;
+            document.getElementById('flashcard-xp-reward').textContent = `+${xpReward}`;
+            
+            // Show results
+            document.getElementById('flashcard-results').classList.add('active');
+            
+            // Update user progress
+            if (!user.progress[currentCategory]) {
+                user.progress[currentCategory] = {};
+            }
+            user.progress[currentCategory].flashcards = {
+                completed: true,
+                correct: flashcardCorrect,
+                total: flashcardDeck.length,
+                score: score
+            };
+            
+            // Add rewards
+            addReward(coinsReward, xpReward);
+            
+            // Show confetti for good scores
+            if (score >= 80) {
+                showConfetti();
+            }
+        }
+
+        // ===============================
+        // MEMORY GAME
+        // ===============================
+
+        let memoryCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let memoryMoves = 0;
+
+        function initializeMemoryGame() {
+            document.getElementById('memory-results').classList.remove('active');
+            
+            // Set category title
+            document.getElementById('memory-category-title').textContent = `Memory - ${currentCategory}`;
+            
+            // Reset stats
+            flippedCards = [];
+            matchedPairs = 0;
+            memoryMoves = 0;
+            
+            // Create card pairs
+            memoryCards = [];
+            const vocabulary = categories[currentCategory].vocabulary;
+            
+            // Use first 8 terms for memory game (16 cards)
+            const gameVocabulary = vocabulary.slice(0, 8);
+            
+            gameVocabulary.forEach((item, index) => {
+                // Term card
+                memoryCards.push({
+                    id: index,
+                    type: 'term',
+                    content: item.term,
+                    matched: false
+                });
+                
+                // Definition card
+                memoryCards.push({
+                    id: index,
+                    type: 'definition',
+                    content: item.definition,
+                    matched: false
+                });
+            });
+            
+            // Shuffle cards
+            memoryCards = shuffleArray(memoryCards);
+            
+            // Render cards
+            renderMemoryCards();
+            updateMemoryStats();
+        }
+
+        function renderMemoryCards() {
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = '';
+            
+            memoryCards.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'memory-card';
+                if (card.matched) cardElement.classList.add('matched');
+                cardElement.setAttribute('data-index', index);
+                
+                cardElement.innerHTML = `
+                    <div class="memory-card-front">
+                        <i class="fas fa-question"></i>
+                    </div>
+                    <div class="memory-card-back">
+                        ${card.content}
+                    </div>
+                `;
+                
+                cardElement.addEventListener('click', () => flipMemoryCard(index));
+                grid.appendChild(cardElement);
+            });
+        }
+
+        function flipMemoryCard(index) {
+            const card = memoryCards[index];
+            const cardElement = document.querySelector(`.memory-card[data-index="${index}"]`);
+            
+            // Ignore if card is already flipped, matched, or two cards are already flipped
+            if (card.matched || cardElement.classList.contains('flipped') || flippedCards.length >= 2) {
+                return;
+            }
+            
+            // Flip the card
+            cardElement.classList.add('flipped');
+            flippedCards.push({ index, card });
+            
+            // Check for match if two cards are flipped
+            if (flippedCards.length === 2) {
+                memoryMoves++;
+                updateMemoryStats();
+                
+                const card1 = flippedCards[0];
+                const card2 = flippedCards[1];
+                
+                // Check if cards match (same id, different types)
+                if (card1.card.id === card2.card.id && card1.card.type !== card2.card.type) {
+                    // Match found
+                    memoryCards[card1.index].matched = true;
+                    memoryCards[card2.index].matched = true;
+                    matchedPairs++;
+                    
+                    document.querySelector(`.memory-card[data-index="${card1.index}"]`).classList.add('matched');
+                    document.querySelector(`.memory-card[data-index="${card2.index}"]`).classList.add('matched');
+                    
+                    flippedCards = [];
+                    
+                    // Check if game is complete
+                    if (matchedPairs === 8) {
+                        setTimeout(finishMemoryGame, 500);
+                    }
+                } else {
+                    // No match, flip back after delay
+                    setTimeout(() => {
+                        document.querySelector(`.memory-card[data-index="${card1.index}"]`).classList.remove('flipped');
+                        document.querySelector(`.memory-card[data-index="${card2.index}"]`).classList.remove('flipped');
+                        flippedCards = [];
+                    }, 1000);
+                }
+            }
+        }
+
+        function updateMemoryStats() {
+            document.getElementById('memory-progress-text').textContent = `${matchedPairs}/8`;
+            document.getElementById('memory-moves').textContent = memoryMoves;
+        }
+
+        function finishMemoryGame() {
+            // Calculate rewards based on moves (fewer moves = better reward)
+            const maxMoves = 24; // Theoretical maximum for 8 pairs
+            const efficiency = Math.max(0, (maxMoves - memoryMoves) / maxMoves);
+            const coinsReward = Math.max(15, Math.floor(30 * efficiency));
+            const xpReward = Math.max(25, Math.floor(50 * efficiency));
+            
+            // Update UI
+            document.getElementById('memory-final-score').textContent = `${Math.round(efficiency * 100)}%`;
+            document.getElementById('memory-coins-reward').textContent = `+${coinsReward}`;
+            document.getElementById('memory-xp-reward').textContent = `+${xpReward}`;
+            
+            // Show results
+            document.getElementById('memory-results').classList.add('active');
+            
+            // Update user progress
+            if (!user.progress[currentCategory]) {
+                user.progress[currentCategory] = {};
+            }
+            user.progress[currentCategory].memory = {
+                completed: true,
+                moves: memoryMoves,
+                efficiency: Math.round(efficiency * 100)
+            };
+            
+            // Add rewards
+            addReward(coinsReward, xpReward);
+            
+            // Show confetti for good efficiency
+            if (efficiency >= 0.7) {
+                showConfetti();
+            }
+        }
+
+        // ===============================
+        // QUIZ GAME
+        // ===============================
+
+        let quizQuestions = [];
+        let currentQuestion = 0;
+        let quizCorrect = 0;
+        let quizIncorrect = 0;
+
+        function initializeQuizGame() {
+            document.getElementById('quiz-results').classList.remove('active');
+            document.getElementById('quiz-next').disabled = true;
+            
+            // Set category title
+            document.getElementById('quiz-category-title').textContent = `Quiz - ${currentCategory}`;
+            
+            // Reset stats
+            currentQuestion = 0;
+            quizCorrect = 0;
+            quizIncorrect = 0;
+            
+            // Create quiz questions
+            quizQuestions = [];
+            const vocabulary = categories[currentCategory].vocabulary;
+            
+            vocabulary.forEach(item => {
+                // Create question with correct answer and 3 distractors
+                const question = {
+                    term: item.term,
+                    correct: item.definition,
+                    options: [item.definition]
+                };
+                
+                // Add 3 random definitions from other terms as distractors
+                const otherDefinitions = vocabulary
+                    .filter(v => v.term !== item.term)
+                    .map(v => v.definition);
+                
+                const shuffledDefinitions = shuffleArray([...otherDefinitions]);
+                question.options.push(...shuffledDefinitions.slice(0, 3));
+                
+                // Shuffle options
+                question.options = shuffleArray(question.options);
+                
+                quizQuestions.push(question);
+            });
+            
+            // Shuffle questions
+            quizQuestions = shuffleArray(quizQuestions);
+            
+            // Load first question
+            loadQuizQuestion();
+            updateQuizStats();
+        }
+
+        function loadQuizQuestion() {
+            const question = quizQuestions[currentQuestion];
+            
+            document.getElementById('quiz-question').textContent = `Was bedeutet "${question.term}"?`;
+            document.getElementById('quiz-current').textContent = currentQuestion + 1;
+            document.getElementById('quiz-total').textContent = quizQuestions.length;
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.innerHTML = `
+                    <div class="option-indicator">${String.fromCharCode(65 + index)}</div>
+                    <div class="option-text">${option}</div>
+                `;
+                
+                optionElement.addEventListener('click', () => selectQuizOption(index, option === question.correct));
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            document.getElementById('quiz-feedback').style.display = 'none';
+            document.getElementById('quiz-next').disabled = true;
+        }
+
+        function selectQuizOption(optionIndex, isCorrect) {
+            const options = document.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById('quiz-feedback');
+            
+            // Disable all options
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+            
+            // Mark correct/incorrect
+            if (isCorrect) {
+                options[optionIndex].classList.add('correct');
+                quizCorrect++;
+                feedback.textContent = 'Richtig! Gut gemacht.';
+                feedback.className = 'quiz-feedback correct';
+            } else {
+                options[optionIndex].classList.add('incorrect');
+                quizIncorrect++;
+                
+                // Find and highlight correct answer
+                const correctIndex = quizQuestions[currentQuestion].options.findIndex(
+                    option => option === quizQuestions[currentQuestion].correct
+                );
+                options[correctIndex].classList.add('correct');
+                
+                feedback.textContent = `Leider falsch. Die richtige Antwort ist: ${quizQuestions[currentQuestion].correct}`;
+                feedback.className = 'quiz-feedback incorrect';
+            }
+            
+            feedback.style.display = 'block';
+            document.getElementById('quiz-next').disabled = false;
+            updateQuizStats();
+        }
+
+        function updateQuizStats() {
+            document.getElementById('quiz-correct').textContent = quizCorrect;
+            document.getElementById('quiz-incorrect').textContent = quizIncorrect;
+        }
+
+        function nextQuizQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < quizQuestions.length) {
+                loadQuizQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            // Calculate score and rewards
+            const score = Math.round((quizCorrect / quizQuestions.length) * 100);
+            const coinsReward = Math.max(15, Math.floor(score / 10) * 2);
+            const xpReward = Math.max(30, Math.floor(score / 5) * 2);
+            
+            // Update UI
+            document.getElementById('quiz-final-score').textContent = `${score}%`;
+            document.getElementById('quiz-final-score').className = `result-score ${
+                score >= 80 ? 'good' : score >= 60 ? 'average' : 'poor'
+            }`;
+            document.getElementById('quiz-coins-reward').textContent = `+${coinsReward}`;
+            document.getElementById('quiz-xp-reward').textContent = `+${xpReward}`;
+            
+            // Show results
+            document.getElementById('quiz-results').classList.add('active');
+            
+            // Update user progress
+            if (!user.progress[currentCategory]) {
+                user.progress[currentCategory] = {};
+            }
+            user.progress[currentCategory].quiz = {
+                completed: true,
+                correct: quizCorrect,
+                total: quizQuestions.length,
+                score: score
+            };
+            
+            // Add rewards
+            addReward(coinsReward, xpReward);
+            
+            // Show confetti for good scores
+            if (score >= 80) {
+                showConfetti();
+            }
+        }
+
+        // ===============================
         // INITIALIZATION
         // ===============================
 
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing economy system...');
+            initializeDashboard();
             
-            // Load user data immediately
-            loadUserData();
-            
-            // Initialize navigation
-            const hamburger = document.getElementById('hamburger');
-            const navMenu = document.getElementById('nav-menu');
-            
-            if (hamburger && navMenu) {
-                hamburger.addEventListener('click', () => {
-                    navMenu.classList.toggle('active');
-                });
-            }
-            
-            // Force update stats after a short delay to ensure DOM is ready
-            setTimeout(() => {
-                updateUserStats();
-                console.log('Economy system initialized');
-            }, 100);
-            
-            // Test function to manually add rewards (for debugging)
-            window.addTestRewards = function() {
-                addReward(50, 100);
-                alert('Test rewards added! Check console for details.');
-            };
+            // Set up quiz next button
+            document.getElementById('quiz-next').addEventListener('click', nextQuizQuestion);
         });
-
-        // Make addReward function globally available for testing
-        window.addReward = addReward;
     </script>
 </body>
 </html>
