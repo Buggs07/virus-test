@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fachwort Master | PflegefachProfi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --primary-light: #eef2ff;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --warning: #fca311;
+            --danger: #e63946;
+            --coin: #ffd166;
+            --text-primary: #1d3557;
+            --text-secondary: #457b9d;
+            --text-tertiary: #a8dadc;
+            --background: #f1faee;
+            --surface: #ffffff;
+            --border: #e0e0e0;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --radius: 12px;
+            --radius-lg: 20px;
+            --spacing-xs: 8px;
+            --spacing-sm: 16px;
+            --spacing-md: 24px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+            --spacing-xxl: 64px;
+            --font-primary: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            color: var(--text-primary);
+            background-color: var(--background);
+            line-height: 1.6;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        /* ===== NEW NAVIGATION BAR ===== */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: var(--spacing-sm) 0 0 0; /* Remove bottom padding to connect with economy bar */
+            box-shadow: var(--shadow-elevated);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: var(--spacing-sm); /* Add padding here instead */
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: var(--spacing-md);
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+        }
+
+        .nav-cta {
+            background: var(--accent);
+            color: white;
+            padding: var(--spacing-xs) var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(247, 37, 133, 0.4);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(247, 37, 133, 0.5);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* ===== FIXED ECONOMY STATS BAR ===== */
+        .economy-bar {
+            background: rgba(0, 0, 0, 0.2);
+            padding: var(--spacing-xs) 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: block !important; /* Force display */
+            visibility: visible !important; /* Force visibility */
+        }
+
+        .economy-stats {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-lg);
+            align-items: center;
+        }
+
+        .economy-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+        }
+
+        .economy-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .economy-item i {
+            font-size: 1rem;
+        }
+
+        /* Mobile economy stats */
+        .mobile-economy {
+            display: none;
+            justify-content: space-around;
+            padding: var(--spacing-sm) 0;
+            background: rgba(0, 0, 0, 0.2);
+            margin-top: var(--spacing-sm);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-economy .economy-item {
+            background: rgba(255, 255, 255, 0.15);
+            flex: 1;
+            justify-content: center;
+            margin: 0 var(--spacing-xs);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: var(--spacing-xxl) 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            color: white;
+            margin-bottom: var(--spacing-md);
+            font-size: 2.5rem;
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            background: var(--accent);
+            color: white;
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: var(--radius);
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: var(--shadow-elevated);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(247, 37, 133, 0.4);
+        }
+
+        /* Categories Dashboard */
+        .dashboard {
+            padding: var(--spacing-xl) 0;
+            background: var(--background);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            font-size: 2rem;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Rest of your existing CSS remains the same... */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+
+        .category-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-elevated);
+            border-color: var(--primary-light);
+        }
+
+        .category-card.locked {
+            opacity: 0.7;
+            filter: grayscale(0.5);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .category-cost {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            background: var(--coin);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .category-title {
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .category-description {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+            font-size: 0.9rem;
+        }
+
+        .category-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .category-action {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .category-action.unlock {
+            background: var(--primary);
+            color: white;
+        }
+
+        .category-action.unlock:hover {
+            background: var(--primary-dark);
+        }
+
+        .category-action.start {
+            background: var(--success);
+            color: white;
+        }
+
+        .category-action.start:hover {
+            background: #3ab0d9;
+        }
+
+        .category-action.continue {
+            background: var(--accent);
+            color: white;
+        }
+
+        .category-action.continue:hover {
+            background: #e1156d;
+        }
+
+        /* Game Selection */
+        .game-selection {
+            display: none;
+            padding: var(--spacing-xl) 0;
+            background: var(--surface);
+            min-height: 100vh;
+        }
+
+        .game-selection.active {
+            display: block;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+
+        .game-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-elevated);
+            border-color: var(--primary-light);
+        }
+
+        .game-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 2rem;
+            margin: 0 auto var(--spacing-md);
+        }
+
+        .game-title {
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .game-description {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+            font-size: 0.9rem;
+        }
+
+        /* Flashcard Game */
+        .flashcard-game {
+            display: none;
+            padding: var(--spacing-xl) 0;
+            background: var(--surface);
+            min-height: 100vh;
+        }
+
+        .flashcard-game.active {
+            display: block;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .game-progress {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .game-stats {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .flashcard {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            margin: 0 auto;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .flashcard-back {
+            background: var(--surface);
+            color: var(--text-primary);
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-term {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .flashcard-hint {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .flashcard-definition {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .flashcard-example {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: var(--spacing-md);
+        }
+
+        .flashcard-category {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .flashcard-back .flashcard-category {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .game-actions {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            background: var(--surface);
+            color: var(--text-primary);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .action-btn.difficult {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .action-btn.medium {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .action-btn.easy {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        /* Memory Game */
+        .memory-game {
+            display: none;
+            padding: var(--spacing-xl) 0;
+            background: var(--surface);
+            min-height: 100vh;
+        }
+
+        .memory-game.active {
+            display: block;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-md);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .memory-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+
+        .memory-card {
+            height: 120px;
+            background: var(--primary);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            position: relative;
+        }
+
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card.matched {
+            border: 3px solid var(--success);
+            animation: pulse 1s;
+        }
+
+        .memory-card-front, .memory-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-md);
+        }
+
+        .memory-card-front {
+            background: var(--primary);
+            color: white;
+        }
+
+        .memory-card-back {
+            background: var(--surface);
+            color: var(--text-primary);
+            transform: rotateY(180deg);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* Quiz Game */
+        .quiz-game {
+            display: none;
+            padding: var(--spacing-xl) 0;
+            background: var(--surface);
+            min-height: 100vh;
+        }
+
+        .quiz-game.active {
+            display: block;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .quiz-question {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .quiz-option {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(76, 201, 240, 0.1);
+            animation: correct 0.5s ease;
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--danger);
+            background: rgba(230, 57, 70, 0.1);
+            animation: incorrect 0.5s ease;
+        }
+
+        .option-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .quiz-option.correct .option-indicator {
+            border-color: var(--success);
+            background: var(--success);
+            color: white;
+        }
+
+        .quiz-option.incorrect .option-indicator {
+            border-color: var(--danger);
+            background: var(--danger);
+            color: white;
+        }
+
+        .quiz-feedback {
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            margin-top: var(--spacing-md);
+            display: none;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(76, 201, 240, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .quiz-feedback.incorrect {
+            background: rgba(230, 57, 70, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        /* ===== NEW DRAG & DROP GAME ===== */
+        .dragdrop-game {
+            display: none;
+            padding: var(--spacing-xl) 0;
+            background: var(--surface);
+            min-height: 100vh;
+        }
+
+        .dragdrop-game.active {
+            display: block;
+        }
+
+        .dragdrop-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .dragdrop-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        @media (max-width: 768px) {
+            .dragdrop-area {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .terms-column, .definitions-column {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .dragdrop-term {
+            background: var(--primary-light);
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            cursor: grab;
+            border: 2px dashed var(--primary);
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .dragdrop-term.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .dragdrop-definition {
+            background: var(--surface);
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .dragdrop-definition.hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .dragdrop-definition.correct {
+            background: rgba(76, 201, 240, 0.1);
+            border-color: var(--success);
+        }
+
+        .dragdrop-definition.incorrect {
+            background: rgba(230, 57, 70, 0.1);
+            border-color: var(--danger);
+        }
+
+        .dragdrop-timer {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+        }
+
+        .dragdrop-streak {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        /* Results Screen */
+        .results-screen {
+            display: none;
+            text-align: center;
+            padding: var(--spacing-xl);
+            animation: fadeIn 0.8s ease;
+        }
+
+        .results-screen.active {
+            display: block;
+        }
+
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .result-icon.correct {
+            color: var(--success);
+        }
+
+        .result-score {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .result-score.good {
+            color: var(--success);
+        }
+
+        .result-score.average {
+            color: var(--warning);
+        }
+
+        .result-score.poor {
+            color: var(--danger);
+        }
+
+        .reward-animation {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .reward-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .reward-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        .reward-icon.coins {
+            background: var(--coin);
+            color: var(--text-primary);
+        }
+
+        .reward-icon.xp {
+            background: var(--success);
+            color: white;
+        }
+
+        .reward-amount {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes correct {
+            0% { background-color: var(--surface); }
+            50% { background-color: var(--success); }
+            100% { background-color: var(--surface); }
+        }
+
+        @keyframes incorrect {
+            0% { background-color: var(--surface); }
+            50% { background-color: var(--danger); }
+            100% { background-color: var(--surface); }
+        }
+
+        .correct-animation {
+            animation: correct 0.5s ease;
+        }
+
+        .incorrect-animation {
+            animation: incorrect 0.5s ease;
+        }
+
+        /* Back Button */
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            background: var(--primary);
+            color: white;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .back-button:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-primary);
+            color: white;
+            padding: var(--spacing-lg) 0;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .footer-logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        .footer-copyright {
+            width: 100%;
+            text-align: center;
+            margin-top: var(--spacing-md);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: var(--shadow-elevated);
+                padding: var(--spacing-lg) 0;
+                gap: 0;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-item {
+                margin: var(--spacing-sm) 0;
+                width: 100%;
+            }
+            
+            .nav-link {
+                justify-content: center;
+                padding: var(--spacing-md);
+            }
+            
+            .economy-bar {
+                display: none !important;
+            }
+            
+            .mobile-economy {
+                display: flex;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .flashcard {
+                height: 350px;
+            }
+
+            .flashcard-term {
+                font-size: 2rem;
+            }
+
+            .flashcard-definition {
+                font-size: 1.25rem;
+            }
+
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: var(--spacing-xl) 0;
+            }
+            
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .cta-button {
+                padding: var(--spacing-sm) var(--spacing-lg);
+                font-size: 1rem;
+            }
+
+            .flashcard {
+                height: 300px;
+            }
+
+            .flashcard-term {
+                font-size: 1.75rem;
+            }
+
+            .memory-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- New Navigation Bar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-star-of-life"></i>
+                </div>
+                <span>PflegefachProfi</span>
+            </a>
+            
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        Startseite
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="lernmodule.html" class="nav-link">
+                        <i class="fas fa-book-medical"></i>
+                        Lernmodule
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="lernspiele.html" class="nav-link active">
+                        <i class="fas fa-gamepad"></i>
+                        Lernspiele
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="fallbeispiele.html" class="nav-link">
+                        <i class="fas fa-procedures"></i>
+                        Fallbeispiele
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link nav-cta">
+                        <i class="fas fa-rocket"></i>
+                        Jetzt starten
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Economy Stats Bar (Desktop) - NOW INSIDE NAV -->
+        <div class="economy-bar">
+            <div class="container">
+                <div class="economy-stats">
+                    <div class="economy-item">
+                        <i class="fas fa-coins"></i>
+                        <span id="coins">100</span>
+                    </div>
+                    <div class="economy-item">
+                        <i class="fas fa-level-up-alt"></i>
+                        Level <span id="level">1</span>
+                    </div>
+                    <div class="economy-item">
+                        <i class="fas fa-fire"></i>
+                        <span id="xp">0</span> XP
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Economy Stats (shown only on mobile) -->
+    <div class="mobile-economy">
+        <div class="economy-item">
+            <i class="fas fa-coins"></i>
+            <span id="mobile-coins">100</span>
+        </div>
+        <div class="economy-item">
+            <i class="fas fa-level-up-alt"></i>
+            <span id="mobile-level">1</span>
+        </div>
+        <div class="economy-item">
+            <i class="fas fa-fire"></i>
+            <span id="mobile-xp">0</span>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Fachwort Master</h1>
+                <p>Lerne Pflegefachwörter mit wissenschaftlichen Methoden und sammle Belohnungen!</p>
+                <button class="cta-button" id="start-learning">
+                    <i class="fas fa-play"></i>
+                    Jetzt starten
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Dashboard -->
+    <section class="dashboard" id="dashboard">
+        <div class="container">
+            <h2 class="section-title">Wortschatz Kategorien</h2>
+            <p class="section-subtitle">Wähle eine Kategorie aus und lerne mit verschiedenen Spielmodi</p>
+            
+            <div class="categories-grid" id="categories-grid">
+                <!-- Categories will be loaded by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Selection -->
+    <section class="game-selection" id="game-selection">
+        <div class="container">
+            <button class="back-button" id="back-to-categories">
+                <i class="fas fa-arrow-left"></i>
+                Zurück zu Kategorien
+            </button>
+            <h2 class="section-title" id="game-selection-title">Spielmodi auswählen</h2>
+            
+            <div class="games-grid">
+                <div class="game-card" data-game="flashcards">
+                    <div class="game-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3 class="game-title">Karteikarten</h3>
+                    <p class="game-description">Lerne mit intelligenten Karteikarten und Spaced Repetition für maximale Merkfähigkeit.</p>
+                    <div class="category-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="flashcards-progress">0%</span>
+                            <span class="stat-label">Fortschritt</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-card" data-game="memory">
+                    <div class="game-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <h3 class="game-title">Memory Spiel</h3>
+                    <p class="game-description">Verbinde Begriffe mit ihren Definitionen in einem unterhaltsamen Memory-Spiel.</p>
+                    <div class="category-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="memory-progress">0%</span>
+                            <span class="stat-label">Fortschritt</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-card" data-game="quiz">
+                    <div class="game-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <h3 class="game-title">Quiz</h3>
+                    <p class="game-description">Teste dein Wissen mit Multiple-Choice-Fragen zu den Fachbegriffen.</p>
+                    <div class="category-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="quiz-progress">0%</span>
+                            <span class="stat-label">Fortschritt</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Drag & Drop Game Card -->
+                <div class="game-card" data-game="dragdrop">
+                    <div class="game-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <h3 class="game-title">Drag & Drop</h3>
+                    <p class="game-description">Ziehe Begriffe zu den richtigen Definitionen in einem spannenden Zeit-Challenge.</p>
+                    <div class="category-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="dragdrop-progress">0%</span>
+                            <span class="stat-label">Fortschritt</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rest of your game sections remain the same -->
+    <!-- Flashcard Game, Memory Game, Quiz Game, Drag & Drop Game sections... -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">PflegefachProfi - Lernspiele</div>
+                <div class="footer-links">
+                    <a href="index.html" class="footer-link">Startseite</a>
+                    <a href="datenschutz.html" class="footer-link">Datenschutz</a>
+                    <a href="impressum.html" class="footer-link">Impressum</a>
+                    <a href="kontakt.html" class="footer-link">Kontakt</a>
+                </div>
+                <div class="footer-copyright">
+                    &copy; 2023 PflegefachProfi. Alle Rechte vorbehalten.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ===============================
+        // FIXED ECONOMY SYSTEM
+        // ===============================
+
+        // User data structure
+        let user = {
+            coins: 150,
+            xp: 250,
+            level: 3,
+            unlockedCategories: ["Herz und Kreislauf", "Lungen"],
+            progress: {
+                "Herz und Kreislauf": {
+                    flashcards: { completed: true, correct: 8, total: 10, score: 80 },
+                    memory: { completed: true, moves: 12, efficiency: 75 },
+                    quiz: { completed: true, correct: 7, total: 10, score: 70 }
+                },
+                "Lungen": {
+                    flashcards: { completed: false, correct: 5, total: 10, score: 50 }
+                }
+            }
+        };
+
+        // Cookie management
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Save and load user data
+        function saveUserData() {
+            setCookie('pflegeUser', JSON.stringify(user), 30);
+            console.log('User data saved:', user);
+        }
+
+        function loadUserData() {
+            const userData = getCookie('pflegeUser');
+            if (userData) {
+                try {
+                    user = JSON.parse(userData);
+                    console.log('User data loaded:', user);
+                } catch (e) {
+                    console.log('Error loading user data, using defaults');
+                }
+            } else {
+                console.log('No saved user data, using defaults');
+            }
+            updateUserStats();
+        }
+
+        // Update UI with user stats
+        function updateUserStats() {
+            console.log('Updating stats:', user);
+            
+            // Update desktop economy bar
+            const coinsElement = document.getElementById('coins');
+            const levelElement = document.getElementById('level');
+            const xpElement = document.getElementById('xp');
+            
+            if (coinsElement) coinsElement.textContent = user.coins;
+            if (levelElement) levelElement.textContent = user.level;
+            if (xpElement) xpElement.textContent = user.xp;
+            
+            // Update mobile economy stats
+            const mobileCoinsElement = document.getElementById('mobile-coins');
+            const mobileLevelElement = document.getElementById('mobile-level');
+            const mobileXpElement = document.getElementById('mobile-xp');
+            
+            if (mobileCoinsElement) mobileCoinsElement.textContent = user.coins;
+            if (mobileLevelElement) mobileLevelElement.textContent = user.level;
+            if (mobileXpElement) mobileXpElement.textContent = user.xp;
+        }
+
+        // Calculate level based on XP
+        function calculateLevel() {
+            const newLevel = Math.floor(user.xp / 100) + 1;
+            if (newLevel > user.level) {
+                user.level = newLevel;
+                console.log('Level up! New level:', user.level);
+                // Level up celebration could be added here
+            }
+        }
+
+        // Add XP and coins with animation
+        function addReward(coins, xp) {
+            console.log(`Adding reward: ${coins} coins, ${xp} XP`);
+            
+            user.coins += coins;
+            user.xp += xp;
+            calculateLevel();
+            updateUserStats();
+            saveUserData();
+            
+            // Visual feedback for rewards
+            if (coins > 0 || xp > 0) {
+                console.log(`Reward added! Total: ${user.coins} coins, ${user.xp} XP, Level ${user.level}`);
+            }
+        }
+
+        // Show confetti animation
+        function showConfetti() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        // ===============================
+        // INITIALIZATION
+        // ===============================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing economy system...');
+            
+            // Load user data immediately
+            loadUserData();
+            
+            // Initialize navigation
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('nav-menu');
+            
+            if (hamburger && navMenu) {
+                hamburger.addEventListener('click', () => {
+                    navMenu.classList.toggle('active');
+                });
+            }
+            
+            // Force update stats after a short delay to ensure DOM is ready
+            setTimeout(() => {
+                updateUserStats();
+                console.log('Economy system initialized');
+            }, 100);
+            
+            // Test function to manually add rewards (for debugging)
+            window.addTestRewards = function() {
+                addReward(50, 100);
+                alert('Test rewards added! Check console for details.');
+            };
+        });
+
+        // Make addReward function globally available for testing
+        window.addReward = addReward;
+    </script>
+</body>
+</html>
