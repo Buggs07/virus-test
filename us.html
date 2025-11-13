@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PflegefachProfi</title>
+    <title>Pflegeplanung Simulator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --primary: #4361ee;
@@ -13,9 +14,15 @@
             --secondary: #7209b7;
             --accent: #f72585;
             --success: #4cc9f0;
+            --warning: #fca311;
+            --danger: #e63946;
+            --coin: #ffd166;
+            --xp: #06d6a0;
+            --level: #118ab2;
             --text-primary: #1d3557;
             --text-secondary: #457b9d;
-            --background: #f8f9fa;
+            --text-tertiary: #a8dadc;
+            --background: #f1faee;
             --surface: #ffffff;
             --border: #e0e0e0;
             --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -43,6 +50,9 @@
             background-color: var(--background);
             line-height: 1.6;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .container {
@@ -52,17 +62,17 @@
             padding: 0 var(--spacing-md);
         }
 
-        /* Header */
-        .header {
-            background-color: var(--surface);
-            box-shadow: var(--shadow);
+        /* ===== NAVIGATION BAR ===== */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 0;
+            box-shadow: var(--shadow-elevated);
             position: sticky;
             top: 0;
             z-index: 1000;
-            backdrop-filter: blur(10px);
         }
 
-        .header-content {
+        .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -75,795 +85,2926 @@
             gap: var(--spacing-sm);
             font-weight: 800;
             font-size: 1.5rem;
-            color: var(--primary);
+            color: white;
             text-decoration: none;
         }
 
         .logo-icon {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            animation: pulse 2s infinite;
         }
 
-        .nav {
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .nav-menu {
             display: flex;
-            gap: var(--spacing-lg);
+            list-style: none;
+            gap: var(--spacing-md);
+            align-items: center;
         }
 
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
+        .nav-item {
             position: relative;
         }
 
-        .nav-link:hover, .nav-link.active {
-            color: var(--primary);
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover::after, .nav-link.active::after {
-            width: 100%;
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: var(--spacing-xxl) 0;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        .nav-link {
             color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+        }
+
+        .nav-cta {
+            background: var(--accent);
+            color: white;
+            padding: var(--spacing-xs) var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(247, 37, 133, 0.4);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(247, 37, 133, 0.5);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: var(--spacing-xs);
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        /* Active hamburger animation */
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* ===== ECONOMY BAR ===== */
+        .economy-bar {
+            background: rgba(255, 255, 255, 0.1);
+            padding: var(--spacing-xs) 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .economy-stats {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-lg);
+            align-items: center;
+        }
+
+        .economy-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .floating-elements {
+        .economy-item.coins {
+            background: linear-gradient(135deg, var(--coin) 0%, #ffb347 100%);
+            color: var(--text-primary);
+            animation: glow 2s infinite alternate;
+        }
+
+        .economy-item.xp {
+            background: linear-gradient(135deg, var(--xp) 0%, #04a57d 100%);
+            color: white;
+            animation: glow 2s infinite alternate 0.3s;
+        }
+
+        .economy-item.level {
+            background: linear-gradient(135deg, var(--level) 0%, #0c6c8c 100%);
+            color: white;
+            animation: glow 2s infinite alternate 0.6s;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+            to { box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
+        }
+
+        .economy-item i {
+            font-size: 1.1rem;
+        }
+
+        /* XP Progress Bar */
+        .xp-progress {
+            width: 100px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-left: 8px;
+        }
+
+        .xp-progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        /* Mobile economy stats */
+        .mobile-economy {
+            display: none;
+            justify-content: space-around;
+            padding: var(--spacing-sm) 0;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Content */
+        main {
+            padding: var(--spacing-xl) 0;
+            flex-grow: 1;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            font-size: 2rem;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Homepage Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .module-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .module-header {
+            padding: var(--spacing-lg);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            position: relative;
+        }
+
+        .module-title {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .module-difficulty {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .module-body {
+            padding: var(--spacing-lg);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-description {
+            margin-bottom: var(--spacing-md);
+            color: var(--text-secondary);
+            flex-grow: 1;
+        }
+
+        .module-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .module-cost {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-weight: 600;
+            color: var(--coin);
+        }
+
+        .module-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .btn {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--light-surface);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: #f0f0f0;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #3ab8d9;
+        }
+
+        .btn:disabled {
+            background: var(--border);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            border: none;
+        }
+
+        .locked-overlay {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: var(--spacing-lg);
+            text-align: center;
         }
 
-        .floating-element {
+        .locked-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--coin);
+        }
+
+        /* Simulator Container */
+        .simulator-container {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: var(--spacing-xl);
+            display: none;
+        }
+
+        .simulator-container.active {
+            display: block;
+        }
+
+        /* Case Study */
+        .case-study {
+            padding: var(--spacing-lg);
+            background: #f0f7f0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .case-title {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-sm);
+            color: var(--primary);
+        }
+
+        .case-description {
+            line-height: 1.8;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .case-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            background: white;
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .info-value {
+            font-weight: 500;
+        }
+
+        /* Steps Navigation */
+        .simulator-steps {
+            display: flex;
+            justify-content: space-between;
+            margin: var(--spacing-lg);
+            position: relative;
+        }
+
+        .simulator-steps::before {
+            content: '';
             position: absolute;
-            font-size: 2rem;
-            opacity: 0.1;
-            animation: float 6s ease-in-out infinite;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border);
+            z-index: 1;
         }
 
-        .floating-element:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
-        .floating-element:nth-child(2) { top: 20%; right: 10%; animation-delay: 1s; }
-        .floating-element:nth-child(3) { bottom: 30%; left: 15%; animation-delay: 2s; }
-        .floating-element:nth-child(4) { bottom: 15%; right: 20%; animation-delay: 3s; }
-        .floating-element:nth-child(5) { top: 40%; left: 25%; animation-delay: 4s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
-
-        .hero-content {
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             position: relative;
             z-index: 2;
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
+            flex: 1;
+            max-width: 150px;
         }
 
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: var(--spacing-md);
-            font-weight: 700;
-            opacity: 0;
-            animation: slideUp 1s ease 0.2s forwards;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            opacity: 0.9;
-            margin-bottom: var(--spacing-xl);
-            opacity: 0;
-            animation: slideUp 1s ease 0.4s forwards;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Mission Section */
-        .mission {
-            padding: var(--spacing-xxl) 0;
-            background: var(--surface);
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: var(--spacing-xxl);
-        }
-
-        .section-header h2 {
-            font-size: 2.5rem;
-            margin-bottom: var(--spacing-md);
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .section-header p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .mission-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--spacing-xl);
-            margin-top: var(--spacing-xl);
-        }
-
-        .mission-card {
-            background: var(--surface);
-            padding: var(--spacing-xl);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
-            text-align: center;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .mission-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .mission-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-elevated);
-            border-color: var(--primary-light);
-        }
-
-        .mission-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--primary-light);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto var(--spacing-lg);
-            color: var(--primary);
-            font-size: 2rem;
-            transition: all 0.3s ease;
-        }
-
-        .mission-card:hover .mission-icon {
-            background: var(--primary);
-            color: white;
-            transform: scale(1.1);
-        }
-
-        .mission-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: var(--spacing-md);
-            color: var(--text-primary);
-        }
-
-        .mission-card p {
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        /* Team Section */
-        .team {
-            padding: var(--spacing-xxl) 0;
-            background: var(--background);
-        }
-
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: var(--spacing-xl);
-            margin-top: var(--spacing-xl);
-        }
-
-        .team-card {
-            background: var(--surface);
-            border-radius: var(--radius-lg);
-            padding: var(--spacing-xl);
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            opacity: 0;
-            transform: translateX(-30px);
-        }
-
-        .team-card.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .team-card:nth-child(even) {
-            transform: translateX(30px);
-        }
-
-        .team-card:nth-child(even).visible {
-            transform: translateX(0);
-        }
-
-        .team-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: var(--shadow-elevated);
-        }
-
-        .team-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin: 0 auto var(--spacing-lg);
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2.5rem;
-            font-weight: 600;
-        }
-
-        .team-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: var(--spacing-xs);
-            color: var(--text-primary);
-        }
-
-        .team-role {
-            color: var(--primary);
-            font-weight: 600;
-            margin-bottom: var(--spacing-md);
-        }
-
-        .team-bio {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .team-social {
-            display: flex;
-            justify-content: center;
-            gap: var(--spacing-md);
-        }
-
-        .social-link {
+        .step-number {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: var(--primary-light);
+            background: var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--primary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .social-link:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        /* Stats Section */
-        .stats {
-            padding: var(--spacing-xxl) 0;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--spacing-xl);
-            text-align: center;
-        }
-
-        .stat-item {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .stat-item.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .stat-number {
-            font-size: 3rem;
             font-weight: 700;
             margin-bottom: var(--spacing-xs);
-            background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            transition: all 0.3s;
         }
 
-        .stat-label {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        /* Values Section */
-        .values {
-            padding: var(--spacing-xxl) 0;
-            background: var(--surface);
-        }
-
-        .values-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--spacing-xl);
-            margin-top: var(--spacing-xl);
-        }
-
-        .value-card {
-            background: var(--surface);
-            padding: var(--spacing-xl);
-            border-radius: var(--radius-lg);
-            border-left: 4px solid var(--primary);
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            opacity: 0;
-            transform: scale(0.9);
-        }
-
-        .value-card.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .value-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: var(--shadow-elevated);
-        }
-
-        .value-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--primary-light);
-            border-radius: var(--radius);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: var(--spacing-lg);
-            transition: all 0.3s ease;
-        }
-
-        .value-card:hover .value-icon {
+        .step.active .step-number {
             background: var(--primary);
             color: white;
-            transform: rotate(10deg);
         }
 
-        .value-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: var(--spacing-md);
-            color: var(--text-primary);
+        .step.completed .step-number {
+            background: var(--success);
+            color: white;
         }
 
-        .value-card p {
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            padding: var(--spacing-xxl) 0;
-            background: var(--background);
+        .step-label {
+            font-size: 0.8rem;
+            font-weight: 600;
             text-align: center;
         }
 
-        .cta-content {
-            max-width: 600px;
-            margin: 0 auto;
+        /* Step Content */
+        .step-content {
+            display: none;
+            padding: 0 var(--spacing-lg) var(--spacing-lg);
         }
 
-        .cta-content h2 {
-            font-size: 2.5rem;
+        .step-content.active {
+            display: block;
+        }
+
+        .step-title {
+            font-size: 1.4rem;
+            color: var(--primary);
             margin-bottom: var(--spacing-md);
-            color: var(--text-primary);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 1px solid var(--border);
         }
 
-        .cta-content p {
+        .step-description {
+            margin-bottom: var(--spacing-lg);
             color: var(--text-secondary);
-            font-size: 1.1rem;
+        }
+
+        /* Data Categorization */
+        .categorization-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        @media (max-width: 768px) {
+            .categorization-area {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .data-items {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .data-item {
+            background: var(--primary-light);
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            border: 2px dashed var(--primary);
+            cursor: grab;
+            transition: all 0.3s;
+            user-select: none;
+            touch-action: none;
+        }
+
+        .data-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .category {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            min-height: 120px;
+            transition: all 0.3s;
+        }
+
+        .category.hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .category-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .category-items {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+            min-height: 60px;
+        }
+
+        /* Options Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .option-card {
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+        }
+
+        .option-card:hover {
+            border-color: var(--primary-light);
+            background: #f8f9fa;
+        }
+
+        .option-card.selected {
+            border-color: var(--primary);
+            background: #e8f4e8;
+        }
+
+        .option-card.correct {
+            border-color: var(--success);
+            background: #d4edda;
+        }
+
+        .option-card.incorrect {
+            border-color: var(--danger);
+            background: #f8d7da;
+        }
+
+        .option-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .option-card.selected .option-indicator {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .option-card.correct .option-indicator {
+            border-color: var(--success);
+            background: var(--success);
+            color: white;
+        }
+
+        .option-card.incorrect .option-indicator {
+            border-color: var(--danger);
+            background: var(--danger);
+            color: white;
+        }
+
+        .option-text {
+            flex-grow: 1;
+        }
+
+        .option-label {
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+            color: var(--primary);
+        }
+
+        .option-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Navigation Buttons */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-lg);
+        }
+
+        /* Results Screen */
+        .results-screen {
+            text-align: center;
+            padding: var(--spacing-xl);
+            display: none;
+        }
+
+        .results-screen.active {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--success);
+        }
+
+        .result-title {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--primary);
+        }
+
+        .result-score {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+            color: var(--success);
+        }
+
+        .result-feedback {
+            font-size: 1.2rem;
+            margin-bottom: var(--spacing-xl);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .result-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
             margin-bottom: var(--spacing-xl);
         }
 
-        .cta-button {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-            background: var(--primary);
-            color: white;
-            padding: var(--spacing-md) var(--spacing-xl);
+        .breakdown-item {
+            background: white;
+            padding: var(--spacing-md);
             border-radius: var(--radius);
-            font-weight: 600;
-            text-decoration: none;
-            box-shadow: var(--shadow-elevated);
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
+            box-shadow: var(--shadow);
         }
 
-        .cta-button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(67, 97, 238, 0.3);
+        .breakdown-label {
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-secondary);
+        }
+
+        .breakdown-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .result-actions {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+        }
+
+        /* Auto-scroll indicators */
+        .scroll-indicator {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            z-index: 999;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .scroll-indicator.top {
+            top: 20px;
+        }
+
+        .scroll-indicator.bottom {
+            bottom: 20px;
+        }
+
+        .scroll-indicator.show {
+            display: flex;
         }
 
         /* Footer */
-        .footer {
-            padding: var(--spacing-xl) 0;
+        footer {
             background: var(--text-primary);
             color: white;
+            padding: var(--spacing-lg) 0;
+            margin-top: auto;
         }
 
         .footer-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
         }
 
         .footer-logo {
             font-weight: 700;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
         }
 
         .footer-links {
             display: flex;
             gap: var(--spacing-lg);
+            flex-wrap: wrap;
         }
 
         .footer-link {
-            color: rgba(255, 255, 255, 0.7);
+            color: #ddd;
             text-decoration: none;
-            font-size: 0.875rem;
-            transition: color 0.2s ease;
+            transition: color 0.3s;
         }
 
         .footer-link:hover {
             color: white;
         }
 
-        /* Responsive */
+        .footer-bottom {
+            text-align: center;
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: var(--spacing-sm);
+            .hamburger {
+                display: flex;
             }
             
-            .nav {
-                gap: var(--spacing-md);
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                flex-direction: column;
+                background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+                width: 80%;
+                height: 100vh;
+                text-align: left;
+                transition: 0.3s;
+                box-shadow: var(--shadow-elevated);
+                padding: var(--spacing-xxl) var(--spacing-lg);
+                gap: 0;
+                z-index: 999;
+                overflow-y: auto;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-item {
+                margin: var(--spacing-sm) 0;
+                width: 100%;
+            }
+            
+            .nav-link {
+                justify-content: flex-start;
+                padding: var(--spacing-md);
+                font-size: 1.1rem;
+            }
+            
+            .economy-bar {
+                display: none;
+            }
+            
+            .mobile-economy {
+                display: flex;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .simulator-steps {
                 flex-wrap: wrap;
+                gap: var(--spacing-md);
+            }
+            
+            .simulator-steps::before {
+                display: none;
+            }
+            
+            .step {
+                flex: 1;
+                min-width: 120px;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+            
+            .btn {
+                width: 100%;
                 justify-content: center;
             }
             
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .mission-grid,
-            .team-grid,
-            .stats-grid,
-            .values-grid {
-                grid-template-columns: 1fr;
+            .result-actions {
+                flex-direction: column;
             }
             
             .footer-content {
                 flex-direction: column;
-                gap: var(--spacing-md);
                 text-align: center;
             }
             
             .footer-links {
                 justify-content: center;
-                flex-wrap: wrap;
             }
+        }
+
+        /* Particle effects for economy */
+        .coin-particle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--coin);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.8;
+            animation: coinFloat 1s ease-out forwards;
+        }
+
+        @keyframes coinFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(var(--tx, 0), var(--ty, -50px)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .xp-particle {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: var(--xp);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.8;
+            animation: xpFloat 1s ease-out forwards;
+        }
+
+        @keyframes xpFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(var(--tx, 0), var(--ty, -40px)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Level up animation */
+        .level-up {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            color: white;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .level-up h2 {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--coin);
+        }
+
+        .level-up p {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* Achievement badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary-light);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .badge i {
+            color: var(--coin);
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <a href="index.html" class="logo">
-                    <div class="logo-icon">
-                        <i class="fas fa-star-of-life"></i>
-                    </div>
-                    <span>PflegefachProfi</span>
-                </a>
-                <nav class="nav">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="wissenstraining.html" class="nav-link">Lernspiele</a>
-                    <a href="themen.html" class="nav-link active">Vorbereitung</a>
-                    <a href="test.html" class="nav-link">Fallbeispielle</a>
-                </nav>
-            </div>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo" id="home-link">
+                <div class="logo-icon">
+                    <i class="fas fa-stethoscope"></i>
+                </div>
+                <span>Pflegeplanung Simulator</span>
+            </a>
+            
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" id="nav-home">
+                        <i class="fas fa-home"></i>
+                        Startseite
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-book-medical"></i>
+                        Lernmodule
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-gamepad"></i>
+                        Lernspiele
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-procedures"></i>
+                        Fallbeispiele
+                    </a>
+                </li>
+            </ul>
         </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="floating-elements">
-            <div class="floating-element"><i class="fas fa-heartbeat"></i></div>
-            <div class="floating-element"><i class="fas fa-stethoscope"></i></div>
-            <div class="floating-element"><i class="fas fa-graduation-cap"></i></div>
-            <div class="floating-element"><i class="fas fa-users"></i></div>
-            <div class="floating-element"><i class="fas fa-rocket"></i></div>
-        </div>
-        <div class="container">
-            <div class="hero-content">
-                <h1>Willkommen bei PflegefachProfi</h1>
-                <p>Wir revolutionieren die Pflegeausbildung durch innovative, gamifizierte Lernmethoden und moderne Technologie.</p>
+        <!-- Economy Bar -->
+        <div class="economy-bar">
+            <div class="container">
+                <div class="economy-stats">
+                    <div class="economy-item coins" id="coins-display">
+                        <i class="fas fa-coins"></i>
+                        <span id="coins">150</span>
+                    </div>
+                    <div class="economy-item xp" id="xp-display">
+                        <i class="fas fa-fire"></i>
+                        <span id="xp">75</span> XP
+                        <div class="xp-progress">
+                            <div class="xp-progress-fill" id="xp-progress" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <div class="economy-item level" id="level-display">
+                        <i class="fas fa-level-up-alt"></i>
+                        Level <span id="level">2</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
 
-    <!-- Mission Section -->
-    <section class="mission">
-        <div class="container">
-            <div class="section-header">
-                <h2>Unsere Mission</h2>
-                <p>Wir machen Pflegeausbildung zugänglich, engagierend und effektiv für die nächste Generation von Pflegefachkräften.</p>
+        <!-- Mobile Economy Stats (shown only on mobile) -->
+        <div class="mobile-economy">
+            <div class="economy-item coins">
+                <i class="fas fa-coins"></i>
+                <span id="mobile-coins">150</span>
             </div>
-            <div class="mission-grid">
-                <div class="mission-card">
-                    <div class="mission-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h3>Bildung Revolutionieren</h3>
-                    <p>Durch gamifizierte Lernmethoden verwandeln wir trockene Theorie in spannende Lernerlebnisse, die nachhaltig im Gedächtnis bleiben.</p>
-                </div>
-                <div class="mission-card">
-                    <div class="mission-icon">
-                        <i class="fas fa-hand-holding-heart"></i>
-                    </div>
-                    <h3>Praxisnahes Lernen</h3>
-                    <p>Realistische Fallbeispiele und interaktive Szenarien bereiten optimal auf die Herausforderungen des Pflegealltags vor.</p>
-                </div>
-                <div class="mission-card">
-                    <div class="mission-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Fortschritt Messbar Machen</h3>
-                    <p>Detaillierte Fortschrittsverfolgung und personalisiertes Feedback helfen dabei, Stärken zu erkennen und Schwächen zu verbessern.</p>
-                </div>
+            <div class="economy-item xp">
+                <i class="fas fa-fire"></i>
+                <span id="mobile-xp">75</span>
+            </div>
+            <div class="economy-item level">
+                <i class="fas fa-level-up-alt"></i>
+                <span id="mobile-level">2</span>
             </div>
         </div>
-    </section>
+    </nav>
 
-    <!-- Team Section -->
-    <section class="team">
-        <div class="container">
-            <div class="section-header">
-                <h2>Unser Team</h2>
-                <p>Hinter PflegefachProfi steht Experten in der Ausbildung, die Selber durch die Prüfung gehen.</p>
-            </div>
-            <div class="team-grid">
-                <div class="team-card">
-                    <div class="team-avatar">JT</div>
-                    <h3>Jibin Thomas</h3>
-                    <div class="team-role">Gründer & Azubi im 3. Lehrjahr</div>
-                    <p class="team-bio">Selber Auszubildender Pflegefachmann, spezialisiert auf Front und Backend Development und Prüfungsvorbereitung.</p>
-                    <div class="team-social">
-                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="social-link"><i class="fas fa-envelope"></i></a>
-                    </div>
-                </div>
-                <div class="team-card">
-              <!--      <div class="team-avatar">Nayana</div>
-                    <h3>Nayana Shaju</h3>
-                    <div class="team-role">Technischer Leiter</div>
-                    <p class="team-bio">bio.</p>
-                    <div class="team-social">
-                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-             -->   <div class="team-card">
-                    <div class="team-avatar">NS</div>
-                    <h3>Nayana Shaju</h3>
-                    <div class="team-role">Content-Spezialistin</div>
-                    <p class="team-bio">Auszubildende Pflegefachfrau, spezialisiert auf Anatomie; Psychologie und Prüfungsfragen.</p>
-                    <div class="team-social">
-                        <a href="#" class="social-link"><i class="fas fa-envelope"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Auto-scroll indicators -->
+    <div class="scroll-indicator top" id="scroll-indicator-top">
+        <i class="fas fa-arrow-up"></i>
+        Nach oben scrollen
+    </div>
+    <div class="scroll-indicator bottom" id="scroll-indicator-bottom">
+        <i class="fas fa-arrow-down"></i>
+        Nach unten scrollen
+    </div>
 
-    <!-- Stats Section -->
-    <section class="stats">
+    <!-- Main Content -->
+    <main>
         <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number" data-target="10000">0</div>
-                    <div class="stat-label">Aktive Lernende</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" data-target="98">0</div>
-                    <div class="stat-label">Erfolgsquote in Prüfungen</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" data-target="150">0</div>
-                    <div class="stat-label">Fallbeispiele</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" data-target="24">0</div>
-                    <div class="stat-label">Monate Erfahrung</div>
-                </div>
-            </div>
-        </div>
-    </section>
+            <!-- Homepage View -->
+            <div id="homepage-view">
+                <h1 class="section-title">Pflegeplanung Simulator</h1>
+                <p class="section-subtitle">
+                    Meistern Sie die Pflegeplanung mit interaktiven Fallbeispielen. Sammeln Sie Erfahrungspunkte, schalten Sie Module frei und werden Sie zum Pflegeprofi!
+                </p>
 
-    <!-- Values Section -->
-    <section class="values">
-        <div class="container">
-            <div class="section-header">
-                <h2>Unsere Werte</h2>
-                <p>Diese Grundsätze leiten alles, was wir bei PflegefachProfi tun.</p>
-            </div>
-            <div class="values-grid">
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Qualität</h3>
-                    <p>Höchste Standards in allen Lernmaterialien, regelmäßige Updates basierend auf aktuellen Pflegestandards und Feedback unserer Community.</p>
-                </div>
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-lightbulb"></i>
-                    </div>
-                    <h3>Innovation</h3>
-                    <p>Ständige Weiterentwicklung unserer Plattform mit modernsten Lerntechnologien und gamifizierten Ansätzen für maximalen Lernerfolg.</p>
-                </div>
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-hands-helping"></i>
-                    </div>
-                    <h3>Gemeinschaft</h3>
-                    <p>Eine unterstützende Lerncommunity, in der sich Pflegeschüler gegenseitig helfen und von erfahrenen Fachkräften lernen können.</p>
+                <div class="modules-grid" id="modules-container">
+                    <!-- Modules will be populated by JavaScript -->
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Starte deine Lernreise</h2>
-                <p>Werde Teil der PflegefachProfi-Community und meistere deine Pflegeausbildung mit modernsten Lernmethoden.</p>
-                <a href="index.html" class="cta-button">
-                    <i class="fas fa-rocket"></i>
-                    Jetzt starten
-                </a>
+            <!-- Simulator View -->
+            <div id="simulator-view" style="display: none;">
+                <div class="simulator-container" id="simulator-container">
+                    <!-- Case Study -->
+                    <div class="case-study">
+                        <h2 class="case-title" id="case-title">Fallbeispiel: Frau Schmidt</h2>
+                        <div class="case-description" id="case-description">
+                            Frau Schmidt, 82 Jahre, ist nach einem Sturz mit Oberschenkelhalsfraktur operiert worden (Dynamische Hüftschraube). 
+                            Sie ist seit 3 Tagen postoperativ, hat starke Schmerzen (8/10 auf der Schmerzskala) und ist in ihrer Mobilität eingeschränkt. 
+                            Sie benötigt Hilfe bei der Körperpflege und beim Anziehen. Sie ist ängstlich vor erneuten Stürzen und wirkt desorientiert. 
+                            Ihre Haut zeigt eine beginnende Rötung am Kreuzbein. Sie hat Appetitmangel und trinkt wenig. Frau Schmidt war früher Lehrerin, 
+                            ist verwitwet und lebt allein. Ihre Tochter besucht sie täglich im Krankenhaus.
+                        </div>
+                        <div class="case-info">
+                            <div class="info-item">
+                                <div class="info-label">Patient</div>
+                                <div class="info-value">Frau Schmidt, 82 Jahre</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Diagnose</div>
+                                <div class="info-value">Oberschenkelhalsfraktur, Status post OP</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Situation</div>
+                                <div class="info-value">Stationäre Pflege, 3. postoperativer Tag</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Steps Navigation -->
+                    <div class="simulator-steps">
+                        <div class="step active" data-step="1">
+                            <div class="step-number">1</div>
+                            <div class="step-label">Daten kategorisieren</div>
+                        </div>
+                        <div class="step" data-step="2">
+                            <div class="step-number">2</div>
+                            <div class="step-label">Probleme identifizieren</div>
+                        </div>
+                        <div class="step" data-step="3">
+                            <div class="step-number">3</div>
+                            <div class="step-label">Ziele setzen</div>
+                        </div>
+                        <div class="step" data-step="4">
+                            <div class="step-number">4</div>
+                            <div class="step-label">Maßnahmen planen</div>
+                        </div>
+                        <div class="step" data-step="5">
+                            <div class="step-number">5</div>
+                            <div class="step-label">Evaluation</div>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Data Categorization -->
+                    <div class="step-content active" data-step="1">
+                        <h3 class="step-title">Daten kategorisieren</h3>
+                        <p class="step-description">
+                            Ziehen Sie die Informationen aus dem Fallbeispiel in die richtigen Kategorien:
+                        </p>
+                        
+                        <div class="categorization-area">
+                            <div class="data-items" id="data-items">
+                                <!-- Data items will be populated by JavaScript -->
+                            </div>
+                            <div class="categories">
+                                <div class="category" data-category="biographisch">
+                                    <div class="category-title">
+                                        <i class="fas fa-user"></i>
+                                        Biographisch
+                                    </div>
+                                    <div class="category-items" id="biographisch-items"></div>
+                                </div>
+                                <div class="category" data-category="sozial">
+                                    <div class="category-title">
+                                        <i class="fas fa-users"></i>
+                                        Sozial
+                                    </div>
+                                    <div class="category-items" id="sozial-items"></div>
+                                </div>
+                                <div class="category" data-category="medizinisch">
+                                    <div class="category-title">
+                                        <i class="fas fa-heartbeat"></i>
+                                        Medizinisch
+                                    </div>
+                                    <div class="category-items" id="medizinisch-items"></div>
+                                </div>
+                                <div class="category" data-category="pflegerisch">
+                                    <div class="category-title">
+                                        <i class="fas fa-hand-holding-heart"></i>
+                                        Pflegerisch
+                                    </div>
+                                    <div class="category-items" id="pflegerisch-items"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="navigation-buttons">
+                            <button class="btn btn-secondary" id="back-to-modules">
+                                <i class="fas fa-arrow-left"></i>
+                                Zurück zu Modulen
+                            </button>
+                            <button class="btn btn-primary" id="next-to-probleme" disabled>
+                                Weiter zu Problemen
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Problem Identification -->
+                    <div class="step-content" data-step="2">
+                        <h3 class="step-title">Probleme identifizieren</h3>
+                        <p class="step-description">
+                            Identifizieren Sie 2 korrekte Pflegeprobleme für dieses Fallbeispiel. Wählen Sie aus den folgenden Optionen:
+                        </p>
+                        
+                        <div class="options-grid" id="problem-options">
+                            <!-- Options will be populated by JavaScript -->
+                        </div>
+                        
+                        <div class="navigation-buttons">
+                            <button class="btn btn-secondary" id="back-to-categorization">
+                                <i class="fas fa-arrow-left"></i>
+                                Zurück zur Kategorisierung
+                            </button>
+                            <button class="btn btn-primary" id="next-to-ziele" disabled>
+                                Weiter zu Zielen
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Goal Setting -->
+                    <div class="step-content" data-step="3">
+                        <h3 class="step-title">Pflegeziele setzen</h3>
+                        <p class="step-description">
+                            Setzen Sie für jedes identifizierte Problem 2 korrekte Ziele. Wählen Sie aus den folgenden Optionen:
+                        </p>
+                        
+                        <div id="ziele-container">
+                            <!-- Dynamic content will be added by JavaScript -->
+                        </div>
+                        
+                        <div class="navigation-buttons">
+                            <button class="btn btn-secondary" id="back-to-probleme">
+                                <i class="fas fa-arrow-left"></i>
+                                Zurück zu Problemen
+                            </button>
+                            <button class="btn btn-primary" id="next-to-massnahmen" disabled>
+                                Weiter zu Maßnahmen
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Intervention Planning -->
+                    <div class="step-content" data-step="4">
+                        <h3 class="step-title">Pflegemaßnahmen planen</h3>
+                        <p class="step-description">
+                            Planen Sie für jedes Problem 5 korrekte Maßnahmen. Wählen Sie aus den folgenden Optionen:
+                        </p>
+                        
+                        <div id="massnahmen-container">
+                            <!-- Dynamic content will be added by JavaScript -->
+                        </div>
+                        
+                        <div class="navigation-buttons">
+                            <button class="btn btn-secondary" id="back-to-ziele">
+                                <i class="fas fa-arrow-left"></i>
+                                Zurück zu Zielen
+                            </button>
+                            <button class="btn btn-primary" id="next-to-evaluation">
+                                Auswerten
+                                <i class="fas fa-check-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Evaluation -->
+                    <div class="step-content" data-step="5">
+                        <h3 class="step-title">Evaluation</h3>
+                        <p class="step-description">
+                            Ihre Auswahl wird jetzt ausgewertet.
+                        </p>
+                        
+                        <div class="navigation-buttons">
+                            <button class="btn btn-secondary" id="back-to-massnahmen">
+                                <i class="fas fa-arrow-left"></i>
+                                Zurück zu Maßnahmen
+                            </button>
+                            <button class="btn btn-primary" id="evaluate-answers">
+                                Ergebnisse anzeigen
+                                <i class="fas fa-chart-bar"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Screen -->
+                <div class="results-screen" id="results-screen">
+                    <div class="result-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h2 class="result-title">Herzlichen Glückwunsch!</h2>
+                    <div class="result-score" id="result-score">0%</div>
+                    <p class="result-feedback" id="result-feedback">
+                        Sie haben das Fallbeispiel erfolgreich bearbeitet.
+                    </p>
+                    
+                    <div class="result-breakdown">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Daten kategorisiert</div>
+                            <div class="breakdown-value" id="categorization-score">0/8</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Probleme</div>
+                            <div class="breakdown-value" id="problem-score">0/2</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Ziele Problem 1</div>
+                            <div class="breakdown-value" id="ziel1-score">0/2</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Ziele Problem 2</div>
+                            <div class="breakdown-value" id="ziel2-score">0/2</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Maßnahmen Problem 1</div>
+                            <div class="breakdown-value" id="massnahme1-score">0/5</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Maßnahmen Problem 2</div>
+                            <div class="breakdown-value" id="massnahme2-score">0/5</div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-actions">
+                        <button class="btn btn-secondary" id="review-answers">
+                            <i class="fas fa-redo"></i>
+                            Antworten überprüfen
+                        </button>
+                        <button class="btn btn-primary" id="back-to-modules-from-results">
+                            Zurück zu Modulen
+                            <i class="fas fa-home"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
+    </main>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer>
         <div class="container">
             <div class="footer-content">
-                <div class="footer-logo">PflegefachProfi</div>
+                <div class="footer-logo">Pflegeplanung Simulator</div>
                 <div class="footer-links">
-                    <a href="impressum.html" class="footer-link">Impressum</a>
-                    <a href="datenschutz.html" class="footer-link">Datenschutz</a>
-                    <a href="agb.html" class="footer-link">AGB</a>
-                    <a href="kontakt.html" class="footer-link">Kontakt</a>
+                    <a href="#" class="footer-link">Startseite</a>
+                    <a href="#" class="footer-link">Über dieses Projekt</a>
+                    <a href="#" class="footer-link">Kontakt</a>
+                </div>
+                <div class="footer-bottom">
+                    &copy; 2023 Pflegeplanung Simulator. Entwickelt für die Ausbildung.
                 </div>
             </div>
         </div>
     </footer>
 
     <script>
-        // Scroll Animation
-        function animateOnScroll() {
-            const elements = document.querySelectorAll('.mission-card, .team-card, .stat-item, .value-card');
-            
-            elements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 150;
-                
-                if (elementTop < window.innerHeight - elementVisible) {
-                    element.classList.add('visible');
-                }
-            });
-        }
-
-        // Animate numbers
-        function animateNumbers() {
-            const counters = document.querySelectorAll('.stat-number');
-            const speed = 200;
-            
-            counters.forEach(counter => {
-                const target = +counter.getAttribute('data-target');
-                const count = +counter.innerText;
-                const increment = target / speed;
-                
-                if (count < target) {
-                    counter.innerText = Math.ceil(count + increment);
-                    setTimeout(() => animateNumbers(), 1);
-                } else {
-                    counter.innerText = target;
-                }
-            });
-        }
-
-        // Initialize animations
-        window.addEventListener('scroll', animateOnScroll);
-        window.addEventListener('load', () => {
-            animateOnScroll();
-            // Start number animation when stats section is visible
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        animateNumbers();
-                        observer.unobserve(entry.target);
+        // Module Data Structure
+        const modules = [
+            {
+                id: "frau-schmidt",
+                title: "Fallbeispiel: Frau Schmidt",
+                description: "Eine 82-jährige Patientin nach Oberschenkelhalsfraktur mit postoperativen Schmerzen und Mobilitätseinschränkungen.",
+                difficulty: "Anfänger",
+                cost: 50,
+                unlocked: false,
+                completed: false,
+                caseStudy: {
+                    id: 1,
+                    title: "Fallbeispiel: Frau Schmidt",
+                    description: "Frau Schmidt, 82 Jahre, ist nach einem Sturz mit Oberschenkelhalsfraktur operiert worden (Dynamische Hüftschraube). Sie ist seit 3 Tagen postoperativ, hat starke Schmerzen (8/10 auf der Schmerzskala) und ist in ihrer Mobilität eingeschränkt. Sie benötigt Hilfe bei der Körperpflege und beim Anziehen. Sie ist ängstlich vor erneuten Stürzen und wirkt desorientiert. Ihre Haut zeigt eine beginnende Rötung am Kreuzbein. Sie hat Appetitmangel und trinkt wenig. Frau Schmidt war früher Lehrerin, ist verwitwet und lebt allein. Ihre Tochter besucht sie täglich im Krankenhaus.",
+                    patient: "Frau Schmidt, 82 Jahre",
+                    diagnosis: "Oberschenkelhalsfraktur, Status post OP",
+                    situation: "Stationäre Pflege, 3. postoperativer Tag",
+                    dataItems: [
+                        { id: "data-1", text: "82 Jahre alt", correctCategory: "biographisch" },
+                        { id: "data-2", text: "War früher Lehrerin", correctCategory: "biographisch" },
+                        { id: "data-3", text: "Verwitwet", correctCategory: "sozial" },
+                        { id: "data-4", text: "Tochter besucht täglich", correctCategory: "sozial" },
+                        { id: "data-5", text: "Oberschenkelhalsfraktur", correctCategory: "medizinisch" },
+                        { id: "data-6", text: "Status post Operation", correctCategory: "medizinisch" },
+                        { id: "data-7", text: "Benötigt Hilfe bei Körperpflege", correctCategory: "pflegerisch" },
+                        { id: "data-8", text: "Hautrötung am Kreuzbein", correctCategory: "pflegerisch" }
+                    ],
+                    problems: {
+                        question: "Identifizieren Sie 2 korrekte Pflegeprobleme:",
+                        options: [
+                            {
+                                id: "problem-1",
+                                text: "Akute Schmerzen",
+                                description: "Durch postoperative Zustand und Bewegungseinschränkung",
+                                correct: true,
+                                type: "correct"
+                            },
+                            {
+                                id: "problem-2",
+                                text: "Risiko für Dekubitus",
+                                description: "Durch Immobilität und Druck auf Gewebe",
+                                correct: true,
+                                type: "correct"
+                            },
+                            {
+                                id: "problem-3",
+                                text: "Eingeschränkte Mobilität",
+                                description: "Durch schlechte Laune und Unlust sich zu bewegen",
+                                correct: false,
+                                type: "wrong-etiology"
+                            },
+                            {
+                                id: "problem-4",
+                                text: "Oberschenkelhalsfraktur",
+                                description: "Diagnose nach Sturz",
+                                correct: false,
+                                type: "medical"
+                            },
+                            {
+                                id: "problem-5",
+                                text: "Zeitaufwändige Pflege",
+                                description: "Benötigt viel Betreuung durch das Pflegepersonal",
+                                correct: false,
+                                type: "burden"
+                            }
+                        ]
+                    },
+                    ziele: {
+                        "problem-1": {
+                            title: "Ziele für 'Akute Schmerzen'",
+                            options: [
+                                {
+                                    id: "ziel-1-1",
+                                    text: "Die Schmerzintensität ist innerhalb von 30 Minuten von 8/10 auf 4/10 reduziert worden.",
+                                    correct: true
+                                },
+                                {
+                                    id: "ziel-1-2",
+                                    text: "Der Patient ist in 3 Tagen schmerzfrei.",
+                                    correct: false
+                                },
+                                {
+                                    id: "ziel-1-3",
+                                    text: "Die Schmerzintensität ist bei Mobilisation unter 3/10.",
+                                    correct: true
+                                },
+                                {
+                                    id: "ziel-1-4",
+                                    text: "Der Patient nimmt regelmäßig Schmerzmittel.",
+                                    correct: false
+                                }
+                            ]
+                        },
+                        "problem-2": {
+                            title: "Ziele für 'Risiko für Dekubitus'",
+                            options: [
+                                {
+                                    id: "ziel-2-1",
+                                    text: "Die Haut am Kreuzbein ist in 24 Stunden ohne Rötung.",
+                                    correct: true
+                                },
+                                {
+                                    id: "ziel-2-2",
+                                    text: "Es ist während des Aufenthalts kein Dekubitus entstanden.",
+                                    correct: true
+                                },
+                                {
+                                    id: "ziel-2-3",
+                                    text: "Der Patient liegt bequem im Bett.",
+                                    correct: false
+                                },
+                                {
+                                    id: "ziel-2-4",
+                                    text: "Die Haut ist täglich eingecremt worden.",
+                                    correct: false
+                                }
+                            ]
+                        }
+                    },
+                    massnahmen: {
+                        "problem-1": {
+                            title: "Maßnahmen für 'Akute Schmerzen'",
+                            options: [
+                                {
+                                    id: "massnahme-1-1",
+                                    text: "Die Pflegekraft verabreicht bei Schmerzangabe >4/10 das verordnete Analgetikum.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-1-2",
+                                    text: "Die Pflegekraft lagert den Patienten schmerzentlastend mit Kissen.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-1-3",
+                                    text: "Die Pflegekraft lenkt den Patienten durch Gespräche von den Schmerzen ab.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-1-4",
+                                    text: "Die Pflegekraft dokumentiert die Schmerzintensität vor und nach Maßnahmen.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-1-5",
+                                    text: "Die Pflegekraft appliziert Wärme/Kälte je nach Indikation.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-1-6",
+                                    text: "Die Pflegekraft informiert den Arzt nur bei starken Schmerzen.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-1-7",
+                                    text: "Die Pflegekraft lässt den Patienten alleine, um ihn nicht zu stören.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-1-8",
+                                    text: "Die Pflegekraft verabreicht zusätzliche Schmerzmittel ohne Verordnung.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-1-9",
+                                    text: "Die Pflegekraft massiert die schmerzende Stelle intensiv.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-1-10",
+                                    text: "Die Pflegekraft erklärt dem Patienten, dass Schmerzen normal sind.",
+                                    correct: false
+                                }
+                            ]
+                        },
+                        "problem-2": {
+                            title: "Maßnahmen für 'Risiko für Dekubitus'",
+                            options: [
+                                {
+                                    id: "massnahme-2-1",
+                                    text: "Die Pflegekraft lagert den Patienten nach Plan alle 2 Stunden um.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-2-2",
+                                    text: "Die Pflegekraft inspiziert die Haut bei jeder Lagerung systematisch.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-2-3",
+                                    text: "Die Pflegekraft verwendet eine Wechseldruckmatratze.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-2-4",
+                                    text: "Die Pflegekraft hält die Haut trocken und sauber.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-2-5",
+                                    text: "Die Pflegekraft fördert die Mobilisation soweit möglich.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-2-6",
+                                    text: "Die Pflegekraft lässt den Patienten lange in einer Position liegen.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-2-7",
+                                    text: "Die Pflegekraft verwendet normale Bettwäsche ohne Spezialauflagen.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-2-8",
+                                    text: "Die Pflegekraft cremt die Haut nur bei sichtbaren Problemen ein.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-2-9",
+                                    text: "Die Pflegekraft lagert den Patienten nach eigenem Ermessen.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-2-10",
+                                    text: "Die Pflegekraft informiert den Patienten nicht über Dekubitusrisiko.",
+                                    correct: false
+                                }
+                            ]
+                        }
                     }
-                });
+                }
+            },
+            {
+                id: "herr-mueller",
+                title: "Fallbeispiel: Herr Müller",
+                description: "Ein 68-jähriger Patient mit Diabetes mellitus Typ 2 und neu diagnostizierter Herzinsuffizienz.",
+                difficulty: "Fortgeschritten",
+                cost: 100,
+                unlocked: false,
+                completed: false,
+                caseStudy: {
+                    id: 2,
+                    title: "Fallbeispiel: Herr Müller",
+                    description: "Herr Müller, 68 Jahre, wurde mit der Diagnose Herzinsuffizienz stationär aufgenommen. Er hat seit Jahren einen Diabetes mellitus Typ 2, der mit Metformin und Insulin behandelt wird. Aktuelle Beschwerden: Atemnot bei Belastung, Beinödeme, Müdigkeit. Der Blutzucker ist schlecht eingestellt (Nüchternwert: 180 mg/dl). Herr Müller ist verwitwet und lebt allein. Sein Sohn wohnt in der Nähe und unterstützt ihn. Der Patient wirkt ängstlich und hat wenig Wissen über seine Erkrankungen.",
+                    patient: "Herr Müller, 68 Jahre",
+                    diagnosis: "Herzinsuffizienz, Diabetes mellitus Typ 2",
+                    situation: "Stationäre Aufnahme, 1. Behandlungstag",
+                    dataItems: [
+                        { id: "data-1", text: "68 Jahre alt", correctCategory: "biographisch" },
+                        { id: "data-2", text: "Verwitwet", correctCategory: "sozial" },
+                        { id: "data-3", text: "Sohn wohnt in der Nähe", correctCategory: "sozial" },
+                        { id: "data-4", text: "Herzinsuffizienz", correctCategory: "medizinisch" },
+                        { id: "data-5", text: "Diabetes mellitus Typ 2", correctCategory: "medizinisch" },
+                        { id: "data-6", text: "Beinödeme", correctCategory: "pflegerisch" },
+                        { id: "data-7", text: "Atemnot bei Belastung", correctCategory: "pflegerisch" },
+                        { id: "data-8", text: "Schlechte Blutzuckereinstellung", correctCategory: "pflegerisch" }
+                    ],
+                    problems: {
+                        question: "Identifizieren Sie 2 korrekte Pflegeprobleme:",
+                        options: [
+                            {
+                                id: "problem-1",
+                                text: "Atemnot",
+                                description: "Durch Herzinsuffizienz und Flüssigkeitsretention",
+                                correct: true,
+                                type: "correct"
+                            },
+                            {
+                                id: "problem-2",
+                                text: "Risiko für Hautschäden",
+                                description: "Durch Ödeme und Diabetes-bedingte Durchblutungsstörungen",
+                                correct: true,
+                                type: "correct"
+                            },
+                            {
+                                id: "problem-3",
+                                text: "Diabetes mellitus",
+                                description: "Chronische Stoffwechselerkrankung",
+                                correct: false,
+                                type: "medical"
+                            },
+                            {
+                                id: "problem-4",
+                                text: "Wissensdefizit",
+                                description: "Mangelnde Krankheitseinsicht und Therapieverständnis",
+                                correct: true,
+                                type: "correct"
+                            },
+                            {
+                                id: "problem-5",
+                                text: "Einsamkeit",
+                                description: "Durch Verwitwetsein und allein leben",
+                                correct: false,
+                                type: "psychosocial"
+                            }
+                        ]
+                    },
+                    ziele: {
+                        "problem-1": {
+                            title: "Ziele für 'Atemnot'",
+                            options: [
+                                {
+                                    id: "ziel-1-1",
+                                    text: "Der Patient hat in Ruhe keine Atemnot mehr.",
+                                    correct: true
+                                },
+                                {
+                                    id: "ziel-1-2",
+                                    text: "Die Atemfrequenz ist innerhalb von 24 Stunden von 28 auf 20/Minute gesunken.",
+                                    correct: true
+                                },
+                                {
+                                    id: "ziel-1-3",
+                                    text: "Der Patient kann problemlos Treppen steigen.",
+                                    correct: false
+                                },
+                                {
+                                    id: "ziel-1-4",
+                                    text: "Der Patient atmet ohne Sauerstoffgabe.",
+                                    correct: false
+                                }
+                            ]
+                        },
+                        "problem-2": {
+                            title: "Ziele für 'Risiko für Hautschäden'",
+                            options: [
+                                {
+                                    id: "ziel-2-1",
+                                    text: "Die Haut an den Beinen ist intakt ohne Rötungen.",
+                                    correct: true
+                                },
+                                {
+                                    id: "ziel-2-2",
+                                    text: "Die Ödeme sind innerhalb von 3 Tagen zurückgegangen.",
+                                    correct: true
+                                },
+                                {
+                                    id: "ziel-2-3",
+                                    text: "Der Patient fühlt sich wohl in seiner Haut.",
+                                    correct: false
+                                },
+                                {
+                                    id: "ziel-2-4",
+                                    text: "Die Haut wird täglich gepflegt.",
+                                    correct: false
+                                }
+                            ]
+                        }
+                    },
+                    massnahmen: {
+                        "problem-1": {
+                            title: "Maßnahmen für 'Atemnot'",
+                            options: [
+                                {
+                                    id: "massnahme-1-1",
+                                    text: "Die Pflegekraft lagert den Patienten mit erhöhtem Oberkörper.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-1-2",
+                                    text: "Die Pflegekraft überwacht die Atemfrequenz und Sauerstoffsättigung.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-1-3",
+                                    text: "Die Pflegekraft plant Ruhephasen zwischen den Aktivitäten.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-1-4",
+                                    text: "Die Pflegekraft dokumentiert die Atemgeräusche.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-1-5",
+                                    text: "Die Pflegekraft verabreicht Sauerstoff nach Verordnung.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-1-6",
+                                    text: "Die Pflegekraft ermutigt den Patienten zu sportlicher Betätigung.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-1-7",
+                                    text: "Die Pflegekraft lässt den Patienten alleine, um ihn nicht zu belasten.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-1-8",
+                                    text: "Die Pflegekraft verabreicht zusätzliche Diuretika ohne Verordnung.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-1-9",
+                                    text: "Die Pflegekraft öffnet das Fenster für frische Luft.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-1-10",
+                                    text: "Die Pflegekraft erklärt dem Patienten, dass Atemnot normal ist.",
+                                    correct: false
+                                }
+                            ]
+                        },
+                        "problem-2": {
+                            title: "Maßnahmen für 'Risiko für Hautschäden'",
+                            options: [
+                                {
+                                    id: "massnahme-2-1",
+                                    text: "Die Pflegekraft inspiziert die Haut täglich systematisch.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-2-2",
+                                    text: "Die Pflegekraft lagert die Beine hoch, um Ödeme zu reduzieren.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-2-3",
+                                    text: "Die Pflegekraft hält die Haut trocken und intakt.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-2-4",
+                                    text: "Die Pflegekraft verwendet weiche, nicht-einschnürende Socken.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-2-5",
+                                    text: "Die Pflegekraft dokumentiert Hautveränderungen sofort.",
+                                    correct: true
+                                },
+                                {
+                                    id: "massnahme-2-6",
+                                    text: "Die Pflegekraft massiert die ödematösen Bereiche kräftig.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-2-7",
+                                    text: "Die Pflegekraft verwendet normale Seife für die Hautpflege.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-2-8",
+                                    text: "Die Pflegekraft lässt den Patienten lange sitzen ohne Positionswechsel.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-2-9",
+                                    text: "Die Pflegekraft cremt die Haut nur bei sichtbaren Problemen ein.",
+                                    correct: false
+                                },
+                                {
+                                    id: "massnahme-2-10",
+                                    text: "Die Pflegekraft informiert den Patienten nicht über Hautrisiken.",
+                                    correct: false
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        ];
+
+        // Current State
+        let currentModuleId = null;
+        let currentCaseIndex = 0;
+        let currentStep = 1;
+        let userSelections = {
+            categorization: {
+                biographisch: [],
+                sozial: [],
+                medizinisch: [],
+                pflegerisch: []
+            },
+            problems: [],
+            ziele: {},
+            massnahmen: {}
+        };
+        let selectedProblems = [];
+        let isDragging = false;
+        let scrollInterval;
+        let scrollDirection = 0; // -1 for up, 1 for down, 0 for none
+
+        // DOM Elements
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        const homepageView = document.getElementById('homepage-view');
+        const simulatorView = document.getElementById('simulator-view');
+        const modulesContainer = document.getElementById('modules-container');
+        const simulatorContainer = document.getElementById('simulator-container');
+        const caseTitleElement = document.getElementById('case-title');
+        const caseDescriptionElement = document.getElementById('case-description');
+        const stepElements = document.querySelectorAll('.step');
+        const stepContentElements = document.querySelectorAll('.step-content');
+        const resultsScreen = document.getElementById('results-screen');
+        const resultScoreElement = document.getElementById('result-score');
+        const resultFeedbackElement = document.getElementById('result-feedback');
+        const categorizationScoreElement = document.getElementById('categorization-score');
+        const problemScoreElement = document.getElementById('problem-score');
+        const ziel1ScoreElement = document.getElementById('ziel1-score');
+        const ziel2ScoreElement = document.getElementById('ziel2-score');
+        const massnahme1ScoreElement = document.getElementById('massnahme1-score');
+        const massnahme2ScoreElement = document.getElementById('massnahme2-score');
+        const scrollIndicatorTop = document.getElementById('scroll-indicator-top');
+        const scrollIndicatorBottom = document.getElementById('scroll-indicator-bottom');
+        const coinsDisplay = document.getElementById('coins-display');
+        const xpDisplay = document.getElementById('xp-display');
+        const levelDisplay = document.getElementById('level-display');
+
+        // User State
+        let userState = {
+            coins: 150,
+            xp: 75,
+            level: 2,
+            unlockedModules: [],
+            completedModules: []
+        };
+
+        // Initialize the application
+        function initApp() {
+            loadUserState();
+            renderModules();
+            setupEventListeners();
+            updateEconomyDisplay();
+            
+            // Show homepage by default
+            showHomepage();
+        }
+
+        // Load user state from localStorage
+        function loadUserState() {
+            const savedState = localStorage.getItem('pflegeplanung-user-state');
+            if (savedState) {
+                userState = JSON.parse(savedState);
+            }
+            
+            // Update modules based on user state
+            modules.forEach(module => {
+                module.unlocked = userState.unlockedModules.includes(module.id);
+                module.completed = userState.completedModules.includes(module.id);
+            });
+        }
+
+        // Save user state to localStorage
+        function saveUserState() {
+            localStorage.setItem('pflegeplanung-user-state', JSON.stringify(userState));
+        }
+
+        // Render modules on homepage
+        function renderModules() {
+            modulesContainer.innerHTML = '';
+            
+            modules.forEach(module => {
+                const moduleElement = document.createElement('div');
+                moduleElement.className = 'module-card';
+                moduleElement.dataset.id = module.id;
+                
+                let actionsHTML = '';
+                if (module.unlocked) {
+                    if (module.completed) {
+                        actionsHTML = `
+                            <div class="module-actions">
+                                <button class="btn btn-success start-module" data-id="${module.id}">
+                                    <i class="fas fa-redo"></i>
+                                    Wiederholen
+                                </button>
+                            </div>
+                            <div class="badge">
+                                <i class="fas fa-check-circle"></i>
+                                Abgeschlossen
+                            </div>
+                        `;
+                    } else {
+                        actionsHTML = `
+                            <div class="module-actions">
+                                <button class="btn btn-primary start-module" data-id="${module.id}">
+                                    <i class="fas fa-play"></i>
+                                    Starten
+                                </button>
+                            </div>
+                        `;
+                    }
+                } else {
+                    actionsHTML = `
+                        <div class="module-actions">
+                            <button class="btn btn-primary unlock-module" data-id="${module.id}" ${userState.coins < module.cost ? 'disabled' : ''}>
+                                <i class="fas fa-lock-open"></i>
+                                Freischalten (${module.cost} Münzen)
+                            </button>
+                        </div>
+                    `;
+                }
+                
+                moduleElement.innerHTML = `
+                    <div class="module-header">
+                        <h3 class="module-title">${module.title}</h3>
+                        <div class="module-difficulty">
+                            <i class="fas fa-star"></i>
+                            ${module.difficulty}
+                        </div>
+                        ${!module.unlocked ? `
+                            <div class="locked-overlay">
+                                <div class="locked-icon">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                <p>Schalten Sie dieses Modul für ${module.cost} Münzen frei</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="module-body">
+                        <p class="module-description">${module.description}</p>
+                        <div class="module-meta">
+                            <div class="module-cost">
+                                <i class="fas fa-coins"></i>
+                                ${module.cost} Münzen
+                            </div>
+                            <div>
+                                <i class="fas fa-clock"></i>
+                                15-20 Minuten
+                            </div>
+                        </div>
+                        ${actionsHTML}
+                    </div>
+                `;
+                
+                modulesContainer.appendChild(moduleElement);
+            });
+        }
+
+        // Show homepage view
+        function showHomepage() {
+            homepageView.style.display = 'block';
+            simulatorView.style.display = 'none';
+            document.getElementById('nav-home').classList.add('active');
+        }
+
+        // Show simulator view
+        function showSimulator(moduleId) {
+            homepageView.style.display = 'none';
+            simulatorView.style.display = 'block';
+            document.getElementById('nav-home').classList.remove('active');
+            
+            currentModuleId = moduleId;
+            const module = modules.find(m => m.id === moduleId);
+            loadCaseStudy(module.caseStudy);
+        }
+
+        // Unlock a module
+        function unlockModule(moduleId) {
+            const module = modules.find(m => m.id === moduleId);
+            
+            if (userState.coins >= module.cost) {
+                userState.coins -= module.cost;
+                userState.unlockedModules.push(moduleId);
+                module.unlocked = true;
+                
+                saveUserState();
+                updateEconomyDisplay();
+                renderModules();
+                
+                // Show success message
+                alert(`Modul "${module.title}" erfolgreich freigeschaltet!`);
+                
+                // Start the module immediately
+                showSimulator(moduleId);
+            }
+        }
+
+        // Load a case study
+        function loadCaseStudy(caseStudy) {
+            // Update case info
+            caseTitleElement.textContent = caseStudy.title;
+            caseDescriptionElement.textContent = caseStudy.description;
+            
+            // Update case info details
+            document.querySelector('.info-item:nth-child(1) .info-value').textContent = caseStudy.patient;
+            document.querySelector('.info-item:nth-child(2) .info-value').textContent = caseStudy.diagnosis;
+            document.querySelector('.info-item:nth-child(3) .info-value').textContent = caseStudy.situation;
+            
+            // Load data items for categorization
+            loadDataItems(caseStudy.dataItems);
+            
+            // Load problem options
+            loadProblemOptions(caseStudy.problems);
+            
+            // Reset user selections
+            userSelections = {
+                categorization: {
+                    biographisch: [],
+                    sozial: [],
+                    medizinisch: [],
+                    pflegerisch: []
+                },
+                problems: [],
+                ziele: {},
+                massnahmen: {}
+            };
+            selectedProblems = [];
+            
+            // Reset UI
+            resetStepNavigation();
+            goToStep(1);
+            resultsScreen.classList.remove('active');
+            simulatorContainer.classList.add('active');
+        }
+
+        // Load data items for categorization
+        function loadDataItems(dataItems) {
+            const container = document.getElementById('data-items');
+            container.innerHTML = '';
+            
+            // Clear category items
+            document.getElementById('biographisch-items').innerHTML = '';
+            document.getElementById('sozial-items').innerHTML = '';
+            document.getElementById('medizinisch-items').innerHTML = '';
+            document.getElementById('pflegerisch-items').innerHTML = '';
+            
+            dataItems.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'data-item';
+                itemElement.id = item.id;
+                itemElement.textContent = item.text;
+                itemElement.draggable = true;
+                
+                itemElement.addEventListener('dragstart', handleDragStart);
+                itemElement.addEventListener('dragend', handleDragEnd);
+                
+                container.appendChild(itemElement);
             });
             
-            observer.observe(document.querySelector('.stats'));
-        });
+            // Set up drop zones
+            setupDropZones();
+        }
 
-        // Add hover effects to mission cards
-        document.addEventListener('DOMContentLoaded', () => {
-            const missionCards = document.querySelectorAll('.mission-card');
-            missionCards.forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    card.style.transform = 'translateY(-8px)';
-                });
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'translateY(0)';
+        // Set up drop zones for categorization
+        function setupDropZones() {
+            const categories = document.querySelectorAll('.category');
+            
+            categories.forEach(category => {
+                category.addEventListener('dragover', handleDragOver);
+                category.addEventListener('dragenter', handleDragEnter);
+                category.addEventListener('dragleave', handleDragLeave);
+                category.addEventListener('drop', handleDrop);
+            });
+        }
+
+        // Drag and drop handlers
+        function handleDragStart(e) {
+            isDragging = true;
+            e.dataTransfer.setData('text/plain', e.target.id);
+            e.target.classList.add('dragging');
+            
+            // Start auto-scroll on mobile
+            if (window.innerWidth <= 768) {
+                startAutoScroll();
+            }
+        }
+
+        function handleDragEnd() {
+            isDragging = false;
+            
+            // Stop auto-scroll
+            stopAutoScroll();
+            scrollIndicatorTop.classList.remove('show');
+            scrollIndicatorBottom.classList.remove('show');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            e.target.closest('.category').classList.add('hover');
+        }
+
+        function handleDragLeave(e) {
+            e.target.closest('.category').classList.remove('hover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const category = e.target.closest('.category');
+            category.classList.remove('hover');
+            
+            const id = e.dataTransfer.getData('text/plain');
+            const draggable = document.getElementById(id);
+            
+            if (category && draggable) {
+                const categoryType = category.dataset.category;
+                const categoryItems = category.querySelector('.category-items');
+                
+                // Remove from previous category if it was categorized before
+                const previousCategory = draggable.parentElement.closest('.category');
+                if (previousCategory) {
+                    const previousCategoryType = previousCategory.dataset.category;
+                    userSelections.categorization[previousCategoryType] = 
+                        userSelections.categorization[previousCategoryType].filter(itemId => itemId !== id);
+                }
+                
+                // Add to new category
+                categoryItems.appendChild(draggable);
+                draggable.classList.remove('dragging');
+                
+                // Store selection
+                if (!userSelections.categorization[categoryType].includes(id)) {
+                    userSelections.categorization[categoryType].push(id);
+                }
+                
+                // Check if all items are categorized to enable next button
+                const currentModule = modules.find(m => m.id === currentModuleId);
+                const totalItems = currentModule.caseStudy.dataItems.length;
+                const categorizedItems = Object.values(userSelections.categorization).flat().length;
+                document.getElementById('next-to-probleme').disabled = categorizedItems !== totalItems;
+            }
+            
+            // Stop auto-scroll after drop
+            stopAutoScroll();
+            scrollIndicatorTop.classList.remove('show');
+            scrollIndicatorBottom.classList.remove('show');
+        }
+
+        // Auto-scroll functionality for mobile
+        function startAutoScroll() {
+            scrollInterval = requestAnimationFrame(autoScroll);
+        }
+
+        function stopAutoScroll() {
+            cancelAnimationFrame(scrollInterval);
+            scrollDirection = 0;
+        }
+
+        function autoScroll() {
+            if (isDragging) {
+                const scrollY = window.scrollY || window.pageYOffset;
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
+                
+                // Get touch position for bidirectional scrolling
+                const touchY = window.touchY || windowHeight / 2;
+                
+                // Determine scroll direction based on touch position
+                const topThreshold = 100;
+                const bottomThreshold = windowHeight - 100;
+                
+                if (touchY < topThreshold) {
+                    // Scroll up
+                    scrollDirection = -1;
+                    scrollIndicatorTop.classList.add('show');
+                    scrollIndicatorBottom.classList.remove('show');
+                } else if (touchY > bottomThreshold) {
+                    // Scroll down
+                    scrollDirection = 1;
+                    scrollIndicatorTop.classList.remove('show');
+                    scrollIndicatorBottom.classList.add('show');
+                } else {
+                    // No scroll needed
+                    scrollDirection = 0;
+                    scrollIndicatorTop.classList.remove('show');
+                    scrollIndicatorBottom.classList.remove('show');
+                }
+                
+                // Perform scrolling
+                if (scrollDirection === -1 && scrollY > 0) {
+                    window.scrollBy(0, -10);
+                } else if (scrollDirection === 1 && scrollY + windowHeight < documentHeight - 10) {
+                    window.scrollBy(0, 10);
+                }
+                
+                // Continue scrolling
+                scrollInterval = requestAnimationFrame(autoScroll);
+            }
+        }
+
+        // Track touch position for bidirectional scrolling
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging && e.touches.length > 0) {
+                window.touchY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        // Load problem options
+        function loadProblemOptions(problemsData) {
+            const container = document.getElementById('problem-options');
+            container.innerHTML = '';
+            
+            problemsData.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option-card';
+                optionElement.dataset.id = option.id;
+                optionElement.dataset.type = option.type;
+                
+                optionElement.innerHTML = `
+                    <div class="option-indicator">${String.fromCharCode(65 + problemsData.options.indexOf(option))}</div>
+                    <div class="option-text">
+                        <div class="option-label">${option.text}</div>
+                        <div class="option-description">${option.description}</div>
+                    </div>
+                `;
+                
+                optionElement.addEventListener('click', () => selectProblemOption(option.id));
+                container.appendChild(optionElement);
+            });
+        }
+
+        // Load ziele options for selected problems
+        function loadZieleOptions() {
+            const container = document.getElementById('ziele-container');
+            container.innerHTML = '';
+            
+            const currentModule = modules.find(m => m.id === currentModuleId);
+            const caseStudy = currentModule.caseStudy;
+            
+            selectedProblems.forEach(problemId => {
+                const problem = caseStudy.problems.options.find(p => p.id === problemId);
+                const zieleData = caseStudy.ziele[problemId];
+                
+                const section = document.createElement('div');
+                section.className = 'ziele-section';
+                section.innerHTML = `
+                    <h4>${zieleData.title}</h4>
+                    <div class="options-grid" id="ziele-${problemId}">
+                        <!-- Options will be populated by JavaScript -->
+                    </div>
+                `;
+                
+                container.appendChild(section);
+                
+                // Load options for this problem
+                const optionsContainer = document.getElementById(`ziele-${problemId}`);
+                zieleData.options.forEach(option => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'option-card';
+                    optionElement.dataset.id = option.id;
+                    optionElement.dataset.problem = problemId;
+                    
+                    optionElement.innerHTML = `
+                        <div class="option-indicator">${String.fromCharCode(65 + zieleData.options.indexOf(option))}</div>
+                        <div class="option-text">
+                            <div class="option-description">${option.text}</div>
+                        </div>
+                    `;
+                    
+                    optionElement.addEventListener('click', () => selectZielOption(option.id, problemId));
+                    optionsContainer.appendChild(optionElement);
                 });
             });
-        });
+        }
+
+        // Load massnahmen options for selected problems
+        function loadMassnahmenOptions() {
+            const container = document.getElementById('massnahmen-container');
+            container.innerHTML = '';
+            
+            const currentModule = modules.find(m => m.id === currentModuleId);
+            const caseStudy = currentModule.caseStudy;
+            
+            selectedProblems.forEach(problemId => {
+                const problem = caseStudy.problems.options.find(p => p.id === problemId);
+                const massnahmenData = caseStudy.massnahmen[problemId];
+                
+                const section = document.createElement('div');
+                section.className = 'massnahmen-section';
+                section.innerHTML = `
+                    <h4>${massnahmenData.title}</h4>
+                    <div class="options-grid" id="massnahmen-${problemId}">
+                        <!-- Options will be populated by JavaScript -->
+                    </div>
+                `;
+                
+                container.appendChild(section);
+                
+                // Load options for this problem
+                const optionsContainer = document.getElementById(`massnahmen-${problemId}`);
+                massnahmenData.options.forEach(option => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'option-card';
+                    optionElement.dataset.id = option.id;
+                    optionElement.dataset.problem = problemId;
+                    
+                    optionElement.innerHTML = `
+                        <div class="option-indicator">${String.fromCharCode(65 + massnahmenData.options.indexOf(option))}</div>
+                        <div class="option-text">
+                            <div class="option-description">${option.text}</div>
+                        </div>
+                    `;
+                    
+                    optionElement.addEventListener('click', () => selectMassnahmeOption(option.id, problemId));
+                    optionsContainer.appendChild(optionElement);
+                });
+            });
+        }
+
+        // Select problem option
+        function selectProblemOption(optionId) {
+            const selectedCard = document.querySelector(`#problem-options .option-card[data-id="${optionId}"]`);
+            const currentModule = modules.find(m => m.id === currentModuleId);
+            const caseStudy = currentModule.caseStudy;
+            const option = caseStudy.problems.options.find(o => o.id === optionId);
+            
+            // Toggle selection
+            if (selectedCard.classList.contains('selected')) {
+                selectedCard.classList.remove('selected');
+                // Remove from selections
+                userSelections.problems = userSelections.problems.filter(id => id !== optionId);
+                selectedProblems = selectedProblems.filter(id => id !== optionId);
+            } else {
+                // Check if we can select more (max 2)
+                if (userSelections.problems.length < 2) {
+                    selectedCard.classList.add('selected');
+                    // Add to selections
+                    userSelections.problems.push(optionId);
+                    selectedProblems.push(optionId);
+                } else {
+                    alert('Sie können maximal 2 Probleme auswählen.');
+                    return;
+                }
+            }
+            
+            // Enable next button if exactly 2 problems are selected
+            document.getElementById('next-to-ziele').disabled = userSelections.problems.length !== 2;
+        }
+
+        // Select ziel option
+        function selectZielOption(optionId, problemId) {
+            const selectedCard = document.querySelector(`#ziele-${problemId} .option-card[data-id="${optionId}"]`);
+            
+            // Initialize array for this problem if it doesn't exist
+            if (!userSelections.ziele[problemId]) {
+                userSelections.ziele[problemId] = [];
+            }
+            
+            // Toggle selection
+            if (selectedCard.classList.contains('selected')) {
+                selectedCard.classList.remove('selected');
+                // Remove from selections
+                userSelections.ziele[problemId] = userSelections.ziele[problemId].filter(id => id !== optionId);
+            } else {
+                // Check if we can select more (max 2 per problem)
+                if (userSelections.ziele[problemId].length < 2) {
+                    selectedCard.classList.add('selected');
+                    // Add to selections
+                    userSelections.ziele[problemId].push(optionId);
+                } else {
+                    alert('Sie können maximal 2 Ziele pro Problem auswählen.');
+                    return;
+                }
+            }
+            
+            // Enable next button if all problems have 2 goals selected
+            let allProblemsHaveGoals = true;
+            selectedProblems.forEach(problemId => {
+                if (!userSelections.ziele[problemId] || userSelections.ziele[problemId].length !== 2) {
+                    allProblemsHaveGoals = false;
+                }
+            });
+            
+            document.getElementById('next-to-massnahmen').disabled = !allProblemsHaveGoals;
+        }
+
+        // Select massnahme option
+        function selectMassnahmeOption(optionId, problemId) {
+            const selectedCard = document.querySelector(`#massnahmen-${problemId} .option-card[data-id="${optionId}"]`);
+            
+            // Initialize array for this problem if it doesn't exist
+            if (!userSelections.massnahmen[problemId]) {
+                userSelections.massnahmen[problemId] = [];
+            }
+            
+            // Toggle selection
+            if (selectedCard.classList.contains('selected')) {
+                selectedCard.classList.remove('selected');
+                // Remove from selections
+                userSelections.massnahmen[problemId] = userSelections.massnahmen[problemId].filter(id => id !== optionId);
+            } else {
+                // Check if we can select more (max 5 per problem)
+                if (userSelections.massnahmen[problemId].length < 5) {
+                    selectedCard.classList.add('selected');
+                    // Add to selections
+                    userSelections.massnahmen[problemId].push(optionId);
+                } else {
+                    alert('Sie können maximal 5 Maßnahmen pro Problem auswählen.');
+                    return;
+                }
+            }
+            
+            // Enable next button if all problems have 5 measures selected
+            let allProblemsHaveMeasures = true;
+            selectedProblems.forEach(problemId => {
+                if (!userSelections.massnahmen[problemId] || userSelections.massnahmen[problemId].length !== 5) {
+                    allProblemsHaveMeasures = false;
+                }
+            });
+            
+            document.getElementById('next-to-evaluation').disabled = !allProblemsHaveMeasures;
+        }
+
+        // Navigate to a specific step
+        function goToStep(stepNumber) {
+            // Update step navigation
+            stepElements.forEach(step => {
+                step.classList.remove('active');
+                if (parseInt(step.dataset.step) === stepNumber) {
+                    step.classList.add('active');
+                }
+                
+                // Mark previous steps as completed
+                if (parseInt(step.dataset.step) < stepNumber) {
+                    step.classList.add('completed');
+                } else {
+                    step.classList.remove('completed');
+                }
+            });
+            
+            // Update step content
+            stepContentElements.forEach(content => {
+                content.classList.remove('active');
+                if (parseInt(content.dataset.step) === stepNumber) {
+                    content.classList.add('active');
+                }
+            });
+            
+            currentStep = stepNumber;
+            
+            // Load dynamic content for steps 3 and 4
+            if (stepNumber === 3 && selectedProblems.length > 0) {
+                loadZieleOptions();
+            } else if (stepNumber === 4 && selectedProblems.length > 0) {
+                loadMassnahmenOptions();
+            }
+        }
+
+        // Reset step navigation
+        function resetStepNavigation() {
+            stepElements.forEach(step => {
+                step.classList.remove('active', 'completed');
+                if (parseInt(step.dataset.step) === 1) {
+                    step.classList.add('active');
+                }
+            });
+            
+            stepContentElements.forEach(content => {
+                content.classList.remove('active');
+                if (parseInt(content.dataset.step) === 1) {
+                    content.classList.add('active');
+                }
+            });
+            
+            currentStep = 1;
+        }
+
+        // Evaluate answers and show results
+        function evaluateAnswers() {
+            const currentModule = modules.find(m => m.id === currentModuleId);
+            const caseStudy = currentModule.caseStudy;
+            
+            // Calculate scores
+            let categorizationScore = 0;
+            let problemScore = 0;
+            const zielScores = {};
+            const massnahmeScores = {};
+            
+            // Check categorization
+            caseStudy.dataItems.forEach(item => {
+                if (userSelections.categorization[item.correctCategory] && 
+                    userSelections.categorization[item.correctCategory].includes(item.id)) {
+                    categorizationScore++;
+                }
+            });
+            
+            // Check problems
+            const correctProblems = caseStudy.problems.options.filter(option => option.correct);
+            const selectedCorrectProblems = userSelections.problems.filter(id => {
+                return caseStudy.problems.options.find(option => option.id === id && option.correct);
+            });
+            problemScore = selectedCorrectProblems.length;
+            
+            // Check ziele for each problem
+            selectedProblems.forEach(problemId => {
+                const correctZiele = caseStudy.ziele[problemId].options.filter(option => option.correct);
+                const selectedCorrectZiele = userSelections.ziele[problemId] ? 
+                    userSelections.ziele[problemId].filter(id => {
+                        return caseStudy.ziele[problemId].options.find(option => option.id === id && option.correct);
+                    }) : [];
+                zielScores[problemId] = selectedCorrectZiele.length;
+            });
+            
+            // Check massnahmen for each problem
+            selectedProblems.forEach(problemId => {
+                const correctMassnahmen = caseStudy.massnahmen[problemId].options.filter(option => option.correct);
+                const selectedCorrectMassnahmen = userSelections.massnahmen[problemId] ? 
+                    userSelections.massnahmen[problemId].filter(id => {
+                        return caseStudy.massnahmen[problemId].options.find(option => option.id === id && option.correct);
+                    }) : [];
+                massnahmeScores[problemId] = selectedCorrectMassnahmen.length;
+            });
+            
+            // Calculate total score
+            const totalPossible = caseStudy.dataItems.length + 2 + (2 * selectedProblems.length) + (5 * selectedProblems.length);
+            let totalScore = categorizationScore + problemScore;
+            selectedProblems.forEach(problemId => {
+                totalScore += zielScores[problemId] + massnahmeScores[problemId];
+            });
+            const percentage = Math.round((totalScore / totalPossible) * 100);
+            
+            // Update results UI
+            categorizationScoreElement.textContent = `${categorizationScore}/${caseStudy.dataItems.length}`;
+            problemScoreElement.textContent = `${problemScore}/2`;
+            
+            // Update ziele scores
+            if (selectedProblems.length > 0) {
+                ziel1ScoreElement.textContent = `${zielScores[selectedProblems[0]]}/2`;
+                if (selectedProblems.length > 1) {
+                    ziel2ScoreElement.textContent = `${zielScores[selectedProblems[1]]}/2`;
+                }
+            }
+            
+            // Update massnahmen scores
+            if (selectedProblems.length > 0) {
+                massnahme1ScoreElement.textContent = `${massnahmeScores[selectedProblems[0]]}/5`;
+                if (selectedProblems.length > 1) {
+                    massnahme2ScoreElement.textContent = `${massnahmeScores[selectedProblems[1]]}/5`;
+                }
+            }
+            
+            resultScoreElement.textContent = `${percentage}%`;
+            
+            // Set feedback based on score
+            if (percentage >= 90) {
+                resultFeedbackElement.textContent = "Ausgezeichnet! Sie haben fast alle Antworten korrekt ausgewählt.";
+            } else if (percentage >= 70) {
+                resultFeedbackElement.textContent = "Gut gemacht! Sie haben die meisten Antworten korrekt ausgewählt.";
+            } else if (percentage >= 50) {
+                resultFeedbackElement.textContent = "Nicht schlecht! Üben Sie weiter, um Ihre Ergebnisse zu verbessern.";
+            } else {
+                resultFeedbackElement.textContent = "Üben Sie weiter! Wiederholen Sie die Grundlagen der Pflegeplanung.";
+            }
+            
+            // Show results screen
+            simulatorContainer.classList.remove('active');
+            resultsScreen.classList.add('active');
+            
+            // Show confetti if score is good
+            if (percentage >= 70) {
+                showConfetti();
+            }
+            
+            // Update economy (coins and XP) and mark module as completed
+            updateEconomy(percentage);
+            
+            // Mark the evaluation step as completed
+            document.querySelector('.step[data-step="5"]').classList.add('completed');
+            
+            // Mark module as completed if not already
+            if (!userState.completedModules.includes(currentModuleId)) {
+                userState.completedModules.push(currentModuleId);
+                currentModule.completed = true;
+                saveUserState();
+            }
+        }
+
+        // Show confetti animation
+        function showConfetti() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+            
+            // Additional bursts for celebration
+            setTimeout(() => confetti({
+                particleCount: 100,
+                angle: 60,
+                spread: 70,
+                origin: { x: 0, y: 0.6 }
+            }), 250);
+            
+            setTimeout(() => confetti({
+                particleCount: 100,
+                angle: 120,
+                spread: 70,
+                origin: { x: 1, y: 0.6 }
+            }), 500);
+        }
+
+        // Update economy (coins and XP)
+        function updateEconomy(score) {
+            // Calculate rewards based on score
+            const coinsEarned = Math.floor(score / 10) * 5; // 5 coins per 10% score
+            const xpEarned = Math.floor(score / 5) * 2; // 2 XP per 5% score
+            
+            // Get current values
+            let coins = userState.coins;
+            let xp = userState.xp;
+            let level = userState.level;
+            
+            // Update values
+            coins += coinsEarned;
+            xp += xpEarned;
+            
+            // Check for level up (every 100 XP)
+            const newLevel = Math.floor(xp / 100) + 1;
+            if (newLevel > level) {
+                level = newLevel;
+                // Level up celebration
+                showLevelUp(level);
+            }
+            
+            // Update user state
+            userState.coins = coins;
+            userState.xp = xp;
+            userState.level = level;
+            
+            // Save to localStorage
+            saveUserState();
+            
+            // Update UI with animations
+            updateEconomyDisplay(coinsEarned, xpEarned);
+        }
+
+        // Update economy display with animations
+        function updateEconomyDisplay(coinsEarned = 0, xpEarned = 0) {
+            // Update coins
+            const coinsElement = document.getElementById('coins');
+            const mobileCoinsElement = document.getElementById('mobile-coins');
+            
+            coinsElement.textContent = userState.coins;
+            mobileCoinsElement.textContent = userState.coins;
+            
+            // Update XP
+            const xpElement = document.getElementById('xp');
+            const mobileXpElement = document.getElementById('mobile-xp');
+            const xpProgressElement = document.getElementById('xp-progress');
+            
+            xpElement.textContent = userState.xp;
+            mobileXpElement.textContent = userState.xp;
+            
+            // Calculate XP progress percentage
+            const xpInCurrentLevel = userState.xp % 100;
+            const xpProgress = (xpInCurrentLevel / 100) * 100;
+            xpProgressElement.style.width = `${xpProgress}%`;
+            
+            // Update level
+            const levelElement = document.getElementById('level');
+            const mobileLevelElement = document.getElementById('mobile-level');
+            
+            levelElement.textContent = userState.level;
+            mobileLevelElement.textContent = userState.level;
+            
+            // Add particle effects for earned rewards
+            if (coinsEarned > 0) {
+                createCoinParticles(coinsDisplay, coinsEarned);
+            }
+            
+            if (xpEarned > 0) {
+                createXpParticles(xpDisplay, xpEarned);
+            }
+            
+            if (userState.level > parseInt(levelElement.textContent)) {
+                createLevelParticles(levelDisplay);
+            }
+        }
+
+        // Create coin particles animation
+        function createCoinParticles(element, count) {
+            for (let i = 0; i < count / 5; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'coin-particle';
+                
+                // Random position and animation
+                const rect = element.getBoundingClientRect();
+                const startX = rect.left + rect.width / 2;
+                const startY = rect.top + rect.height / 2;
+                
+                particle.style.left = `${startX}px`;
+                particle.style.top = `${startY}px`;
+                
+                // Random movement
+                const tx = (Math.random() - 0.5) * 100;
+                const ty = -50 - Math.random() * 50;
+                
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                
+                document.body.appendChild(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    particle.remove();
+                }, 1000);
+            }
+        }
+
+        // Create XP particles animation
+        function createXpParticles(element, count) {
+            for (let i = 0; i < count / 2; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'xp-particle';
+                
+                // Random position and animation
+                const rect = element.getBoundingClientRect();
+                const startX = rect.left + rect.width / 2;
+                const startY = rect.top + rect.height / 2;
+                
+                particle.style.left = `${startX}px`;
+                particle.style.top = `${startY}px`;
+                
+                // Random movement
+                const tx = (Math.random() - 0.5) * 80;
+                const ty = -40 - Math.random() * 40;
+                
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                
+                document.body.appendChild(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    particle.remove();
+                }, 1000);
+            }
+        }
+
+        // Create level particles animation
+        function createLevelParticles(element) {
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'coin-particle';
+                
+                // Random position and animation
+                const rect = element.getBoundingClientRect();
+                const startX = rect.left + rect.width / 2;
+                const startY = rect.top + rect.height / 2;
+                
+                particle.style.left = `${startX}px`;
+                particle.style.top = `${startY}px`;
+                
+                // Random movement
+                const tx = (Math.random() - 0.5) * 150;
+                const ty = -100 - Math.random() * 100;
+                
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                
+                document.body.appendChild(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    particle.remove();
+                }, 1500);
+            }
+        }
+
+        // Show level up celebration
+        function showLevelUp(newLevel) {
+            const levelUpDiv = document.createElement('div');
+            levelUpDiv.className = 'level-up';
+            levelUpDiv.innerHTML = `
+                <h2>Level Up!</h2>
+                <p>Herzlichen Glückwunsch! Sie haben Level ${newLevel} erreicht!</p>
+                <button class="btn btn-primary" id="close-level-up">
+                    Weiter
+                </button>
+            `;
+            
+            document.body.appendChild(levelUpDiv);
+            
+            // Add confetti
+            confetti({
+                particleCount: 200,
+                spread: 100,
+                origin: { y: 0.6 }
+            });
+            
+            // Close level up message
+            document.getElementById('close-level-up').addEventListener('click', () => {
+                levelUpDiv.remove();
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Mobile menu toggle
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                hamburger.classList.toggle('active');
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (navMenu.classList.contains('active') && 
+                    !navMenu.contains(e.target) && 
+                    !hamburger.contains(e.target)) {
+                    navMenu.classList.remove('active');
+                    hamburger.classList.remove('active');
+                }
+            });
+            
+            // Home navigation
+            document.getElementById('home-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                showHomepage();
+            });
+            
+            document.getElementById('nav-home').addEventListener('click', (e) => {
+                e.preventDefault();
+                showHomepage();
+            });
+            
+            // Module interactions
+            document.addEventListener('click', (e) => {
+                // Unlock module
+                if (e.target.closest('.unlock-module')) {
+                    const moduleId = e.target.closest('.unlock-module').dataset.id;
+                    unlockModule(moduleId);
+                }
+                
+                // Start module
+                if (e.target.closest('.start-module')) {
+                    const moduleId = e.target.closest('.start-module').dataset.id;
+                    showSimulator(moduleId);
+                }
+            });
+            
+            // Simulator navigation buttons
+            document.getElementById('next-to-probleme').addEventListener('click', () => goToStep(2));
+            document.getElementById('back-to-categorization').addEventListener('click', () => goToStep(1));
+            document.getElementById('next-to-ziele').addEventListener('click', () => goToStep(3));
+            document.getElementById('back-to-probleme').addEventListener('click', () => goToStep(2));
+            document.getElementById('next-to-massnahmen').addEventListener('click', () => goToStep(4));
+            document.getElementById('back-to-ziele').addEventListener('click', () => goToStep(3));
+            document.getElementById('next-to-evaluation').addEventListener('click', () => goToStep(5));
+            document.getElementById('back-to-massnahmen').addEventListener('click', () => goToStep(4));
+            document.getElementById('evaluate-answers').addEventListener('click', evaluateAnswers);
+            
+            // Back to modules buttons
+            document.getElementById('back-to-modules').addEventListener('click', showHomepage);
+            document.getElementById('back-to-modules-from-results').addEventListener('click', showHomepage);
+            
+            // Results screen buttons
+            document.getElementById('review-answers').addEventListener('click', () => {
+                resultsScreen.classList.remove('active');
+                simulatorContainer.classList.add('active');
+                goToStep(1);
+            });
+        }
+
+        // Initialize the application when page loads
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
