@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pflegeplanung Simulator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #2c5530;
+            --primary-light: #4a7856;
+            --primary-dark: #1e3a23;
+            --secondary: #5d823b;
+            --accent: #8fb339;
+            --light-bg: #f8f9fa;
+            --light-surface: #ffffff;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border: #dee2e6;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --radius: 8px;
+            --shadow: 0 2px 10px rgba(0,0,0,0.08);
+            --spacing-xs: 8px;
+            --spacing-sm: 16px;
+            --spacing-md: 24px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-primary);
+            background-color: var(--light-bg);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: var(--spacing-lg) 0;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .simulator-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .case-counter {
+            background: rgba(255,255,255,0.2);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+        }
+
+        /* Main Content */
+        main {
+            padding: var(--spacing-xl) 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--primary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: var(--spacing-xs);
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+            max-width: 800px;
+        }
+
+        /* Simulator Container */
+        .simulator-container {
+            background: var(--light-surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        /* Case Study */
+        .case-study {
+            padding: var(--spacing-lg);
+            background: #f0f7f0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .case-title {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-sm);
+            color: var(--primary);
+        }
+
+        .case-description {
+            line-height: 1.8;
+        }
+
+        .case-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            background: white;
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .info-value {
+            font-weight: 500;
+        }
+
+        /* Steps Navigation */
+        .simulator-steps {
+            display: flex;
+            justify-content: space-between;
+            margin: var(--spacing-lg);
+            position: relative;
+        }
+
+        .simulator-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border);
+            z-index: 1;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: var(--spacing-xs);
+            transition: all 0.3s;
+        }
+
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: var(--success);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Step Content */
+        .step-content {
+            display: none;
+            padding: 0 var(--spacing-lg) var(--spacing-lg);
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .step-title {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .step-description {
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-secondary);
+        }
+
+        /* Options Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .option-card {
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+        }
+
+        .option-card:hover {
+            border-color: var(--primary-light);
+            background: #f8f9fa;
+        }
+
+        .option-card.selected {
+            border-color: var(--primary);
+            background: #e8f4e8;
+        }
+
+        .option-card.correct {
+            border-color: var(--success);
+            background: #d4edda;
+        }
+
+        .option-card.incorrect {
+            border-color: var(--danger);
+            background: #f8d7da;
+        }
+
+        .option-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .option-card.selected .option-indicator {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .option-card.correct .option-indicator {
+            border-color: var(--success);
+            background: var(--success);
+            color: white;
+        }
+
+        .option-card.incorrect .option-indicator {
+            border-color: var(--danger);
+            background: var(--danger);
+            color: white;
+        }
+
+        .option-text {
+            flex-grow: 1;
+        }
+
+        .option-label {
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+            color: var(--primary);
+        }
+
+        .option-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Navigation Buttons */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-lg);
+        }
+
+        .btn {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--light-surface);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: #f0f0f0;
+        }
+
+        .btn:disabled {
+            background: var(--border);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            border: none;
+        }
+
+        /* Results Screen */
+        .results-screen {
+            text-align: center;
+            padding: var(--spacing-xl);
+            display: none;
+        }
+
+        .results-screen.active {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--success);
+        }
+
+        .result-title {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--primary);
+        }
+
+        .result-score {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+            color: var(--success);
+        }
+
+        .result-feedback {
+            font-size: 1.2rem;
+            margin-bottom: var(--spacing-xl);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .result-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .breakdown-item {
+            background: white;
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .breakdown-label {
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-secondary);
+        }
+
+        .breakdown-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .result-actions {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: var(--spacing-lg) 0;
+            margin-top: var(--spacing-xl);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .footer-logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: var(--spacing-md);
+                text-align: center;
+            }
+            
+            .simulator-steps {
+                flex-wrap: wrap;
+                gap: var(--spacing-md);
+            }
+            
+            .simulator-steps::before {
+                display: none;
+            }
+            
+            .step {
+                flex: 1;
+                min-width: 120px;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-user-md logo-icon"></i>
+                    <div class="logo-text">Pflegeplanung Simulator</div>
+                </div>
+                <div class="simulator-info">
+                    <div class="case-counter">
+                        Fallbeispiel <span id="current-case">1</span> von <span id="total-cases">3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <h1 class="section-title">Pflegeplanung Simulator</h1>
+            <p class="section-subtitle">
+                Üben Sie die Pflegeplanung mit realistischen Fallbeispielen. Wählen Sie die korrekten PESR, Ziele und Maßnahmen aus.
+            </p>
+
+            <!-- Simulator Container -->
+            <div class="simulator-container">
+                <!-- Case Study -->
+                <div class="case-study">
+                    <h2 class="case-title" id="case-title">Fallbeispiel: Herr Müller</h2>
+                    <div class="case-description" id="case-description">
+                        Herr Müller, 78 Jahre, ist postoperativ nach einer Hüft-TEP-Implantation. 
+                        Er ist unsicher beim Gehen, hat Schmerzen und benötigt Hilfe bei der Mobilisation. 
+                        Er ist orientiert und motiviert, aber ängstlich vor Stürzen.
+                    </div>
+                    <div class="case-info">
+                        <div class="info-item">
+                            <div class="info-label">Patient</div>
+                            <div class="info-value">Herr Müller, 78 Jahre</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Diagnose</div>
+                            <div class="info-value">Status post Hüft-TEP-Implantation</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Situation</div>
+                            <div class="info-value">Stationäre Pflege, 2. postoperativer Tag</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Steps Navigation -->
+                <div class="simulator-steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">PESR</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Ziele</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Maßnahmen</div>
+                    </div>
+                    <div class="step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Evaluation</div>
+                    </div>
+                </div>
+
+                <!-- Step 1: PESR -->
+                <div class="step-content active" data-step="1">
+                    <h3 class="step-title">Pflegediagnose (PESR)</h3>
+                    <p class="step-description">
+                        Wählen Sie die korrekte PESR-Formulierung für dieses Fallbeispiel aus.
+                    </p>
+                    
+                    <div class="options-grid" id="pesr-options">
+                        <!-- Options will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="navigation-buttons">
+                        <button class="btn btn-secondary" id="back-to-cases">
+                            <i class="fas fa-arrow-left"></i>
+                            Zurück zu Fallbeispielen
+                        </button>
+                        <button class="btn btn-primary" id="next-to-ziele" disabled>
+                            Weiter zu Zielen
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Ziele -->
+                <div class="step-content" data-step="2">
+                    <h3 class="step-title">Pflegeziele</h3>
+                    <p class="step-description">
+                        Wählen Sie die korrekten Nah- und Fernziele für dieses Fallbeispiel aus.
+                    </p>
+                    
+                    <h4>Nahziel (kurzfristig)</h4>
+                    <div class="options-grid" id="nahziel-options">
+                        <!-- Options will be populated by JavaScript -->
+                    </div>
+                    
+                    <h4>Fernziel (langfristig)</h4>
+                    <div class="options-grid" id="fernziel-options">
+                        <!-- Options will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="navigation-buttons">
+                        <button class="btn btn-secondary" id="back-to-pesr">
+                            <i class="fas fa-arrow-left"></i>
+                            Zurück zu PESR
+                        </button>
+                        <button class="btn btn-primary" id="next-to-massnahmen" disabled>
+                            Weiter zu Maßnahmen
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Maßnahmen -->
+                <div class="step-content" data-step="3">
+                    <h3 class="step-title">Pflegemaßnahmen</h3>
+                    <p class="step-description">
+                        Wählen Sie die korrekten Pflegemaßnahmen für dieses Fallbeispiel aus (Mehrfachauswahl möglich).
+                    </p>
+                    
+                    <div class="options-grid" id="massnahmen-options">
+                        <!-- Options will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="navigation-buttons">
+                        <button class="btn btn-secondary" id="back-to-ziele">
+                            <i class="fas fa-arrow-left"></i>
+                            Zurück zu Zielen
+                        </button>
+                        <button class="btn btn-primary" id="next-to-evaluation">
+                            Auswerten
+                            <i class="fas fa-check-circle"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Evaluation -->
+                <div class="step-content" data-step="4">
+                    <h3 class="step-title">Evaluation</h3>
+                    <p class="step-description">
+                        Ihre Auswahl wird jetzt ausgewertet.
+                    </p>
+                    
+                    <div class="navigation-buttons">
+                        <button class="btn btn-secondary" id="back-to-massnahmen">
+                            <i class="fas fa-arrow-left"></i>
+                            Zurück zu Maßnahmen
+                        </button>
+                        <button class="btn btn-primary" id="evaluate-answers">
+                            Ergebnisse anzeigen
+                            <i class="fas fa-chart-bar"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Screen -->
+            <div class="results-screen" id="results-screen">
+                <div class="result-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h2 class="result-title">Herzlichen Glückwunsch!</h2>
+                <div class="result-score" id="result-score">0%</div>
+                <p class="result-feedback" id="result-feedback">
+                    Sie haben das Fallbeispiel erfolgreich bearbeitet.
+                </p>
+                
+                <div class="result-breakdown">
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">PESR</div>
+                        <div class="breakdown-value" id="pesr-score">0/1</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Nahziel</div>
+                        <div class="breakdown-value" id="nahziel-score">0/1</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Fernziel</div>
+                        <div class="breakdown-value" id="fernziel-score">0/1</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Maßnahmen</div>
+                        <div class="breakdown-value" id="massnahmen-score">0/3</div>
+                    </div>
+                </div>
+                
+                <div class="result-actions">
+                    <button class="btn btn-secondary" id="review-answers">
+                        <i class="fas fa-redo"></i>
+                        Antworten überprüfen
+                    </button>
+                    <button class="btn btn-primary" id="next-case">
+                        Nächstes Fallbeispiel
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">Pflegeplanung Simulator</div>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Startseite</a>
+                    <a href="#" class="footer-link">Über dieses Projekt</a>
+                    <a href="#" class="footer-link">Kontakt</a>
+                </div>
+                <div class="footer-bottom">
+                    &copy; 2023 Pflegeplanung Simulator. Entwickelt für die Ausbildung.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Case Study Data
+        const caseStudies = [
+            {
+                id: 1,
+                title: "Fallbeispiel: Herr Müller",
+                description: "Herr Müller, 78 Jahre, ist postoperativ nach einer Hüft-TEP-Implantation. Er ist unsicher beim Gehen, hat Schmerzen und benötigt Hilfe bei der Mobilisation. Er ist orientiert und motiviert, aber ängstlich vor Stürzen.",
+                patient: "Herr Müller, 78 Jahre",
+                diagnosis: "Status post Hüft-TEP-Implantation",
+                situation: "Stationäre Pflege, 2. postoperativer Tag",
+                pesr: {
+                    question: "Wählen Sie die korrekte PESR-Formulierung:",
+                    options: [
+                        {
+                            id: "pesr-1",
+                            p: "Sturzgefahr",
+                            e: "Muskelschwäche, postoperative Einschränkungen, Schwindel",
+                            s: "Unsicherer Gang, benötigt Hilfe beim Aufstehen, Angst vor Stürzen",
+                            r: "Ist orientiert, kann um Hilfe rufen, motiviert zur Mobilisation",
+                            correct: true
+                        },
+                        {
+                            id: "pesr-2",
+                            p: "Eingeschränkte Mobilität",
+                            e: "Alter, Gelenkprobleme",
+                            s: "Kann nicht laufen, ist bettlägerig",
+                            r: "Hat Angehörige, die helfen können",
+                            correct: false
+                        },
+                        {
+                            id: "pesr-3",
+                            p: "Akute Schmerzen",
+                            e: "Postoperativer Zustand",
+                            s: "Schonhaltung, Gesichtsverzerrung",
+                            r: "Kann Schmerzen beschreiben",
+                            correct: false
+                        }
+                    ]
+                },
+                ziele: {
+                    nahziel: {
+                        question: "Wählen Sie das korrekte Nahziel:",
+                        options: [
+                            {
+                                id: "nahziel-1",
+                                text: "Der Patient ist in 3 Tagen 10 Meter mit dem Gehstock gegangen.",
+                                correct: true
+                            },
+                            {
+                                id: "nahziel-2",
+                                text: "Der Patient hat keine Schmerzen mehr.",
+                                correct: false
+                            },
+                            {
+                                id: "nahziel-3",
+                                text: "Der Patient ist mobil und selbstständig.",
+                                correct: false
+                            }
+                        ]
+                    },
+                    fernziel: {
+                        question: "Wählen Sie das korrekte Fernziel:",
+                        options: [
+                            {
+                                id: "fernziel-1",
+                                text: "Der Patient ist in 4 Wochen selbstständig mit dem Rollator mobil.",
+                                correct: true
+                            },
+                            {
+                                id: "fernziel-2",
+                                text: "Der Patient ist entlassen und benötigt keine Hilfe mehr.",
+                                correct: false
+                            },
+                            {
+                                id: "fernziel-3",
+                                text: "Der Patient kann wieder Auto fahren.",
+                                correct: false
+                            }
+                        ]
+                    }
+                },
+                massnahmen: {
+                    question: "Wählen Sie die korrekten Pflegemaßnahmen aus:",
+                    options: [
+                        {
+                            id: "massnahme-1",
+                            text: "Die Pflegekraft begleitet den Patienten bei der Mobilisation und stabilisiert ihn.",
+                            correct: true
+                        },
+                        {
+                            id: "massnahme-2",
+                            text: "Die Pflegekraft verabreicht regelmäßig Schmerzmittel nach Therapieplan.",
+                            correct: true
+                        },
+                        {
+                            id: "massnahme-3",
+                            text: "Die Pflegekraft fixiert das Bett in tiefster Position.",
+                            correct: true
+                        },
+                        {
+                            id: "massnahme-4",
+                            text: "Die Pflegekraft lässt den Patienten alleine üben, um sein Selbstvertrauen zu stärken.",
+                            correct: false
+                        },
+                        {
+                            id: "massnahme-5",
+                            text: "Die Pflegekraft verordnet Physiotherapie.",
+                            correct: false
+                        }
+                    ]
+                }
+            }
+            // Additional case studies can be added here
+        ];
+
+        // Current State
+        let currentCaseIndex = 0;
+        let currentStep = 1;
+        let userSelections = {
+            pesr: null,
+            nahziel: null,
+            fernziel: null,
+            massnahmen: []
+        };
+
+        // DOM Elements
+        const currentCaseElement = document.getElementById('current-case');
+        const totalCasesElement = document.getElementById('total-cases');
+        const caseTitleElement = document.getElementById('case-title');
+        const caseDescriptionElement = document.getElementById('case-description');
+        const stepElements = document.querySelectorAll('.step');
+        const stepContentElements = document.querySelectorAll('.step-content');
+        const resultsScreen = document.getElementById('results-screen');
+        const resultScoreElement = document.getElementById('result-score');
+        const resultFeedbackElement = document.getElementById('result-feedback');
+        const pesrScoreElement = document.getElementById('pesr-score');
+        const nahzielScoreElement = document.getElementById('nahziel-score');
+        const fernzielScoreElement = document.getElementById('fernziel-score');
+        const massnahmenScoreElement = document.getElementById('massnahmen-score');
+
+        // Initialize the simulator
+        function initSimulator() {
+            totalCasesElement.textContent = caseStudies.length;
+            loadCaseStudy(currentCaseIndex);
+            setupEventListeners();
+        }
+
+        // Load a case study
+        function loadCaseStudy(index) {
+            const caseStudy = caseStudies[index];
+            
+            // Update case info
+            currentCaseElement.textContent = index + 1;
+            caseTitleElement.textContent = caseStudy.title;
+            caseDescriptionElement.textContent = caseStudy.description;
+            
+            // Update case info details
+            document.querySelector('.info-item:nth-child(1) .info-value').textContent = caseStudy.patient;
+            document.querySelector('.info-item:nth-child(2) .info-value').textContent = caseStudy.diagnosis;
+            document.querySelector('.info-item:nth-child(3) .info-value').textContent = caseStudy.situation;
+            
+            // Load PESR options
+            loadPESROptions(caseStudy.pesr);
+            
+            // Load Ziel options
+            loadZielOptions(caseStudy.ziele);
+            
+            // Load Maßnahmen options
+            loadMassnahmenOptions(caseStudy.massnahmen);
+            
+            // Reset user selections
+            userSelections = {
+                pesr: null,
+                nahziel: null,
+                fernziel: null,
+                massnahmen: []
+            };
+            
+            // Reset UI
+            resetStepNavigation();
+            goToStep(1);
+            resultsScreen.classList.remove('active');
+        }
+
+        // Load PESR options
+        function loadPESROptions(pesrData) {
+            const container = document.getElementById('pesr-options');
+            container.innerHTML = '';
+            
+            pesrData.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option-card';
+                optionElement.dataset.id = option.id;
+                
+                optionElement.innerHTML = `
+                    <div class="option-indicator">${String.fromCharCode(65 + pesrData.options.indexOf(option))}</div>
+                    <div class="option-text">
+                        <div class="option-label">P: ${option.p}</div>
+                        <div class="option-description">E: ${option.e}</div>
+                        <div class="option-description">S: ${option.s}</div>
+                        <div class="option-description">R: ${option.r}</div>
+                    </div>
+                `;
+                
+                optionElement.addEventListener('click', () => selectPESROption(option.id));
+                container.appendChild(optionElement);
+            });
+        }
+
+        // Load Ziel options
+        function loadZielOptions(zieleData) {
+            // Nahziel options
+            const nahzielContainer = document.getElementById('nahziel-options');
+            nahzielContainer.innerHTML = '';
+            
+            zieleData.nahziel.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option-card';
+                optionElement.dataset.id = option.id;
+                
+                optionElement.innerHTML = `
+                    <div class="option-indicator">${String.fromCharCode(65 + zieleData.nahziel.options.indexOf(option))}</div>
+                    <div class="option-text">
+                        <div class="option-description">${option.text}</div>
+                    </div>
+                `;
+                
+                optionElement.addEventListener('click', () => selectNahzielOption(option.id));
+                nahzielContainer.appendChild(optionElement);
+            });
+            
+            // Fernziel options
+            const fernzielContainer = document.getElementById('fernziel-options');
+            fernzielContainer.innerHTML = '';
+            
+            zieleData.fernziel.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option-card';
+                optionElement.dataset.id = option.id;
+                
+                optionElement.innerHTML = `
+                    <div class="option-indicator">${String.fromCharCode(65 + zieleData.fernziel.options.indexOf(option))}</div>
+                    <div class="option-text">
+                        <div class="option-description">${option.text}</div>
+                    </div>
+                `;
+                
+                optionElement.addEventListener('click', () => selectFernzielOption(option.id));
+                fernzielContainer.appendChild(optionElement);
+            });
+        }
+
+        // Load Maßnahmen options
+        function loadMassnahmenOptions(massnahmenData) {
+            const container = document.getElementById('massnahmen-options');
+            container.innerHTML = '';
+            
+            massnahmenData.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option-card';
+                optionElement.dataset.id = option.id;
+                
+                optionElement.innerHTML = `
+                    <div class="option-indicator">${String.fromCharCode(65 + massnahmenData.options.indexOf(option))}</div>
+                    <div class="option-text">
+                        <div class="option-description">${option.text}</div>
+                    </div>
+                `;
+                
+                optionElement.addEventListener('click', () => selectMassnahmeOption(option.id));
+                container.appendChild(optionElement);
+            });
+        }
+
+        // Select PESR option
+        function selectPESROption(optionId) {
+            // Remove selected class from all options
+            document.querySelectorAll('#pesr-options .option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            const selectedCard = document.querySelector(`#pesr-options .option-card[data-id="${optionId}"]`);
+            selectedCard.classList.add('selected');
+            
+            // Store selection
+            userSelections.pesr = optionId;
+            
+            // Enable next button
+            document.getElementById('next-to-ziele').disabled = false;
+        }
+
+        // Select Nahziel option
+        function selectNahzielOption(optionId) {
+            // Remove selected class from all options
+            document.querySelectorAll('#nahziel-options .option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            const selectedCard = document.querySelector(`#nahziel-options .option-card[data-id="${optionId}"]`);
+            selectedCard.classList.add('selected');
+            
+            // Store selection
+            userSelections.nahziel = optionId;
+            
+            // Check if both ziele are selected to enable next button
+            if (userSelections.nahziel && userSelections.fernziel) {
+                document.getElementById('next-to-massnahmen').disabled = false;
+            }
+        }
+
+        // Select Fernziel option
+        function selectFernzielOption(optionId) {
+            // Remove selected class from all options
+            document.querySelectorAll('#fernziel-options .option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            const selectedCard = document.querySelector(`#fernziel-options .option-card[data-id="${optionId}"]`);
+            selectedCard.classList.add('selected');
+            
+            // Store selection
+            userSelections.fernziel = optionId;
+            
+            // Check if both ziele are selected to enable next button
+            if (userSelections.nahziel && userSelections.fernziel) {
+                document.getElementById('next-to-massnahmen').disabled = false;
+            }
+        }
+
+        // Select Maßnahme option
+        function selectMassnahmeOption(optionId) {
+            const selectedCard = document.querySelector(`#massnahmen-options .option-card[data-id="${optionId}"]`);
+            
+            // Toggle selection
+            if (selectedCard.classList.contains('selected')) {
+                selectedCard.classList.remove('selected');
+                // Remove from selections
+                userSelections.massnahmen = userSelections.massnahmen.filter(id => id !== optionId);
+            } else {
+                selectedCard.classList.add('selected');
+                // Add to selections
+                userSelections.massnahmen.push(optionId);
+            }
+            
+            // Enable evaluation button if at least one massnahme is selected
+            document.getElementById('next-to-evaluation').disabled = userSelections.massnahmen.length === 0;
+        }
+
+        // Navigate to a specific step
+        function goToStep(stepNumber) {
+            // Update step navigation
+            stepElements.forEach(step => {
+                step.classList.remove('active');
+                if (parseInt(step.dataset.step) === stepNumber) {
+                    step.classList.add('active');
+                }
+                
+                // Mark previous steps as completed
+                if (parseInt(step.dataset.step) < stepNumber) {
+                    step.classList.add('completed');
+                } else {
+                    step.classList.remove('completed');
+                }
+            });
+            
+            // Update step content
+            stepContentElements.forEach(content => {
+                content.classList.remove('active');
+                if (parseInt(content.dataset.step) === stepNumber) {
+                    content.classList.add('active');
+                }
+            });
+            
+            currentStep = stepNumber;
+        }
+
+        // Reset step navigation
+        function resetStepNavigation() {
+            stepElements.forEach(step => {
+                step.classList.remove('active', 'completed');
+                if (parseInt(step.dataset.step) === 1) {
+                    step.classList.add('active');
+                }
+            });
+            
+            stepContentElements.forEach(content => {
+                content.classList.remove('active');
+                if (parseInt(content.dataset.step) === 1) {
+                    content.classList.add('active');
+                }
+            });
+            
+            currentStep = 1;
+        }
+
+        // Evaluate answers and show results
+        function evaluateAnswers() {
+            const caseStudy = caseStudies[currentCaseIndex];
+            
+            // Calculate scores
+            let pesrScore = 0;
+            let nahzielScore = 0;
+            let fernzielScore = 0;
+            let massnahmenScore = 0;
+            
+            // Check PESR
+            const correctPESR = caseStudy.pesr.options.find(option => option.correct);
+            if (userSelections.pesr === correctPESR.id) {
+                pesrScore = 1;
+            }
+            
+            // Check Nahziel
+            const correctNahziel = caseStudy.ziele.nahziel.options.find(option => option.correct);
+            if (userSelections.nahziel === correctNahziel.id) {
+                nahzielScore = 1;
+            }
+            
+            // Check Fernziel
+            const correctFernziel = caseStudy.ziele.fernziel.options.find(option => option.correct);
+            if (userSelections.fernziel === correctFernziel.id) {
+                fernzielScore = 1;
+            }
+            
+            // Check Maßnahmen
+            const correctMassnahmen = caseStudy.massnahmen.options.filter(option => option.correct);
+            const selectedCorrectMassnahmen = userSelections.massnahmen.filter(id => {
+                return caseStudy.massnahmen.options.find(option => option.id === id && option.correct);
+            });
+            massnahmenScore = selectedCorrectMassnahmen.length;
+            
+            // Calculate total score
+            const totalPossible = 1 + 1 + 1 + correctMassnahmen.length;
+            const totalScore = pesrScore + nahzielScore + fernzielScore + massnahmenScore;
+            const percentage = Math.round((totalScore / totalPossible) * 100);
+            
+            // Update results UI
+            pesrScoreElement.textContent = `${pesrScore}/1`;
+            nahzielScoreElement.textContent = `${nahzielScore}/1`;
+            fernzielScoreElement.textContent = `${fernzielScore}/1`;
+            massnahmenScoreElement.textContent = `${massnahmenScore}/${correctMassnahmen.length}`;
+            resultScoreElement.textContent = `${percentage}%`;
+            
+            // Set feedback based on score
+            if (percentage >= 90) {
+                resultFeedbackElement.textContent = "Ausgezeichnet! Sie haben fast alle Antworten korrekt ausgewählt.";
+            } else if (percentage >= 70) {
+                resultFeedbackElement.textContent = "Gut gemacht! Sie haben die meisten Antworten korrekt ausgewählt.";
+            } else if (percentage >= 50) {
+                resultFeedbackElement.textContent = "Nicht schlecht! Üben Sie weiter, um Ihre Ergebnisse zu verbessern.";
+            } else {
+                resultFeedbackElement.textContent = "Üben Sie weiter! Wiederholen Sie die Grundlagen der Pflegeplanung.";
+            }
+            
+            // Show results screen
+            document.querySelector('.simulator-container').style.display = 'none';
+            resultsScreen.classList.add('active');
+            
+            // Show confetti if score is good
+            if (percentage >= 70) {
+                showConfetti();
+            }
+            
+            // Mark the evaluation step as completed
+            document.querySelector('.step[data-step="4"]').classList.add('completed');
+        }
+
+        // Show confetti animation
+        function showConfetti() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+            
+            // Additional bursts for celebration
+            setTimeout(() => confetti({
+                particleCount: 100,
+                angle: 60,
+                spread: 70,
+                origin: { x: 0, y: 0.6 }
+            }), 250);
+            
+            setTimeout(() => confetti({
+                particleCount: 100,
+                angle: 120,
+                spread: 70,
+                origin: { x: 1, y: 0.6 }
+            }), 500);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Navigation buttons
+            document.getElementById('next-to-ziele').addEventListener('click', () => goToStep(2));
+            document.getElementById('back-to-pesr').addEventListener('click', () => goToStep(1));
+            document.getElementById('next-to-massnahmen').addEventListener('click', () => goToStep(3));
+            document.getElementById('back-to-ziele').addEventListener('click', () => goToStep(2));
+            document.getElementById('next-to-evaluation').addEventListener('click', () => goToStep(4));
+            document.getElementById('back-to-massnahmen').addEventListener('click', () => goToStep(3));
+            document.getElementById('evaluate-answers').addEventListener('click', evaluateAnswers);
+            
+            // Results screen buttons
+            document.getElementById('review-answers').addEventListener('click', () => {
+                resultsScreen.classList.remove('active');
+                document.querySelector('.simulator-container').style.display = 'block';
+                goToStep(1);
+            });
+            
+            document.getElementById('next-case').addEventListener('click', () => {
+                // For now, just reload the same case
+                // In a real implementation, you would load the next case
+                loadCaseStudy(currentCaseIndex);
+            });
+            
+            document.getElementById('back-to-cases').addEventListener('click', () => {
+                // In a real implementation, this would go back to the case selection screen
+                alert("In einer vollständigen Implementierung würden Sie hier zur Fallauswahl zurückkehren.");
+            });
+        }
+
+        // Initialize the simulator when page loads
+        document.addEventListener('DOMContentLoaded', initSimulator);
+    </script>
+</body>
+</html>
