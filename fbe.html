@@ -159,6 +159,7 @@
             background: none;
             border: none;
             padding: var(--spacing-xs);
+            z-index: 1001;
         }
 
         .hamburger span {
@@ -428,6 +429,7 @@
             cursor: grab;
             transition: all 0.3s;
             user-select: none;
+            touch-action: none;
         }
 
         .data-item.dragging {
@@ -728,6 +730,24 @@
             width: 100%;
         }
 
+        /* Auto-scroll indicator for mobile */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            z-index: 999;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .hamburger {
@@ -737,16 +757,18 @@
             .nav-menu {
                 position: fixed;
                 left: -100%;
-                top: 100%;
+                top: 0;
                 flex-direction: column;
                 background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-                width: 100%;
-                text-align: center;
+                width: 80%;
+                height: 100vh;
+                text-align: left;
                 transition: 0.3s;
                 box-shadow: var(--shadow-elevated);
-                padding: var(--spacing-lg) 0;
+                padding: var(--spacing-xxl) var(--spacing-lg);
                 gap: 0;
                 z-index: 999;
+                overflow-y: auto;
             }
             
             .nav-menu.active {
@@ -759,8 +781,9 @@
             }
             
             .nav-link {
-                justify-content: center;
+                justify-content: flex-start;
                 padding: var(--spacing-md);
+                font-size: 1.1rem;
             }
             
             .economy-bar {
@@ -891,6 +914,12 @@
             </div>
         </div>
     </nav>
+
+    <!-- Auto-scroll indicator -->
+    <div class="scroll-indicator" id="scroll-indicator">
+        <i class="fas fa-arrow-down"></i>
+        Scrollen zum Ablegen
+    </div>
 
     <!-- Main Content -->
     <main>
@@ -1392,7 +1421,6 @@
                     }
                 }
             }
-            // Additional case studies can be added here
         ];
 
         // Current State
@@ -1410,6 +1438,8 @@
             massnahmen: {}
         };
         let selectedProblems = [];
+        let isDragging = false;
+        let scrollInterval;
 
         // DOM Elements
         const hamburger = document.getElementById('hamburger');
@@ -1427,6 +1457,7 @@
         const ziel2ScoreElement = document.getElementById('ziel2-score');
         const massnahme1ScoreElement = document.getElementById('massnahme1-score');
         const massnahme2ScoreElement = document.getElementById('massnahme2-score');
+        const scrollIndicator = document.getElementById('scroll-indicator');
 
         // Initialize the simulator
         function initSimulator() {
@@ -1494,6 +1525,7 @@
                 itemElement.draggable = true;
                 
                 itemElement.addEventListener('dragstart', handleDragStart);
+                itemElement.addEventListener('dragend', handleDragEnd);
                 
                 container.appendChild(itemElement);
             });
@@ -1516,8 +1548,23 @@
 
         // Drag and drop handlers
         function handleDragStart(e) {
+            isDragging = true;
             e.dataTransfer.setData('text/plain', e.target.id);
             e.target.classList.add('dragging');
+            
+            // Start auto-scroll on mobile
+            if (window.innerWidth <= 768) {
+                startAutoScroll();
+                scrollIndicator.style.display = 'flex';
+            }
+        }
+
+        function handleDragEnd() {
+            isDragging = false;
+            
+            // Stop auto-scroll
+            stopAutoScroll();
+            scrollIndicator.style.display = 'none';
         }
 
         function handleDragOver(e) {
@@ -1567,6 +1614,33 @@
                 const categorizedItems = Object.values(userSelections.categorization).flat().length;
                 document.getElementById('next-to-probleme').disabled = categorizedItems !== totalItems;
             }
+            
+            // Stop auto-scroll after drop
+            stopAutoScroll();
+            scrollIndicator.style.display = 'none';
+        }
+
+        // Auto-scroll functionality for mobile
+        function startAutoScroll() {
+            scrollInterval = setInterval(() => {
+                if (isDragging) {
+                    // Get the current scroll position
+                    const scrollY = window.scrollY || window.pageYOffset;
+                    const windowHeight = window.innerHeight;
+                    const documentHeight = document.documentElement.scrollHeight;
+                    
+                    // Scroll down if we're near the bottom
+                    if (scrollY + windowHeight < documentHeight - 100) {
+                        window.scrollBy(0, 10);
+                    }
+                } else {
+                    stopAutoScroll();
+                }
+            }, 50);
+        }
+
+        function stopAutoScroll() {
+            clearInterval(scrollInterval);
         }
 
         // Load problem options
@@ -2039,6 +2113,16 @@
             hamburger.addEventListener('click', () => {
                 navMenu.classList.toggle('active');
                 hamburger.classList.toggle('active');
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (navMenu.classList.contains('active') && 
+                    !navMenu.contains(e.target) && 
+                    !hamburger.contains(e.target)) {
+                    navMenu.classList.remove('active');
+                    hamburger.classList.remove('active');
+                }
             });
             
             // Navigation buttons
