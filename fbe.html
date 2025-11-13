@@ -2330,12 +2330,6 @@
             }
         }
 
-        // Track touch position for bidirectional scrolling
-        document.addEventListener('touchmove', (e) => {
-            if (isDragging && e.touches.length > 0) {
-                window.touchY = e.touches[0].clientY;
-            }
-        }, { passive: true });
 */
         function autoScroll() {
     if (isDragging) {
@@ -2366,15 +2360,24 @@
         
         // Perform scrolling
         if (scrollDirection === -1 && scrollY > 0) {
-            window.scrollBy(0, -15); // Increased scroll speed
+            window.scrollBy(0, -7); // Increased scroll speed
         } else if (scrollDirection === 1 && scrollY + windowHeight < documentHeight - 10) {
-            window.scrollBy(0, 15); // Increased scroll speed
+            window.scrollBy(0, 7); // Increased scroll speed
         }
         
         // Continue scrolling
         scrollInterval = requestAnimationFrame(autoScroll);
     }
 }
+        // Track touch position for bidirectional scrolling
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging && e.touches.length > 0) {
+                window.touchY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        
+
         // Load problem options
         function loadProblemOptions(problemsData) {
             const container = document.getElementById('problem-options');
