@@ -17,6 +17,8 @@
             --warning: #fca311;
             --danger: #e63946;
             --coin: #ffd166;
+            --xp: #06d6a0;
+            --level: #118ab2;
             --text-primary: #1d3557;
             --text-secondary: #457b9d;
             --text-tertiary: #a8dadc;
@@ -154,6 +156,9 @@
             display: none;
             flex-direction: column;
             cursor: pointer;
+            background: none;
+            border: none;
+            padding: var(--spacing-xs);
         }
 
         .hamburger span {
@@ -162,6 +167,7 @@
             background: white;
             margin: 3px 0;
             transition: 0.3s;
+            border-radius: 2px;
         }
 
         /* ===== ECONOMY BAR ===== */
@@ -181,14 +187,40 @@
         .economy-item {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             color: white;
-            font-weight: 600;
-            font-size: 0.9rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .economy-item.coins {
+            background: linear-gradient(135deg, var(--coin) 0%, #ffb347 100%);
+            color: var(--text-primary);
+            animation: glow 2s infinite alternate;
+        }
+
+        .economy-item.xp {
+            background: linear-gradient(135deg, var(--xp) 0%, #04a57d 100%);
+            color: white;
+            animation: glow 2s infinite alternate 0.3s;
+        }
+
+        .economy-item.level {
+            background: linear-gradient(135deg, var(--level) 0%, #0c6c8c 100%);
+            color: white;
+            animation: glow 2s infinite alternate 0.6s;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+            to { box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
         }
 
         .economy-item i {
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
         /* Mobile economy stats */
@@ -245,6 +277,7 @@
 
         .case-description {
             line-height: 1.8;
+            margin-bottom: var(--spacing-md);
         }
 
         .case-info {
@@ -298,6 +331,8 @@
             align-items: center;
             position: relative;
             z-index: 2;
+            flex: 1;
+            max-width: 150px;
         }
 
         .step-number {
@@ -324,8 +359,9 @@
         }
 
         .step-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 600;
+            text-align: center;
         }
 
         /* Step Content */
@@ -349,6 +385,76 @@
         .step-description {
             margin-bottom: var(--spacing-lg);
             color: var(--text-secondary);
+        }
+
+        /* Data Categorization */
+        .categorization-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        @media (max-width: 768px) {
+            .categorization-area {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .data-items {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .data-item {
+            background: var(--primary-light);
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            border: 2px dashed var(--primary);
+            cursor: grab;
+            transition: all 0.3s;
+        }
+
+        .data-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .category {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            min-height: 120px;
+            transition: all 0.3s;
+        }
+
+        .category.hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .category-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .category-items {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+            min-height: 60px;
         }
 
         /* Options Grid */
@@ -617,7 +723,7 @@
             .nav-menu {
                 position: fixed;
                 left: -100%;
-                top: 70px;
+                top: 100%;
                 flex-direction: column;
                 background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
                 width: 100%;
@@ -626,6 +732,7 @@
                 box-shadow: var(--shadow-elevated);
                 padding: var(--spacing-lg) 0;
                 gap: 0;
+                z-index: 999;
             }
             
             .nav-menu.active {
@@ -700,11 +807,11 @@
                 <span>Pflegeplanung Simulator</span>
             </a>
             
-            <div class="hamburger" id="hamburger">
+            <button class="hamburger" id="hamburger">
                 <span></span>
                 <span></span>
                 <span></span>
-            </div>
+            </button>
             
             <ul class="nav-menu" id="nav-menu">
                 <li class="nav-item">
@@ -738,17 +845,17 @@
         <div class="economy-bar">
             <div class="container">
                 <div class="economy-stats">
-                    <div class="economy-item">
+                    <div class="economy-item coins">
                         <i class="fas fa-coins"></i>
                         <span id="coins">150</span>
                     </div>
-                    <div class="economy-item">
-                        <i class="fas fa-level-up-alt"></i>
-                        Level <span id="level">2</span>
-                    </div>
-                    <div class="economy-item">
+                    <div class="economy-item xp">
                         <i class="fas fa-fire"></i>
                         <span id="xp">75</span> XP
+                    </div>
+                    <div class="economy-item level">
+                        <i class="fas fa-level-up-alt"></i>
+                        Level <span id="level">2</span>
                     </div>
                 </div>
             </div>
@@ -756,17 +863,17 @@
 
         <!-- Mobile Economy Stats (shown only on mobile) -->
         <div class="mobile-economy">
-            <div class="economy-item">
+            <div class="economy-item coins">
                 <i class="fas fa-coins"></i>
                 <span id="mobile-coins">150</span>
             </div>
-            <div class="economy-item">
-                <i class="fas fa-level-up-alt"></i>
-                <span id="mobile-level">2</span>
-            </div>
-            <div class="economy-item">
+            <div class="economy-item xp">
                 <i class="fas fa-fire"></i>
                 <span id="mobile-xp">75</span>
+            </div>
+            <div class="economy-item level">
+                <i class="fas fa-level-up-alt"></i>
+                <span id="mobile-level">2</span>
             </div>
         </div>
     </nav>
@@ -776,7 +883,7 @@
         <div class="container">
             <h1 class="section-title">Pflegeplanung Simulator</h1>
             <p class="section-subtitle">
-                Üben Sie die Pflegeplanung mit realistischen Fallbeispielen. Identifizieren Sie Probleme, setzen Sie Ziele und planen Sie Maßnahmen.
+                Üben Sie die Pflegeplanung mit realistischen Fallbeispielen. Kategorisieren Sie Informationen, identifizieren Sie Probleme, setzen Sie Ziele und planen Sie Maßnahmen.
             </p>
 
             <!-- Simulator Container -->
@@ -788,7 +895,8 @@
                         Frau Schmidt, 82 Jahre, ist nach einem Sturz mit Oberschenkelhalsfraktur operiert worden (Dynamische Hüftschraube). 
                         Sie ist seit 3 Tagen postoperativ, hat starke Schmerzen (8/10 auf der Schmerzskala) und ist in ihrer Mobilität eingeschränkt. 
                         Sie benötigt Hilfe bei der Körperpflege und beim Anziehen. Sie ist ängstlich vor erneuten Stürzen und wirkt desorientiert. 
-                        Ihre Haut zeigt eine beginnende Rötung am Kreuzbein. Sie hat Appetitmangel und trinkt wenig.
+                        Ihre Haut zeigt eine beginnende Rötung am Kreuzbein. Sie hat Appetitmangel und trinkt wenig. Frau Schmidt war früher Lehrerin, 
+                        ist verwitwet und lebt allein. Ihre Tochter besucht sie täglich im Krankenhaus.
                     </div>
                     <div class="case-info">
                         <div class="info-item">
@@ -810,24 +918,83 @@
                 <div class="simulator-steps">
                     <div class="step active" data-step="1">
                         <div class="step-number">1</div>
-                        <div class="step-label">Probleme</div>
+                        <div class="step-label">Daten kategorisieren</div>
                     </div>
                     <div class="step" data-step="2">
                         <div class="step-number">2</div>
-                        <div class="step-label">Ziele</div>
+                        <div class="step-label">Probleme identifizieren</div>
                     </div>
                     <div class="step" data-step="3">
                         <div class="step-number">3</div>
-                        <div class="step-label">Maßnahmen</div>
+                        <div class="step-label">Ziele setzen</div>
                     </div>
                     <div class="step" data-step="4">
                         <div class="step-number">4</div>
+                        <div class="step-label">Maßnahmen planen</div>
+                    </div>
+                    <div class="step" data-step="5">
+                        <div class="step-number">5</div>
                         <div class="step-label">Evaluation</div>
                     </div>
                 </div>
 
-                <!-- Step 1: Probleme -->
+                <!-- Step 1: Data Categorization -->
                 <div class="step-content active" data-step="1">
+                    <h3 class="step-title">Daten kategorisieren</h3>
+                    <p class="step-description">
+                        Ziehen Sie die Informationen aus dem Fallbeispiel in die richtigen Kategorien:
+                    </p>
+                    
+                    <div class="categorization-area">
+                        <div class="data-items" id="data-items">
+                            <!-- Data items will be populated by JavaScript -->
+                        </div>
+                        <div class="categories">
+                            <div class="category" data-category="biographisch">
+                                <div class="category-title">
+                                    <i class="fas fa-user"></i>
+                                    Biographisch
+                                </div>
+                                <div class="category-items" id="biographisch-items"></div>
+                            </div>
+                            <div class="category" data-category="sozial">
+                                <div class="category-title">
+                                    <i class="fas fa-users"></i>
+                                    Sozial
+                                </div>
+                                <div class="category-items" id="sozial-items"></div>
+                            </div>
+                            <div class="category" data-category="medizinisch">
+                                <div class="category-title">
+                                    <i class="fas fa-heartbeat"></i>
+                                    Medizinisch
+                                </div>
+                                <div class="category-items" id="medizinisch-items"></div>
+                            </div>
+                            <div class="category" data-category="pflegerisch">
+                                <div class="category-title">
+                                    <i class="fas fa-hand-holding-heart"></i>
+                                    Pflegerisch
+                                </div>
+                                <div class="category-items" id="pflegerisch-items"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="navigation-buttons">
+                        <button class="btn btn-secondary" id="back-to-cases">
+                            <i class="fas fa-arrow-left"></i>
+                            Zurück zu Fallbeispielen
+                        </button>
+                        <button class="btn btn-primary" id="next-to-probleme" disabled>
+                            Weiter zu Problemen
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Problem Identification -->
+                <div class="step-content" data-step="2">
                     <h3 class="step-title">Probleme identifizieren</h3>
                     <p class="step-description">
                         Identifizieren Sie 2 korrekte Pflegeprobleme für dieses Fallbeispiel. Wählen Sie aus den folgenden Optionen:
@@ -838,9 +1005,9 @@
                     </div>
                     
                     <div class="navigation-buttons">
-                        <button class="btn btn-secondary" id="back-to-cases">
+                        <button class="btn btn-secondary" id="back-to-categorization">
                             <i class="fas fa-arrow-left"></i>
-                            Zurück zu Fallbeispielen
+                            Zurück zur Kategorisierung
                         </button>
                         <button class="btn btn-primary" id="next-to-ziele" disabled>
                             Weiter zu Zielen
@@ -849,8 +1016,8 @@
                     </div>
                 </div>
 
-                <!-- Step 2: Ziele -->
-                <div class="step-content" data-step="2">
+                <!-- Step 3: Goal Setting -->
+                <div class="step-content" data-step="3">
                     <h3 class="step-title">Pflegeziele setzen</h3>
                     <p class="step-description">
                         Setzen Sie für jedes identifizierte Problem 2 korrekte Ziele. Wählen Sie aus den folgenden Optionen:
@@ -872,8 +1039,8 @@
                     </div>
                 </div>
 
-                <!-- Step 3: Maßnahmen -->
-                <div class="step-content" data-step="3">
+                <!-- Step 4: Intervention Planning -->
+                <div class="step-content" data-step="4">
                     <h3 class="step-title">Pflegemaßnahmen planen</h3>
                     <p class="step-description">
                         Planen Sie für jedes Problem 5 korrekte Maßnahmen. Wählen Sie aus den folgenden Optionen:
@@ -895,8 +1062,8 @@
                     </div>
                 </div>
 
-                <!-- Step 4: Evaluation -->
-                <div class="step-content" data-step="4">
+                <!-- Step 5: Evaluation -->
+                <div class="step-content" data-step="5">
                     <h3 class="step-title">Evaluation</h3>
                     <p class="step-description">
                         Ihre Auswahl wird jetzt ausgewertet.
@@ -927,6 +1094,10 @@
                 </p>
                 
                 <div class="result-breakdown">
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Daten kategorisiert</div>
+                        <div class="breakdown-value" id="categorization-score">0/8</div>
+                    </div>
                     <div class="breakdown-item">
                         <div class="breakdown-label">Probleme</div>
                         <div class="breakdown-value" id="problem-score">0/2</div>
@@ -986,10 +1157,20 @@
             {
                 id: 1,
                 title: "Fallbeispiel: Frau Schmidt",
-                description: "Frau Schmidt, 82 Jahre, ist nach einem Sturz mit Oberschenkelhalsfraktur operiert worden (Dynamische Hüftschraube). Sie ist seit 3 Tagen postoperativ, hat starke Schmerzen (8/10 auf der Schmerzskala) und ist in ihrer Mobilität eingeschränkt. Sie benötigt Hilfe bei der Körperpflege und beim Anziehen. Sie ist ängstlich vor erneuten Stürzen und wirkt desorientiert. Ihre Haut zeigt eine beginnende Rötung am Kreuzbein. Sie hat Appetitmangel und trinkt wenig.",
+                description: "Frau Schmidt, 82 Jahre, ist nach einem Sturz mit Oberschenkelhalsfraktur operiert worden (Dynamische Hüftschraube). Sie ist seit 3 Tagen postoperativ, hat starke Schmerzen (8/10 auf der Schmerzskala) und ist in ihrer Mobilität eingeschränkt. Sie benötigt Hilfe bei der Körperpflege und beim Anziehen. Sie ist ängstlich vor erneuten Stürzen und wirkt desorientiert. Ihre Haut zeigt eine beginnende Rötung am Kreuzbein. Sie hat Appetitmangel und trinkt wenig. Frau Schmidt war früher Lehrerin, ist verwitwet und lebt allein. Ihre Tochter besucht sie täglich im Krankenhaus.",
                 patient: "Frau Schmidt, 82 Jahre",
                 diagnosis: "Oberschenkelhalsfraktur, Status post OP",
                 situation: "Stationäre Pflege, 3. postoperativer Tag",
+                dataItems: [
+                    { id: "data-1", text: "82 Jahre alt", correctCategory: "biographisch" },
+                    { id: "data-2", text: "War früher Lehrerin", correctCategory: "biographisch" },
+                    { id: "data-3", text: "Verwitwet", correctCategory: "sozial" },
+                    { id: "data-4", text: "Tochter besucht täglich", correctCategory: "sozial" },
+                    { id: "data-5", text: "Oberschenkelhalsfraktur", correctCategory: "medizinisch" },
+                    { id: "data-6", text: "Status post Operation", correctCategory: "medizinisch" },
+                    { id: "data-7", text: "Benötigt Hilfe bei Körperpflege", correctCategory: "pflegerisch" },
+                    { id: "data-8", text: "Hautrötung am Kreuzbein", correctCategory: "pflegerisch" }
+                ],
                 problems: {
                     question: "Identifizieren Sie 2 korrekte Pflegeprobleme:",
                     options: [
@@ -1204,17 +1385,21 @@
         let currentCaseIndex = 0;
         let currentStep = 1;
         let userSelections = {
-            problems: [],
-            ziele: {
-                // Will be populated with problem IDs as keys and arrays of selected goal IDs
+            categorization: {
+                biographisch: [],
+                sozial: [],
+                medizinisch: [],
+                pflegerisch: []
             },
-            massnahmen: {
-                // Will be populated with problem IDs as keys and arrays of selected measure IDs
-            }
+            problems: [],
+            ziele: {},
+            massnahmen: {}
         };
         let selectedProblems = [];
 
         // DOM Elements
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
         const currentCaseElement = document.getElementById('current-case');
         const totalCasesElement = document.getElementById('total-cases');
         const caseTitleElement = document.getElementById('case-title');
@@ -1224,6 +1409,7 @@
         const resultsScreen = document.getElementById('results-screen');
         const resultScoreElement = document.getElementById('result-score');
         const resultFeedbackElement = document.getElementById('result-feedback');
+        const categorizationScoreElement = document.getElementById('categorization-score');
         const problemScoreElement = document.getElementById('problem-score');
         const ziel1ScoreElement = document.getElementById('ziel1-score');
         const ziel2ScoreElement = document.getElementById('ziel2-score');
@@ -1235,6 +1421,7 @@
             totalCasesElement.textContent = caseStudies.length;
             loadCaseStudy(currentCaseIndex);
             setupEventListeners();
+            loadEconomy();
         }
 
         // Load a case study
@@ -1251,11 +1438,20 @@
             document.querySelector('.info-item:nth-child(2) .info-value').textContent = caseStudy.diagnosis;
             document.querySelector('.info-item:nth-child(3) .info-value').textContent = caseStudy.situation;
             
+            // Load data items for categorization
+            loadDataItems(caseStudy.dataItems);
+            
             // Load problem options
             loadProblemOptions(caseStudy.problems);
             
             // Reset user selections
             userSelections = {
+                categorization: {
+                    biographisch: [],
+                    sozial: [],
+                    medizinisch: [],
+                    pflegerisch: []
+                },
                 problems: [],
                 ziele: {},
                 massnahmen: {}
@@ -1266,6 +1462,100 @@
             resetStepNavigation();
             goToStep(1);
             resultsScreen.classList.remove('active');
+        }
+
+        // Load data items for categorization
+        function loadDataItems(dataItems) {
+            const container = document.getElementById('data-items');
+            container.innerHTML = '';
+            
+            // Clear category items
+            document.getElementById('biographisch-items').innerHTML = '';
+            document.getElementById('sozial-items').innerHTML = '';
+            document.getElementById('medizinisch-items').innerHTML = '';
+            document.getElementById('pflegerisch-items').innerHTML = '';
+            
+            dataItems.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'data-item';
+                itemElement.id = item.id;
+                itemElement.textContent = item.text;
+                itemElement.draggable = true;
+                
+                itemElement.addEventListener('dragstart', handleDragStart);
+                
+                container.appendChild(itemElement);
+            });
+            
+            // Set up drop zones
+            setupDropZones();
+        }
+
+        // Set up drop zones for categorization
+        function setupDropZones() {
+            const categories = document.querySelectorAll('.category');
+            
+            categories.forEach(category => {
+                category.addEventListener('dragover', handleDragOver);
+                category.addEventListener('dragenter', handleDragEnter);
+                category.addEventListener('dragleave', handleDragLeave);
+                category.addEventListener('drop', handleDrop);
+            });
+        }
+
+        // Drag and drop handlers
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.id);
+            e.target.classList.add('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            e.target.classList.add('hover');
+        }
+
+        function handleDragLeave(e) {
+            e.target.classList.remove('hover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.target.classList.remove('hover');
+            
+            const id = e.dataTransfer.getData('text/plain');
+            const draggable = document.getElementById(id);
+            const category = e.target.closest('.category');
+            
+            if (category && draggable) {
+                const categoryType = category.dataset.category;
+                const categoryItems = category.querySelector('.category-items');
+                
+                // Remove from previous category if it was categorized before
+                const previousCategory = draggable.parentElement.closest('.category');
+                if (previousCategory) {
+                    const previousCategoryType = previousCategory.dataset.category;
+                    userSelections.categorization[previousCategoryType] = 
+                        userSelections.categorization[previousCategoryType].filter(itemId => itemId !== id);
+                }
+                
+                // Add to new category
+                categoryItems.appendChild(draggable);
+                draggable.classList.remove('dragging');
+                
+                // Store selection
+                if (!userSelections.categorization[categoryType].includes(id)) {
+                    userSelections.categorization[categoryType].push(id);
+                }
+                
+                // Check if all items are categorized to enable next button
+                const totalItems = caseStudies[currentCaseIndex].dataItems.length;
+                const categorizedItems = Object.values(userSelections.categorization).flat().length;
+                document.getElementById('next-to-probleme').disabled = categorizedItems !== totalItems;
+            }
         }
 
         // Load problem options
@@ -1508,10 +1798,10 @@
             
             currentStep = stepNumber;
             
-            // Load dynamic content for steps 2 and 3
-            if (stepNumber === 2 && selectedProblems.length > 0) {
+            // Load dynamic content for steps 3 and 4
+            if (stepNumber === 3 && selectedProblems.length > 0) {
                 loadZieleOptions();
-            } else if (stepNumber === 3 && selectedProblems.length > 0) {
+            } else if (stepNumber === 4 && selectedProblems.length > 0) {
                 loadMassnahmenOptions();
             }
         }
@@ -1540,9 +1830,18 @@
             const caseStudy = caseStudies[currentCaseIndex];
             
             // Calculate scores
+            let categorizationScore = 0;
             let problemScore = 0;
             const zielScores = {};
             const massnahmeScores = {};
+            
+            // Check categorization
+            caseStudy.dataItems.forEach(item => {
+                if (userSelections.categorization[item.correctCategory] && 
+                    userSelections.categorization[item.correctCategory].includes(item.id)) {
+                    categorizationScore++;
+                }
+            });
             
             // Check problems
             const correctProblems = caseStudy.problems.options.filter(option => option.correct);
@@ -1572,14 +1871,15 @@
             });
             
             // Calculate total score
-            const totalPossible = 2 + (2 * selectedProblems.length) + (5 * selectedProblems.length);
-            let totalScore = problemScore;
+            const totalPossible = caseStudy.dataItems.length + 2 + (2 * selectedProblems.length) + (5 * selectedProblems.length);
+            let totalScore = categorizationScore + problemScore;
             selectedProblems.forEach(problemId => {
                 totalScore += zielScores[problemId] + massnahmeScores[problemId];
             });
             const percentage = Math.round((totalScore / totalPossible) * 100);
             
             // Update results UI
+            categorizationScoreElement.textContent = `${categorizationScore}/${caseStudy.dataItems.length}`;
             problemScoreElement.textContent = `${problemScore}/2`;
             
             // Update ziele scores
@@ -1624,7 +1924,7 @@
             updateEconomy(percentage);
             
             // Mark the evaluation step as completed
-            document.querySelector('.step[data-step="4"]').classList.add('completed');
+            document.querySelector('.step[data-step="5"]').classList.add('completed');
         }
 
         // Show confetti animation
@@ -1670,7 +1970,10 @@
             const newLevel = Math.floor(xp / 100) + 1;
             if (newLevel > level) {
                 level = newLevel;
-                // Could add level up celebration here
+                // Level up celebration
+                setTimeout(() => {
+                    alert(`Glückwunsch! Sie haben Level ${level} erreicht!`);
+                }, 1000);
             }
             
             // Update UI
@@ -1681,17 +1984,35 @@
             document.getElementById('mobile-xp').textContent = xp;
             document.getElementById('mobile-level').textContent = level;
             
-            // Save to localStorage (simulated backend)
-            localStorage.setItem('pflegeplanung-coins', coins);
-            localStorage.setItem('pflegeplanung-xp', xp);
-            localStorage.setItem('pflegeplanung-level', level);
+            // Save to cookies
+            setCookie('pflegeplanung-coins', coins, 30);
+            setCookie('pflegeplanung-xp', xp, 30);
+            setCookie('pflegeplanung-level', level, 30);
         }
 
-        // Load economy from localStorage
+        // Cookie functions
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Load economy from cookies
         function loadEconomy() {
-            const coins = localStorage.getItem('pflegeplanung-coins') || 150;
-            const xp = localStorage.getItem('pflegeplanung-xp') || 75;
-            const level = localStorage.getItem('pflegeplanung-level') || 2;
+            const coins = getCookie('pflegeplanung-coins') || 150;
+            const xp = getCookie('pflegeplanung-xp') || 75;
+            const level = getCookie('pflegeplanung-level') || 2;
             
             document.getElementById('coins').textContent = coins;
             document.getElementById('xp').textContent = xp;
@@ -1704,20 +2025,21 @@
         // Setup event listeners
         function setupEventListeners() {
             // Mobile menu toggle
-            const hamburger = document.getElementById('hamburger');
-            const navMenu = document.getElementById('nav-menu');
-            
             hamburger.addEventListener('click', () => {
                 navMenu.classList.toggle('active');
+                // Animate hamburger
+                hamburger.classList.toggle('active');
             });
             
             // Navigation buttons
-            document.getElementById('next-to-ziele').addEventListener('click', () => goToStep(2));
-            document.getElementById('back-to-probleme').addEventListener('click', () => goToStep(1));
-            document.getElementById('next-to-massnahmen').addEventListener('click', () => goToStep(3));
-            document.getElementById('back-to-ziele').addEventListener('click', () => goToStep(2));
-            document.getElementById('next-to-evaluation').addEventListener('click', () => goToStep(4));
-            document.getElementById('back-to-massnahmen').addEventListener('click', () => goToStep(3));
+            document.getElementById('next-to-probleme').addEventListener('click', () => goToStep(2));
+            document.getElementById('back-to-categorization').addEventListener('click', () => goToStep(1));
+            document.getElementById('next-to-ziele').addEventListener('click', () => goToStep(3));
+            document.getElementById('back-to-probleme').addEventListener('click', () => goToStep(2));
+            document.getElementById('next-to-massnahmen').addEventListener('click', () => goToStep(4));
+            document.getElementById('back-to-ziele').addEventListener('click', () => goToStep(3));
+            document.getElementById('next-to-evaluation').addEventListener('click', () => goToStep(5));
+            document.getElementById('back-to-massnahmen').addEventListener('click', () => goToStep(4));
             document.getElementById('evaluate-answers').addEventListener('click', evaluateAnswers);
             
             // Results screen buttons
@@ -1740,10 +2062,7 @@
         }
 
         // Initialize the simulator when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            initSimulator();
-            loadEconomy();
-        });
+        document.addEventListener('DOMContentLoaded', initSimulator);
     </script>
 </body>
 </html>
