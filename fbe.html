@@ -2287,7 +2287,7 @@
             cancelAnimationFrame(scrollInterval);
             scrollDirection = 0;
         }
-
+/*
         function autoScroll() {
             if (isDragging) {
                 const scrollY = window.scrollY || window.pageYOffset;
@@ -2336,7 +2336,45 @@
                 window.touchY = e.touches[0].clientY;
             }
         }, { passive: true });
+*/
+        function autoScroll() {
+    if (isDragging) {
+        const scrollY = window.scrollY || window.pageYOffset;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        
+        // Determine scroll direction based on fixed thresholds
+        const topThreshold = 100;
+        const bottomThreshold = windowHeight - 100;
 
+        // Always scroll when dragging near edges
+        if (scrollY > 0) {
+            // If we're not at the top, allow scrolling up
+            scrollDirection = -1;
+            scrollIndicatorTop.classList.add('show');
+        } else {
+            scrollIndicatorTop.classList.remove('show');
+        }
+
+        if (scrollY + windowHeight < documentHeight - 10) {
+            // If we're not at the bottom, allow scrolling down  
+            scrollDirection = 1;
+            scrollIndicatorBottom.classList.add('show');
+        } else {
+            scrollIndicatorBottom.classList.remove('show');
+        }
+        
+        // Perform scrolling
+        if (scrollDirection === -1 && scrollY > 0) {
+            window.scrollBy(0, -15); // Increased scroll speed
+        } else if (scrollDirection === 1 && scrollY + windowHeight < documentHeight - 10) {
+            window.scrollBy(0, 15); // Increased scroll speed
+        }
+        
+        // Continue scrolling
+        scrollInterval = requestAnimationFrame(autoScroll);
+    }
+}
         // Load problem options
         function loadProblemOptions(problemsData) {
             const container = document.getElementById('problem-options');
