@@ -1030,6 +1030,13 @@
                 padding: var(--space-md);
             }
         }
+        .hero.hidden {
+    display: none;
+}
+
+.main-content.hidden {
+    display: none;
+}
     </style>
 </head>
 <body>
@@ -1979,7 +1986,7 @@ setupEventListeners() {
                 });
             },
             
-            // Start a module
+           /* // Start a module
             startModule(moduleId) {
                 this.currentModule = moduleId;
                 this.currentLesson = 0;
@@ -1990,7 +1997,24 @@ setupEventListeners() {
                 
                 this.loadLesson();
                 this.updateProgressIndicator();
-            },
+            },*/
+            
+            // Complete the module
+completeModule() {
+    document.getElementById('learning-module').classList.remove('active');
+    
+    // Show both main content AND hero section again
+    document.querySelector('.main-content').style.display = 'block';
+    document.querySelector('.hero').style.display = 'block';
+    
+    // Update progress
+    this.moduleProgress[this.currentModule] = 100;
+    this.saveProgress();
+    this.updateModuleCards();
+    
+    // Scroll to modules
+    document.getElementById('modules-container').scrollIntoView({ behavior: 'smooth' });
+},
             
             // Load the current lesson
             loadLesson() {
