@@ -1999,7 +1999,25 @@ setupEventListeners() {
                 this.updateProgressIndicator();
             },*/
             
-            // Complete the module
+
+
+// Start a module
+startModule(moduleId) {
+    this.currentModule = moduleId;
+    this.currentLesson = 0;
+    this.quizAnswers = {};
+    
+    // Hide both main content AND hero section
+    document.querySelector('.main-content').style.display = 'none';
+    document.querySelector('.hero').style.display = 'none';
+    
+    document.getElementById('learning-module').classList.add('active');
+    
+    this.loadLesson();
+    this.updateProgressIndicator();
+},
+
+// Complete the module
 completeModule() {
     document.getElementById('learning-module').classList.remove('active');
     
@@ -2015,6 +2033,7 @@ completeModule() {
     // Scroll to modules
     document.getElementById('modules-container').scrollIntoView({ behavior: 'smooth' });
 },
+
             
             // Load the current lesson
             loadLesson() {
