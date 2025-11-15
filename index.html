@@ -746,6 +746,35 @@
                 font-size: 2rem;
             }
         }
+        /* Offline state styles */
+body.offline::before {
+  content: "⚠️ Offline";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--warning);
+  color: white;
+  text-align: center;
+  padding: 8px;
+  font-size: 0.875rem;
+  font-weight: bold;
+  z-index: 1001;
+}
+
+/* PWA specific styles */
+@media (display-mode: standalone) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  .navbar {
+    padding-top: calc(var(--space-sm) + env(safe-area-inset-top));
+  }
+}
     </style>
 </head>
 <body>
