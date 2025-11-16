@@ -149,7 +149,7 @@
 
         /* Navigation Bar */
         .navbar {
-            background: /*var(--primary-blue)100%;*/linear-gradient(135deg, var(--primary-blue) )0%, var(--primary-purple) 100%);
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-purple) 100%);
             padding: var(--space-sm) 0;
             box-shadow: var(--shadow-lg);
             position: sticky;
@@ -746,35 +746,6 @@
                 font-size: 2rem;
             }
         }
-        /* Offline state styles */
-body.offline::before {
-  content: "⚠️ Offline";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: var(--warning);
-  color: white;
-  text-align: center;
-  padding: 8px;
-  font-size: 0.875rem;
-  font-weight: bold;
-  z-index: 1001;
-}
-
-/* PWA specific styles */
-@media (display-mode: standalone) {
-  body {
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-  }
-  
-  .navbar {
-    padding-top: calc(var(--space-sm) + env(safe-area-inset-top));
-  }
-}
     </style>
 </head>
 <body>
@@ -785,7 +756,7 @@ body.offline::before {
                 <div class="logo-icon">
                     <i class="fas fa-stethoscope"></i>
                 </div>
-                <span>D PflegefachProfi</span>
+                <span>PflegefachProfi</span>
             </a>
             
             <div class="hamburger" id="hamburger">
@@ -802,19 +773,19 @@ body.offline::before {
                     </a>
                 </li>-->
                 <li class="nav-item">
-                    <a href="themen" class="nav-link">
+                    <a href="themen.html" class="nav-link">
                         <i class="fas fa-book-medical"></i>
                         Lernmodule
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="lernspiele" class="nav-link">
+                    <a href="lernspiele.html" class="nav-link">
                         <i class="fas fa-gamepad"></i>
                         Lernspiele
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/fallbeispiele" class="nav-link">
+                    <a href="fallbeispiele.html" class="nav-link">
                         <i class="fas fa-procedures"></i>
                         Fallbeispiele
                     </a>
@@ -890,7 +861,7 @@ body.offline::before {
                         <li><i class="fas fa-check"></i> Abschlussquiz mit Erfolgsmessung</li>
                     </ul>
                     
-                    <a href="/themen" class="service-cta">
+                    <a href="themen.html" class="service-cta">
                         <i class="fas fa-play"></i>
                         Module entdecken
                     </a>
@@ -910,7 +881,7 @@ body.offline::before {
                         <li><i class="fas fa-check"></i> Fortschritts-Ranglisten</li>
                     </ul>
                     
-                    <a href="/lernspiele" class="service-cta">
+                    <a href="lernspiele.html" class="service-cta">
                         <i class="fas fa-play"></i>
                         Spiele starten
                     </a>
@@ -930,7 +901,7 @@ body.offline::before {
                         <li><i class="fas fa-check"></i> Prüfungsrelevante Fragestellungen</li>
                     </ul>
                     
-                    <a href="/fallbeispiele" class="service-cta">
+                    <a href="fallbeispiele.html" class="service-cta">
                         <i class="fas fa-play"></i>
                         Fälle erkunden
                     </a>
@@ -956,14 +927,14 @@ body.offline::before {
                     <p>Alle Inhalte sind fachlich fundiert und speziell auf Prüfungsvorbereitung gedacht gemacht </p>
                 </div>
                 
-               <!-- <div class="feature-card">
+                <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-mobile-alt"></i>
                     </div>
                     <h3>Immer verfügbar</h3>
                     <p>Lerne wann und wo du willst - und tracke dein persönlicher Fortschritt</p>
                 </div>
-                -->
+                
              <!--   <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
@@ -1196,8 +1167,8 @@ body.offline::before {
                 }, 5000);
             }
         }
-    
-    
+    </script>
+    <script>
   // PWA Installation and Service Worker Registration
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
